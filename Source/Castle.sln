@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2015
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Castle", "Castle.vcxproj", "{6CA8D03C-15E2-4B30-B313-736D53A62AA5}"
 EndProject
 Global

@@ -1,15 +1,19 @@
-#define MOVE_START 0
-#define MOVE_END 1
-#define MOVE_CUR 2
 
 class CDataStream
 {
 private:
 	bool m_bOpen;
-	int m_nSize;
-	int m_nDataPointer;
+	int  m_nSize;
+	int  m_nDataPointer;
 	
 	unsigned char* m_pData;
+public:
+	enum MOVE_T
+	{
+		MOVE_START=0,
+		MOVE_END=1,
+		MOVE_CUR=2,
+	};
 public:
 	CDataStream();
 	CDataStream(char* szFile);
@@ -19,6 +23,6 @@ public:
 	void Close();
 	int Read(unsigned char* pBuffer, int count);
 	int GetSize();
-	int Seek(signed long nDistance, int nMethod);
+	int Seek(signed long nDistance, MOVE_T nMethod);
 	int Tell();
 };

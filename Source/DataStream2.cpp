@@ -26,9 +26,12 @@ bool CDataStream::Open(char* szFile)
 	if(m_bOpen)
 		Close();
 		
-	FILE* pTemp=fopen(szFile, "rb");
-	if(!pTemp)
+	FILE* pTemp=NULL;
+	errno_t Res = fopen_s( &pTemp, szFile, "rb");
+	if( 0 != Res )
+	{
 		return false;
+	}
 		
 	//Get the file size.
 	fseek(pTemp, 0, SEEK_END);
@@ -48,6 +51,7 @@ bool CDataStream::Open(char* szFile)
 	m_bOpen=true;
 	return true;
 }
+
 void CDataStream::Close()
 {
 	if(!m_bOpen)
@@ -58,6 +62,7 @@ void CDataStream::Close()
 	m_nDataPointer=0;
 	m_bOpen=false;
 }
+
 int CDataStream::Read(unsigned char* pBuffer, int count)
 {
 	if(!m_bOpen)
@@ -77,7 +82,8 @@ int CDataStream::GetSize()
 		return 0;
 	return m_nSize;
 }
-int CDataStream::Seek(signed long nDistance, int nMethod)
+
+int CDataStream::Seek(signed long nDistance, MOVE_T nMethod)
 {
 	if(!m_bOpen)
 		return 0;

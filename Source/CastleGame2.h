@@ -5,6 +5,7 @@
 */
 
 #include "DataStream2.h"
+#include "CastleTypes.h"
 
 #define MAX_PATH 260
 #define MAX_LINES 40
@@ -12,27 +13,30 @@
 #define MAX_PARAMS 10
 #define MAX_CHOICES 10
 
-typedef enum tagFUNCTIONTYPE{
-	PRINT=0x00000001L, 
-	GOTO=0x00000002L, 
-	CHOICE=0x00000003L, 
-	CLS=0x00000004L, 
-	END=0x00000005L, 
-	COMMENT=0x00000006L,
-	FUNCTIONFAIL=0x10000000L
-}FUNCTIONTYPE;
+enum FUNCTIONTYPE
+{
+	PRINT, 
+	GOTO, 
+	CHOICE, 
+	CLS, 
+	END, 
+	COMMENT,
+	FUNCTIONFAIL,
+};
 
 
-typedef enum tagSTATEMENTRESULT{
-	ST_FUNCTION=0x00000000L, 
-	ST_LABEL=0x00000001L, 
-	ST_FAIL=0x10000000L, 
-	ST_UNKNOWN=0x10000001L
-}STATEMENTRESULT;
+enum STATEMENTRESULT
+{
+	ST_FUNCTION, 
+	ST_LABEL, 
+	ST_FAIL, 
+	ST_UNKNOWN,
+};
 
 
 
-class CCastleGame{
+class CCastleGame
+{
 private:
 	CDataStream m_pFile;
 	
