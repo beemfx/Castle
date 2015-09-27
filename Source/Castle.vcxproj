@@ -145,12 +145,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CastleGame2.h" />
+    <ClInclude Include="CastleTypes.h" />
     <ClInclude Include="DataStream2.h" />
-    <ClInclude Include="Plugin.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Castle.ico" />
-    <None Include="ReadMeDev.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

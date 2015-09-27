@@ -44,7 +44,7 @@ bool CCastleGame::LoadMap(char* szFilename)
 bool CCastleGame::Initialize()
 {
 	//SetDataStreamPointer(m_hDataStream, 0, STREAM_BEGIN);
-	m_pFile.Seek(0, MOVE_START);
+	m_pFile.Seek(0, CDataStream::MOVE_START);
 	
 	//We initialize by reading the:
 	//	map name
@@ -142,7 +142,7 @@ bool CCastleGame::Seek(char szLabel[MAX_CHARS_PER_LINE])
 	//First we go to the beginning of the file
 	//REWIND(m_hInputFile);
 	//SetDataStreamPointer(m_hDataStream, 0, STREAM_BEGIN);
-	m_pFile.Seek(0, MOVE_START);
+	m_pFile.Seek(0, CDataStream::MOVE_START);
 
 	char szString[MAX_CHARS_PER_LINE];
 
@@ -237,7 +237,7 @@ int CCastleGame::GetParams(char* szLine, char pszParams[MAX_PARAMS][MAX_CHARS_PE
 
 void CCastleGame::Restart()
 {
-	m_pFile.Seek(0, MOVE_START);
+	m_pFile.Seek(0, CDataStream::MOVE_START);
 	m_nCurrentLine=0;
 	m_lpOutputData[0][0]=NULL;
 	Initialize();
@@ -263,7 +263,7 @@ bool CCastleGame::ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStateme
 	{
 	case END:
 		//Print game over and break
-		strcpy(m_lpOutputData[m_nCurrentLine], ("Game Over"));
+		strcpy_s(m_lpOutputData[m_nCurrentLine], ("Game Over"));
 		m_nNumChoices=0;
 		m_nCurrentLine++;
 		break;
@@ -272,7 +272,7 @@ bool CCastleGame::ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStateme
 		//For a print we need to get the string to print, this is as simple
 		//as calling the GetString Fucntion
 		GetString(szFunctionStatement, szFunctionStatement);
-		strcpy(m_lpOutputData[m_nCurrentLine], szFunctionStatement);
+		strcpy_s(m_lpOutputData[m_nCurrentLine], szFunctionStatement);
 		m_nCurrentLine++;
 		}break;
 	case CHOICE:{
@@ -286,10 +286,11 @@ bool CCastleGame::ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStateme
 		//we subtract 1 from the number of choices
 		//because the first parameter is not a choice
 		m_nNumChoices=nNumParams-1;
-		for(int i=0; i<m_nNumChoices; i++){
-			strcpy(m_szGotoChoice[i], szTempString[i+1]);
+		for(int i=0; i<m_nNumChoices; i++)
+		{
+			strcpy_s(m_szGotoChoice[i], szTempString[i+1]);
 		}
-		strcpy(m_lpOutputData[m_nCurrentLine], szTempString[0]);
+		strcpy_s(m_lpOutputData[m_nCurrentLine], szTempString[0]);
 	
 		m_nCurrentLine++;
 		}break;
