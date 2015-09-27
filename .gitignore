@@ -3,3 +3,4 @@ Source_Web/build
 *.suo
 *.sdf
 *.opensdf
+*.vcxproj.user
