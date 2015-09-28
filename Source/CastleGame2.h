@@ -42,9 +42,7 @@ private:
 	
 	int m_nCurrentLine; //The line to print on
 	int m_nNumChoices;
-	
-	int m_nMapVersion;  //The current map's version
-	char m_cMapEdition;  //The current map's edition
+
 	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
 	
 	char m_lpOutputData[MAX_LINES][MAX_CHARS_PER_LINE]; //The output data.
@@ -66,8 +64,6 @@ public:
 	~CCastleGame();
 	bool LoadMap(char* szFilename);
 	
-	int GetMapVersion()const;
-	char GetMapEdition()const;
 	const char* GetMapName()const;
 	
 	bool ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function

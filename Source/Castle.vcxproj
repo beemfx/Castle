@@ -147,6 +147,7 @@
     <ClInclude Include="CastleGame2.h" />
     <ClInclude Include="CastleTypes.h" />
     <ClInclude Include="DataStream2.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Adventure.tba" />
