@@ -48,7 +48,7 @@ bool CCastleGame::Initialize()
 	
 	//We initialize by reading the:
 	//	map name
-	ReadStatement(m_szMapName, MAX_PATH);
+	ReadStatement(m_szMapName, CA_MAX_PATH);
 	char szTempString[128];
 	//	map version
 	ReadStatement(szTempString, 128);
@@ -61,36 +61,72 @@ bool CCastleGame::Initialize()
 	return true;
 }
 
-int CCastleGame::GetMapVersion()
+int CCastleGame::GetMapVersion()const
 {
 	return m_nMapVersion;
 }
 
-char CCastleGame::GetMapEdition()
+char CCastleGame::GetMapEdition()const
 {
 	return m_cMapEdition;
 }
 
-char* CCastleGame::GetMapName()
+const char* CCastleGame::GetMapName()const
 {
 	return m_szMapName;
 }
 
 
-void CCastleGame::GetString(char* szStringOut, char* szLine){
+void CCastleGame::GetString(char* szStringOut, char* szLine)
+{
 	int nLength = (int)strlen(szLine);
 
 	int j=0;
 	bool bActive=false;
-	for(int i=0; i<nLength; i++){
-		if(!bActive){
+	bool bNextCharIsEscape=false;
+	for(int i=0; i<nLength; i++)
+	{
+		if(!bActive)
+		{
 			if(szLine[i]==('"'))
 				bActive=true;
 		}
-		else if(bActive){
-			if(szLine[i]==('"')){szStringOut[j]=NULL;break;}
-			szStringOut[j]=szLine[i];
-			j++;
+		else if(bActive)
+		{
+			if( bNextCharIsEscape )
+			{
+				char EscapeCode = 'X';
+
+				switch( szLine[i] )
+				{
+					case 'n': EscapeCode = '\n'; break;
+					case 'r': EscapeCode = '\r'; break;
+					case '\\': EscapeCode = '\\'; break;
+					case '\"': EscapeCode = '\"'; break;
+					case '\'': EscapeCode = '\''; break;
+				}
+
+				szStringOut[j] = EscapeCode;
+				j++;
+				bNextCharIsEscape = false;
+			}
+			else
+			{
+				if(szLine[i]==('"'))
+				{
+					szStringOut[j]='\0';
+					break;
+				}
+				else if( szLine[i]=='\\' )
+				{
+					bNextCharIsEscape=true;
+				}
+				else
+				{
+					szStringOut[j]=szLine[i];
+					j++;
+				}
+			}
 		}
 	}
 }
@@ -147,7 +183,8 @@ bool CCastleGame::Seek(char szLabel[MAX_CHARS_PER_LINE])
 	char szString[MAX_CHARS_PER_LINE];
 
 	while(true){
-		switch(ReadStatement(szString, MAX_CHARS_PER_LINE)){
+		switch(ReadStatement(szString, MAX_CHARS_PER_LINE))
+		{
 			case ST_LABEL:
 				if(strcmp(szString, szLabel)==0)return true;
 				break;
@@ -261,57 +298,58 @@ void CCastleGame::CompileError(char* lpErrorMessage)
 bool CCastleGame::ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStatement){
 	switch(fnResult)
 	{
-	case END:
-		//Print game over and break
-		strcpy_s(m_lpOutputData[m_nCurrentLine], ("Game Over"));
-		m_nNumChoices=0;
-		m_nCurrentLine++;
-		break;
-	case PRINT:
+		case END:
+			//Print game over and break
+			strcpy_s(m_lpOutputData[m_nCurrentLine], ("\n\nThe End"));
+			m_nNumChoices=0;
+			m_nCurrentLine++;
+			break;
+		case PRINT:
 		{
-		//For a print we need to get the string to print, this is as simple
-		//as calling the GetString Fucntion
-		GetString(szFunctionStatement, szFunctionStatement);
-		strcpy_s(m_lpOutputData[m_nCurrentLine], szFunctionStatement);
-		m_nCurrentLine++;
-		}break;
-	case CHOICE:{
-		//For a choice we need to print out the string, and store the other perameters
-		//
-		//MessageBox(0, szCurrentString, 0, 0);
-		char szTempString[MAX_CHOICES][MAX_CHARS_PER_LINE];
-		int nNumParams;
-		nNumParams=GetParams(szFunctionStatement, szTempString);
-		GetString(szTempString[0], szTempString[0]);
-		//we subtract 1 from the number of choices
-		//because the first parameter is not a choice
-		m_nNumChoices=nNumParams-1;
-		for(int i=0; i<m_nNumChoices; i++)
+			//For a print we need to get the string to print, this is as simple
+			//as calling the GetString Fucntion
+			GetString(szFunctionStatement, szFunctionStatement);
+			strcpy_s(m_lpOutputData[m_nCurrentLine], szFunctionStatement);
+			m_nCurrentLine++;
+		} break;
+		case CHOICE:
 		{
-			strcpy_s(m_szGotoChoice[i], szTempString[i+1]);
-		}
-		strcpy_s(m_lpOutputData[m_nCurrentLine], szTempString[0]);
+			//For a choice we need to print out the string, and store the other perameters
+			//
+			//MessageBox(0, szCurrentString, 0, 0);
+			char szTempString[MAX_CHOICES][MAX_CHARS_PER_LINE];
+			int nNumParams;
+			nNumParams=GetParams(szFunctionStatement, szTempString);
+			GetString(szTempString[0], szTempString[0]);
+			//we subtract 1 from the number of choices
+			//because the first parameter is not a choice
+			m_nNumChoices=nNumParams-1;
+			for(int i=0; i<m_nNumChoices; i++)
+			{
+				strcpy_s(m_szGotoChoice[i], szTempString[i+1]);
+			}
+			strcpy_s(m_lpOutputData[m_nCurrentLine], szTempString[0]);
 	
-		m_nCurrentLine++;
-		}break;
-	case COMMENT://Do nothing
-		break;
-	case GOTO:
+			m_nCurrentLine++;
+		} break;
+		case COMMENT://Do nothing
+			break;
+		case GOTO:
 		{
-		char szParams[1][MAX_CHARS_PER_LINE];
-		GetParams(szFunctionStatement, szParams);
-		Seek(szParams[0]);
-		}break;
-	case CLS:
+			char szParams[1][MAX_CHARS_PER_LINE];
+			GetParams(szFunctionStatement, szParams);
+			Seek(szParams[0]);
+		} break;
+		case CLS:
 		{
-		for(int i=0; i<MAX_LINES; i++)
-			m_lpOutputData[i][0]=NULL;
-		m_nCurrentLine=0;
-		}break;
-	default:
+			for(int i=0; i<MAX_LINES; i++)
+				m_lpOutputData[i][0]=NULL;
+			m_nCurrentLine=0;
+		} break;
+		default:
 		{
-		return false;
-		}break;
+			return false;
+		} break;
 	}
 	return true;
 }
@@ -349,4 +387,23 @@ bool CCastleGame::ProcessGameUntilBreak()
 		if(nNumLoops>1000){CompileError(("Error: Possible Infinite Loop!"));return false;}
 	}
 	return true;
+}
+
+size_t CCastleGame::GetOutput( char* Output , size_t OutputSize )
+{
+	strcpy_s( Output , OutputSize , "" );
+
+	for(int i=0; i<GetNumOutputLines(); i++)
+	{
+		const char* szTemp = GetOutputLine(i);
+		strcat_s( Output , OutputSize , szTemp );
+		size_t Len = strlen( Output );
+		if( Len > 0 && Output[Len-1] != '\n' )
+		{
+			strcat_s( Output , OutputSize , " " );
+		}
+	}
+
+	Output[OutputSize-1] = '\0';
+	return strlen(Output);
 }
