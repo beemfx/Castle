@@ -24,14 +24,26 @@ static class CGameShell
 {
 private:
 	HWND m_hwnd;
+	HFONT m_Font;
 	CCastleGame m_CastleGame;
 	mutable char m_PaintTextBuffer[1024*10];
 public:
 	CGameShell()
 	: m_hwnd(NULL)
+	, m_Font(NULL)
 	, m_CastleGame(TEXT("Adventure.tba"))
 	{
+		m_Font = CreateFont( 
+			24 , 0 , 0 , 0 , FW_DONTCARE 
+			, FALSE , FALSE , FALSE , ANSI_CHARSET 
+			, OUT_DEFAULT_PRECIS , CLIP_DEFAULT_PRECIS 
+			, ANTIALIASED_QUALITY , DEFAULT_PITCH 
+			, "Georgia" );
+	}
 
+	~CGameShell()
+	{
+		DeleteObject( m_Font );
 	}
 
 	int Run( HINSTANCE hInst , int nCmdShow )
@@ -157,8 +169,11 @@ public:
 		GetTextMetrics( hDc , &tm );
 		SetTextColor( hDc , Main_TextColor );
 		SetBkColor( hDc , Main_BgColor );
+		HGDIOBJ OldFont = SelectObject( hDc , m_Font );
 
 		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcClient , DT_WORDBREAK );
+
+		SelectObject( hDc , OldFont );
 
 		EndPaint(hwnd, &ps);
 	}
