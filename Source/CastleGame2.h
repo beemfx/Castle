@@ -7,11 +7,11 @@
 #include "DataStream2.h"
 #include "CastleTypes.h"
 
-#define MAX_PATH 260
-#define MAX_LINES 40
-#define MAX_CHARS_PER_LINE 200
-#define MAX_PARAMS 10
-#define MAX_CHOICES 10
+static const int CA_MAX_PATH = 260;
+static const int MAX_LINES = 40;
+static const int MAX_CHARS_PER_LINE = 1024;
+static const int MAX_PARAMS = 10;
+static const int MAX_CHOICES = 10;
 
 enum FUNCTIONTYPE
 {
@@ -45,7 +45,7 @@ private:
 	
 	int m_nMapVersion;  //The current map's version
 	char m_cMapEdition;  //The current map's edition
-	char m_szMapName[MAX_PATH]; //The name of the map default map is WINCASTLE
+	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
 	
 	char m_lpOutputData[MAX_LINES][MAX_CHARS_PER_LINE]; //The output data.
 	char m_szGotoChoice[MAX_CHOICES][MAX_CHARS_PER_LINE];
@@ -66,19 +66,21 @@ public:
 	~CCastleGame();
 	bool LoadMap(char* szFilename);
 	
-	int GetMapVersion();
-	char GetMapEdition();
-	char* GetMapName();
+	int GetMapVersion()const;
+	char GetMapEdition()const;
+	const char* GetMapName()const;
 	
 	bool ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
 
 	bool SendInput(int nChoice);
 	void Restart();
 	
-	int GetNumOutputLines(){return m_nCurrentLine;}
-	char* GetOutputLine(int nLine)
+	int GetNumOutputLines()const{return m_nCurrentLine;}
+	const char* GetOutputLine(int nLine)const
 	{
 		if(nLine>m_nCurrentLine)return 0;
 		return m_lpOutputData[nLine];
 	}
+
+	size_t GetOutput( char* Output , size_t OutputSize );
 };

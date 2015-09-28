@@ -24,6 +24,7 @@ static class CGameShell
 private:
 	HWND m_hwnd;
 	CCastleGame m_CastleGame;
+	mutable char m_PaintTextBuffer[1024*10];
 public:
 	CGameShell()
 	: m_hwnd(NULL)
@@ -68,8 +69,8 @@ public:
 			//WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
-			500,
-			320,
+			640,
+			480,
 			NULL,
 			NULL,
 			hInst,
@@ -140,16 +141,24 @@ public:
 		zero( &ps );
 		HDC hDc=BeginPaint(hwnd, &ps);
 
+		size_t TextLength = m_CastleGame.GetOutput( m_PaintTextBuffer , countof(m_PaintTextBuffer) );
+		RECT rcClient;
+		GetClientRect( hwnd , &rcClient );
+
 		TEXTMETRIC tm;
 		GetTextMetrics( hDc , &tm );
 		SetTextColor( hDc , Main_TextColor );
 		SetBkColor( hDc , Main_BgColor );
+
+		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcClient , DT_WORDBREAK );
+		/*
 		for(int i=0; i<m_CastleGame.GetNumOutputLines(); i++)
 		{
-			char* szTemp = m_CastleGame.GetOutputLine(i);
+			const char* szTemp = m_CastleGame.GetOutputLine(i);
 
 			TextOut(hDc, 1, i*tm.tmHeight+1, szTemp, _tcslen(szTemp));
 		}
+		*/
 
 		EndPaint(hwnd, &ps);
 	}

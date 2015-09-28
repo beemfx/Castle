@@ -149,7 +149,9 @@
     <ClInclude Include="DataStream2.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Adventure.tba" />
     <None Include="Castle.ico" />
+    <None Include="Test.tba" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
