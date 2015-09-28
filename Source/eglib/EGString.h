@@ -118,8 +118,8 @@ private:
 	eg_uint m_nLength;
 private:
 	void UpdateLength();
-	EG_INLINE void CommonConstruct();
-	EG_INLINE void CommonDestruct();
+	void CommonConstruct();
+	void CommonDestruct();
 	//Some metrics:
 #if defined(__EG__) && defined(DEBUG)
 	static eg_int  s_StringCount;

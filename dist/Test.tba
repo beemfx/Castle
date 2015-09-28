@@ -1,28 +1,20 @@
-TEST2;5;B;
-PRINT("CastleSCRIPT Test");
-START:
-PRINT("Please make a choice:");
-CHOICE("1)ONE 2)TWO 3)THREE 4)QUIT", ONE, TWO, THREE, QUIT);
-
-
-TWO:
-CLS();
-PRINT("You Chose TWO.");
-GOTO(START);
-
+TEST2;
+PRINT("CastleSCRIPT Test\n");
+PRINT("Please make a choice:\n\n");
+CHOICE("1)ONE 2)TWO 3)THREE", ONE, TWO, THREE);
 
 ONE:
 CLS();
-PRINT("You Chose ONE");
-GOTO(START);
+ONE_FROM_TWO:
+PRINT("You Chose ONE.\n");
+END();
 
+TWO:
+CLS();
+PRINT("You Chose TWO, but we will also do ONE...\n");
+GOTO( ONE_FROM_TWO );
 
 THREE:
 CLS();
-PRINT("You Chose THREE.");
-GOTO(START);
-
-
-QUIT:
-PRINT("Finnishing Up!");
+PRINT("You Chose THREE.\n");
 END();

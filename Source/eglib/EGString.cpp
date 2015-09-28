@@ -48,7 +48,7 @@ eg_uint eg_string_base::s_MaxStringLen   = 0;
 static EGMutex g_StrLock;
 #endif
 
-EG_INLINE void eg_string_base::CommonConstruct()
+void eg_string_base::CommonConstruct()
 {
 #if defined(__EG__) && defined(DEBUG)
 	g_StrLock.Lock();
@@ -58,7 +58,7 @@ EG_INLINE void eg_string_base::CommonConstruct()
 #endif
 }
 
-EG_INLINE void eg_string_base::CommonDestruct()
+void eg_string_base::CommonDestruct()
 {
 #if defined(__EG__) && defined(DEBUG)
 	g_StrLock.Lock();
