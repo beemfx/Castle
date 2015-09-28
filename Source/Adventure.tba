@@ -13,7 +13,7 @@ END();
 
 11:
 CLS();
-PRINT("You've Chosen to play!");
+PRINT("You've Chosen to play!\n");
 PRINT("You head through the main gate of an old castle.");
 PRINT("Three doors catch you attention.  An old wooden door");
 PRINT("a shiny new gold door, and a relatively ugly brass door.");
