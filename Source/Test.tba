@@ -1,4 +1,4 @@
-TEST2;5;A;
+TEST2;
 PRINT("CastleSCRIPT Test\n");
 PRINT("Please make a choice:\n\n");
 CHOICE("1)ONE 2)TWO 3)THREE", ONE, TWO, THREE);

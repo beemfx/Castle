@@ -7,7 +7,7 @@
 	version: x.xx (dev)
 */
 
-#define CURVERSION TEXT("version 5.50")
+#define CURVERSION TEXT("version 5.51")
 
 
 #include <windows.h>
@@ -18,6 +18,7 @@
 
 static const COLORREF Main_TextColor = RGB( 255 , 255 , 255 );
 static const COLORREF Main_BgColor = RGB( 0 , 0 , 0 );
+static const char* Main_WinName = TEXT("WinCastle: A Text Based Adventure");
 
 static class CGameShell
 {
@@ -63,7 +64,7 @@ public:
 
 		m_hwnd=CreateWindow(
 			cgAppName,
-			TEXT("WinCastle: A Text Based Adventure"),
+			Main_WinName,
 			WS_MINIMIZEBOX|WS_SYSMENU|
 			WS_DLGFRAME,
 			//WS_OVERLAPPEDWINDOW,
@@ -79,7 +80,7 @@ public:
 		ShowWindow(m_hwnd, nCmdShow);
 		UpdateWindow(m_hwnd);
 
-		//m_CastleGame.LoadMap(TEXT("Adventure.tba"));
+		UpdateWindowName();
 
 		HACCEL hAccelTable = LoadAccelerators(hInst, (LPCTSTR)IDR_ACCELERATOR);
 
@@ -135,6 +136,13 @@ public:
 		return 0L;
 	}
 
+	void UpdateWindowName()
+	{
+		char Temp[1024];
+		sprintf_s( Temp , "%s [%s]" , Main_WinName , m_CastleGame.GetMapName() );
+		SetWindowText( m_hwnd , Temp );
+	}
+
 	void OnPaint( HWND hwnd )
 	{
 		PAINTSTRUCT ps;
@@ -151,47 +159,8 @@ public:
 		SetBkColor( hDc , Main_BgColor );
 
 		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcClient , DT_WORDBREAK );
-		/*
-		for(int i=0; i<m_CastleGame.GetNumOutputLines(); i++)
-		{
-			const char* szTemp = m_CastleGame.GetOutputLine(i);
-
-			TextOut(hDc, 1, i*tm.tmHeight+1, szTemp, _tcslen(szTemp));
-		}
-		*/
 
 		EndPaint(hwnd, &ps);
-	}
-
-	static BOOL CALLBACK StatisticsBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-	{
-		switch(msg)
-		{
-			case WM_INITDIALOG:
-			{
-				/*
-				TCHAR szTempString[MAX_PATH];
-				SetDlgItemInt(hDlg, ID_SCRIPTV, m_CastleGame.GetMapVersion(), TRUE);
-				_stprintf_s(szTempString, TEXT("%c"), m_CastleGame.GetMapEdition());
-				SetDlgItemText(hDlg, ID_EDITION, szTempString);
-				SetDlgItemText(hDlg, ID_NAME, m_CastleGame.GetMapName());
-				*/
-			} return FALSE;
-			case WM_COMMAND:
-			{
-				switch(LOWORD(wParam))
-				{
-					case IDOK: EndDialog(hDlg, 0); break;
-				}
-
-			} break;
-			case WM_CLOSE:
-				EndDialog(hDlg, 0);
-				break;
-			default:
-				return FALSE;
-		}
-		return TRUE;
 	}
 
 	static BOOL CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -283,14 +252,12 @@ public:
 				if(GetOpenFilename(TEXT("Open File"), TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0"), hWnd, szTempFilename))
 				{
 					m_CastleGame.LoadMap(szTempFilename);
+					UpdateWindowName();
 					RedrawWindow(hWnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				}
 			} break;
 			case CM_ABOUT:
 				DialogBox(GetModuleHandle(NULL),MAKEINTRESOURCE(DIALOG_ABOUT), hWnd, AboutBox);
-				break;
-			case CM_GAMESTATISTICS:
-				DialogBox(GetModuleHandle(NULL),MAKEINTRESOURCE(DIALOG_STATS), hWnd, StatisticsBox);
 				break;
 		}
 		return TRUE;

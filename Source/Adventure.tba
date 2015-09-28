@@ -1,7 +1,4 @@
 WinCastle;
-5;
-A;
-
 PRINT("WinCastle: A Text Based Adventure\n");
 PRINT("Copyright (c) 1997, 2000, 2001, 2002 Beem Software\n");
 PRINT("");

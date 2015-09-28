@@ -50,25 +50,9 @@ bool CCastleGame::Initialize()
 	//	map name
 	ReadStatement(m_szMapName, CA_MAX_PATH);
 	char szTempString[128];
-	//	map version
-	ReadStatement(szTempString, 128);
-	m_nMapVersion=atol(szTempString);
-
-	ReadStatement(szTempString, 128);
-	m_cMapEdition=szTempString[0];
 
 	ProcessGameUntilBreak();
 	return true;
-}
-
-int CCastleGame::GetMapVersion()const
-{
-	return m_nMapVersion;
-}
-
-char CCastleGame::GetMapEdition()const
-{
-	return m_cMapEdition;
 }
 
 const char* CCastleGame::GetMapName()const

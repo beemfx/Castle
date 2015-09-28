@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by cresource.rc
 //
 #define IDI_ICON1                       101
@@ -8,12 +8,8 @@
 #define ICON_MAIN                       101
 #define MENU_1                          102
 #define DIALOG_2                        104
-#define DIALOG_STATS                    104
 #define IDR_ACCELERATOR                 105
 #define ID_VERSION                      1000
-#define ID_NAME                         1002
-#define ID_EDITION                      1003
-#define ID_SCRIPTV                      1004
 #define CM_RESTART                      40001
 #define CM_CUSTOMGAME                   40002
 #define CM_QUIT                         40003
