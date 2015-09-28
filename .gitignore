@@ -4,3 +4,4 @@ Source_Web/build
 *.sdf
 *.opensdf
 *.vcxproj.user
+*.aps

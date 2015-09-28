@@ -6,59 +6,93 @@
 
 #include "DataStream2.h"
 #include "CastleTypes.h"
-
-static const int CA_MAX_PATH = 260;
-static const int MAX_LINES = 40;
-static const int MAX_CHARS_PER_LINE = 1024;
-static const int MAX_PARAMS = 10;
-static const int MAX_CHOICES = 10;
-
-enum FUNCTIONTYPE
-{
-	PRINT, 
-	GOTO, 
-	CHOICE, 
-	CLS, 
-	END, 
-	COMMENT,
-	FUNCTIONFAIL,
-};
-
-
-enum STATEMENTRESULT
-{
-	ST_FUNCTION, 
-	ST_LABEL, 
-	ST_FAIL, 
-	ST_UNKNOWN,
-};
-
-
+#include "EGString.h"
+#include "EGArray.h"
 
 class CCastleGame
 {
 private:
-	CDataStream m_pFile;
-	
+	static const int CA_MAX_PATH = 260;
+	static const int MAX_LINES = 40;
+	static const int MAX_CHARS_PER_LINE = 1024;
+	static const int MAX_PARAMS = 10;
+	static const int MAX_CHOICES = 10;
+
+	enum STATEMENTRESULT
+	{
+		ST_FUNCTION, 
+		ST_LABEL, 
+		ST_FAIL, 
+		ST_UNKNOWN,
+	};
+
+	struct SFunction
+	{
+		eg_string Statement;
+	};
+
+	class CLabelMap
+	{
+	public:
+		static const eg_uint INVALID_INDEX = 0xFFFFFFFF;
+	private:
+		struct SLabel
+		{
+			eg_string Label;
+			eg_uint   ProgramIndex;
+		};
+
+		EGArray<SLabel> m_Labels; // Could be optimized by using a map
+
+	public:
+		void Clear(){ m_Labels.Resize(0); }
+		void AddLabel( eg_cpstr Label , eg_uint ProgramIndex )
+		{
+			SLabel NewLabel;
+			NewLabel.Label = Label;
+			NewLabel.ProgramIndex = ProgramIndex;
+			m_Labels.Append( NewLabel );
+		}
+
+		eg_uint GetProgramIndex( eg_cpstr Label )const
+		{
+			for( eg_uint i=0; i<m_Labels.GetLength(); i++ )
+			{
+				const SLabel& Lbl  = m_Labels[i];
+				if( Lbl.Label.Equals( Label ) )
+				{
+					return Lbl.ProgramIndex;
+				}
+			}
+
+			return INVALID_INDEX;
+		}
+	};
+
+
+
+private:
+	EGArray<SFunction> m_Program;
+	CLabelMap          m_LabelMap;
+	eg_uint            m_InstrPtr;
 	int m_nCurrentLine; //The line to print on
 	int m_nNumChoices;
-
 	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
-	
 	char m_lpOutputData[MAX_LINES][MAX_CHARS_PER_LINE]; //The output data.
 	char m_szGotoChoice[MAX_CHOICES][MAX_CHARS_PER_LINE];
 	
-	bool Initialize(); //After a map is loaded, this function checks the variables.
-	STATEMENTRESULT ReadStatement(char* szOut, int nMaxLen); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
-	
-	FUNCTIONTYPE GetFunction(char* szLine); //Determines function of a line
-	bool ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStatement);
+private:
+	STATEMENTRESULT ReadStatement(CDataStream& Stream , char* szOut, int nMaxLen); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
 	void CompileError(char* szErrorMessage);
-	
-	void GetString(char* szStringOut, char* szLine); //Gets a string out of a line
-	int GetParams(char* szLine, char pszParams[MAX_PARAMS][MAX_CHARS_PER_LINE]); //Get parameters of a function
-	
-	bool Seek(char szLabel[MAX_CHARS_PER_LINE]); //Seek to a position I want to change this to look for labels
+	bool GotoLabel( const char* StrLabel );
+	void LoadProgram( CDataStream& Stream );
+	void DoPrint( const char* StrLine );
+	int GetNumOutputLines()const{return m_nCurrentLine;}
+	const char* GetOutputLine(int nLine)const
+	{
+		if(nLine>m_nCurrentLine)return "";
+		return m_lpOutputData[nLine];
+	}
 public:
 	CCastleGame(char* szInitialMap);
 	~CCastleGame();
@@ -66,17 +100,10 @@ public:
 	
 	const char* GetMapName()const;
 	
-	bool ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
+	void ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
 
 	bool SendInput(int nChoice);
 	void Restart();
 	
-	int GetNumOutputLines()const{return m_nCurrentLine;}
-	const char* GetOutputLine(int nLine)const
-	{
-		if(nLine>m_nCurrentLine)return 0;
-		return m_lpOutputData[nLine];
-	}
-
 	size_t GetOutput( char* Output , size_t OutputSize );
 };
