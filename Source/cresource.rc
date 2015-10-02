@@ -80,17 +80,15 @@ END
 // Dialog
 //
 
-DIALOG_ABOUT DIALOGEX 0, 0, 220, 119
+DIALOG_ABOUT DIALOGEX 0, 0, 221, 98
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
-CAPTION "About WinCastle"
+CAPTION "About Castle"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "&OK",IDOK,82,86,55,20
-    CTEXT           "WinCaslte: A Text Based Adventure",IDC_STATIC,51,13,118,8
+    DEFPUSHBUTTON   "&OK",IDOK,83,71,55,20
+    CTEXT           "Caslte: A Text Based Adventure",IDC_STATIC,51,13,118,8
     CTEXT           "Version 4.00xxxx",ID_VERSION,83,28,54,8
-    LTEXT           "CastleBUILD Copyright (C) 1997-2006 Blaine Myers",IDC_STATIC,27,50,166,11
-    LTEXT           "WinCastle Copyright (C) 2002 Blaine Myers",IDC_STATIC,28,61,163,10
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,16,43,186,36
+    CTEXT           "Copyright (c) 1997-2015 Beem Media",IDC_STATIC,27,50,166,11
     ICON            ICON_MAIN,IDC_STATIC,21,11,21,20
 END
 
@@ -106,9 +104,9 @@ BEGIN
     DIALOG_ABOUT, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 212
+        RIGHTMARGIN, 213
         TOPMARGIN, 2
-        BOTTOMMARGIN, 112
+        BOTTOMMARGIN, 91
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -125,6 +123,17 @@ BEGIN
     VK_F1,          CM_HELP,                VIRTKEY, NOINVERT
     VK_F3,          CM_RESTART,             VIRTKEY, NOINVERT
     VK_F4,          CM_GAMESTATISTICS,      VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+DIALOG_ABOUT AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
 #endif    // English (United States) resources

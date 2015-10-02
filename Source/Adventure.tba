@@ -1,10 +1,10 @@
-WinCastle;
-PRINT("WinCastle: A Text Based Adventure\n");
-PRINT("Copyright (c) 1997, 2000, 2001, 2002 Beem Software\n");
-PRINT("");
+Castle;
+PRINT("Castle: A Text Based Adventure\n");
+PRINT("Copyright (c) 1997-2015 Beem Media\n");
+PRINT("\n");
 PRINT("Welcome I am the Tunnel Master.\n");
-PRINT("Ready to Begin?\n\n");
-CHOICE("1)Yes 2) No", 11, 12);
+PRINT("Ready to Begin?");
+CHOICE( "Yes" , 11 , "No" , 12 );
 
 12:
 CLS();
@@ -19,14 +19,16 @@ PRINT("Three doors catch you attention.  An old wooden door");
 PRINT("a shiny new gold door, and a relatively ugly brass door.");
 PRINT("Your first instinct is to try to open the wooden door,");
 PRINT("you try to open it, but to no avail, its locked.\n\n");
-CHOICE("Which door do you open? 1)Brass 2)Gold:", 13, 14);
+PRINT("Which door do you open?");
+CHOICE( "Brass" , 13 , "Gold" , 14 );
 
 13:
 CLS();
 PRINT("You open the brass door and walk through.");
 PRINT("As you enter the room out of the corner of your eye");
 PRINT("you see a large monster.\n\n");
-CHOICE("Do you 1)Fight the monster or 2)Hide from it:", 15, 16);
+PRINT( "Do you:" );
+CHOICE("Fight the monster" , 15 , "Hide from it", 16);
 
 15:
 CLS();
@@ -37,7 +39,8 @@ END();
 CLS();
 PRINT("Deciding to hide you look around the room.");
 PRINT("You immediately sense a Box and a Desk in the room.\n\n");
-CHOICE("Do you hide behind the 1)Box or the 2)Desk:", 17, 18);
+PRINT("Do you hide behind the box or desk?");
+CHOICE( "Box" , 17 , "Desk" , 18 );
 
 18:
 CLS();
@@ -53,7 +56,8 @@ PRINT("The monster doesn't seem to see you.  Thank Goodness!\n\n");
 PRINT("Behind the box is a ventillation system.  You decide");
 PRINT("that it would be best to crawl through it.  After a");
 PRINT("couple of minutes you approach an intersection.\n\n");
-CHOICE("Would you like to go 1)Right or 2)Left:", 19, 20);
+PRINT("Would you like to go:");
+CHOICE( "Right" , 19 , "Left" , 20 );
 
 19:
 CLS();
@@ -68,7 +72,8 @@ CLS();
 PRINT("After a couple of minutes you exit the vent, only to");
 PRINT("see a beautiful princess being harassed by an overweight");
 PRINT("monster.\n\n");
-CHOICE("Do you wish to 1)Yell at the monster or 2)Fight it:", 21, 22);
+PRINT("Do you wish to:");
+CHOICE( "Yell at the monster" , 21 , "Fight the monster" , 22 );
 
 21:
 CLS();
@@ -88,7 +93,7 @@ PRINT("and the Princess begin to kiss. You keep on kissing.");
 PRINT("You love each other so much.");
 PRINT("\n\n");
 PRINT("You have succesfully completed");
-PRINT("WinCastle: A Text Based Adventure");
+PRINT("Castle: A Text Based Adventure");
 PRINT("\n\n");
 PRINT("Thank You For Playing");
 END();
@@ -97,14 +102,16 @@ END();
 CLS();
 PRINT("Upon Entering the room you see two tunnels. Both look");
 PRINT("about the same and you don't want to waste time choosing.\n\n");
-CHOICE("Will you go 1)Right or 2)Left:", 24, 25);
+PRINT("Will you go:" );
+CHOICE( "Right" , 24 , "Left" , 25 );
 
 24:
 CLS();
 PRINT("You quickly walk down the right tunnel.");
 PRINT("After a moment of traveling you see an Axe.");
 PRINT("It looks very sharp and dangerous.\n\n");
-CHOICE("Would you like to 1)Pick it up or 2)Leave it:", 26, 27);
+PRINT( "Would you like to:" );
+CHOICE( "Pick it up" , 26 , "Leave it" , 27 );
 
 27:
 CLS();
@@ -124,7 +131,8 @@ PRINT("and move on.");
 PRINT("\n\n");
 PRINT("Soon after, you approach a shaft.  A fairly sturdy rope");
 PRINT("extends downward, and a rikety ladder climbs upward.\n\n");
-CHOICE("Do you want to climb 1)Down the rope or 2) Up the ladder:", 28, 29);
+PRINT("Do you want to climb" );
+CHOICE( "Down the rope" , 28 , "Up the ladder" , 29 );
 
 28:
 CLS();
@@ -142,7 +150,8 @@ PRINT("Once you reach the top of the shaft you climb onto the");
 PRINT("edge, only to find the most ugly monster you have ever");
 PRINT("seen.  You remember the Axe you collected and decide");
 PRINT("that it's time to make a decision.\n\n");
-CHOICE("Will you 1)Attack the monster or 2)Think of something else:", 30, 31);
+PRINT("Will you:" );
+CHOICE( "Attack the monster" , 30 , "Think of something else" , 31 );
 
 31:
 CLS();
@@ -163,7 +172,8 @@ PRINT("\n\n");
 PRINT("After the slaughter you dash down a hallway.  After a");
 PRINT("few hours of running you approach a floating barricade.");
 PRINT("There is just enough room to go under or over it.\n\n");
-CHOICE("Do you want to 1)Crawl under or 2)Jump over:", 32, 33);
+PRINT("Do you want to:" );
+CHOICE( "Crawl under" , 32 , "Jump over" , 33 );
 
 32:
 CLS();
@@ -179,7 +189,8 @@ PRINT("You soon exit the castle.");
 PRINT("\n\n");
 PRINT("Upon exiting the castle you meet a funny looking Dwarf.");
 PRINT("A thought pops into your mind.\n\n");
-CHOICE("You can 1)Kill the innocent creature or 2)Let it go:", 34, 35);
+PRINT("You can:" );
+CHOICE( "Kill the innocent creature" , 34 , "Let it go" , 35 );
 
 34:
 CLS();
@@ -201,7 +212,8 @@ PRINT("Well after the encounter with the dwarf you feel pretty");
 PRINT("good about yourself.  You decide to go to the local arcade.");
 PRINT("Two games engage your interest, but you can only play one");
 PRINT("of them.\n\n");
-CHOICE("Do you wish to play 1)Duke Nukem or 2)Rashers", 41, 42);
+PRINT("Do you wish to play:");
+CHOICE( "Duke Nukem" , 41 , "Rashers", 42 );
 
 41:
 CLS();
@@ -217,7 +229,7 @@ PRINT("enjoy playing the game.  Your mind is consumed with playing");
 PRINT("video games.  You play video games for the rest of your life.");
 PRINT("\n\n");
 PRINT("You have successfully completed");
-PRINT("WinCastle: A Text Based Adventure");
+PRINT("Castle: A Text Based Adventure");
 PRINT("\n\n");
 PRINT("Thank You For Playing");
 END();
@@ -229,8 +241,8 @@ PRINT("After a while you exit the tunnel.  You realize that you were");
 PRINT("just traveling through a sewar.  Discusted you find a lake and");
 PRINT("bathe nude.  You notice a babe standing by the lake.  Embarrased");
 PRINT("you run to your clothes and put them on.  The babe walks up to you");
-PRINT("and asks if you will kiss her.\n\n");
-CHOICE("You can 1)!!!Go For It!!! or 2)Stay cool:", 50, 51);
+PRINT("and asks if you will kiss her.");
+CHOICE( "!!!GO FOR IT!!!" , 50 , "Stay cool" , 51 );
 
 50:
 CLS();
@@ -245,7 +257,8 @@ PRINT("Staying cool you decide not to kiss anyone that you don't");
 PRINT("know that well.  She is kind of dissapointed, but respects your");
 PRINT("decission.  She tells you that she was in trouble, but you've");
 PRINT("rescued her.  She continues to ask if you will marry her.\n\n");
-CHOICE("Will you 1)Marry her or 2)Leave her:", 52, 53);
+PRINT("Will you:");
+CHOICE( "Marry her" , 52 , "Leave her" , 53 );
 
 52:
 CLS();
@@ -253,7 +266,7 @@ PRINT("Your wedding is the next day.  You live the rest of your lives");
 PRINT("together.  Happily ever after.");
 PRINT("\n\n");
 PRINT("You have successfully completed");
-PRINT("WinCastle: A Text Based Adventure");
+PRINT("Castle: A Text Based Adventure");
 PRINT("\n\n");
 PRINT("Thank you for playing");
 END();
@@ -272,7 +285,7 @@ PRINT("country and you go to the city.  The two of you never see each");
 PRINT("other again...");
 PRINT("\n\n");
 PRINT("You have successfully completed");
-PRINT("WinCastle: A Text Based Adventure");
+PRINT("Castle: A Text Based Adventure");
 PRINT("\n\n");
 PRINT("Thank You For Playing");
 END();

@@ -1,13 +1,7 @@
-/*
-	main.cpp - Entry point for WinCastle
-
-	WinCastle (Castle BUILD 5) (c) 2001, 2002, 2003 Blaine Myers
-	Castle (c) 1997, 2000, 2001, 2002, 2003 Blaine Myers
-
-	version: x.xx (dev)
-*/
-
-#define CURVERSION TEXT("version 5.51")
+/******************************************************************************
+main.cpp - Entry point for WinCastle
+(c) 1997-2015 Beem Software
+******************************************************************************/
 
 
 #include <windows.h>
@@ -16,9 +10,12 @@
 #include "resource.h"
 #include "CastleGame2.h"
 
+static const eg_char* Main_CurVersion = TEXT("version 6.XX");
+
 static const COLORREF Main_TextColor = RGB( 255 , 255 , 255 );
+static const COLORREF Main_ChoiceColor = RGB( 75 , 75 , 255 );
 static const COLORREF Main_BgColor = RGB( 0 , 0 , 0 );
-static const char* Main_WinName = TEXT("WinCastle: A Text Based Adventure");
+static const eg_char* Main_WinName = TEXT("Castle: A Text Based Adventure");
 
 static class CGameShell
 {
@@ -171,7 +168,29 @@ public:
 		SetBkColor( hDc , Main_BgColor );
 		HGDIOBJ OldFont = SelectObject( hDc , m_Font );
 
-		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcClient , DT_WORDBREAK );
+		RECT rcDraw = rcClient;
+		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcDraw , DT_WORDBREAK|DT_CALCRECT );
+		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcDraw , DT_WORDBREAK );
+
+		SetTextColor( hDc , Main_ChoiceColor );
+		for( int i=0; i<m_CastleGame.GetNumChoices(); i++ )
+		{
+			eg_string Line = EGString_Format( "%u) %s" , i+1 , m_CastleGame.GetChoiceText(i) );
+
+			rcDraw.top = rcDraw.bottom;
+			rcDraw.bottom = rcClient.bottom;
+			rcDraw.left = rcClient.left;
+			rcDraw.right = rcClient.right;
+			DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK|DT_CALCRECT );
+			DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK );
+		}
+
+		if( m_CastleGame.GetCompilerError()[0] != '\0' )
+		{
+			SetTextColor( hDc , RGB(255,0,0) );
+			SetBkColor( hDc , RGB(0,0,255) );
+			DrawText( hDc , m_CastleGame.GetCompilerError() , -1 , &rcClient , DT_BOTTOM|DT_CENTER|DT_SINGLELINE );
+		}
 
 		SelectObject( hDc , OldFont );
 
@@ -183,7 +202,7 @@ public:
 		switch (msg)
 		{
 			case WM_INITDIALOG:
-				SetDlgItemText(hDlg, ID_VERSION, CURVERSION);
+				SetDlgItemText(hDlg, ID_VERSION, Main_CurVersion);
 				return FALSE;
 			case WM_CLOSE:
 				EndDialog(hDlg, 0);
@@ -208,39 +227,39 @@ public:
 		switch(nVirtKey)
 		{
 			case '1': 
-				if(m_CastleGame.SendInput(1))
+				if(m_CastleGame.SendInput(0))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '2': 
-				if(m_CastleGame.SendInput(2))
+				if(m_CastleGame.SendInput(1))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '3': 
-				if(m_CastleGame.SendInput(3))
+				if(m_CastleGame.SendInput(2))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '4': 
-				if(m_CastleGame.SendInput(4))
+				if(m_CastleGame.SendInput(3))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '5': 
-				if(m_CastleGame.SendInput(5))
+				if(m_CastleGame.SendInput(4))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '6': 
-				if(m_CastleGame.SendInput(6))
+				if(m_CastleGame.SendInput(5))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '7': 
-				if(m_CastleGame.SendInput(7))
+				if(m_CastleGame.SendInput(6))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '8': 
-				if(m_CastleGame.SendInput(8))
+				if(m_CastleGame.SendInput(7))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			case '9': 
-				if(m_CastleGame.SendInput(9))
+				if(m_CastleGame.SendInput(8))
 					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 				break;
 			default:

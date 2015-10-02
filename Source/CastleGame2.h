@@ -13,7 +13,6 @@ class CCastleGame
 {
 private:
 	static const int CA_MAX_PATH = 260;
-	static const int MAX_LINES = 40;
 	static const int MAX_CHARS_PER_LINE = 1024;
 	static const int MAX_PARAMS = 10;
 	static const int MAX_CHOICES = 10;
@@ -25,6 +24,13 @@ private:
 		ST_LABEL, 
 		ST_FAIL, 
 		ST_UNKNOWN,
+	};
+
+	enum e_input_t
+	{
+		INPUT_NONE,
+		INPUT_GETCHOICE,
+		INPUT_CHOICESWITCH,
 	};
 
 	struct SFunction
@@ -76,15 +82,20 @@ private:
 	EGArray<SFunction> m_Program;
 	CLabelMap          m_LabelMap;
 	eg_uint            m_InstrPtr;
+	e_input_t m_InputType;
 	int m_nNumChoices;
+	int m_nInputChoice;
 	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
 	char m_Output[MAX_OUTPUT_SIZE];
 	int  m_OutputSize;
-	char m_szGotoChoice[MAX_CHOICES][MAX_CHARS_PER_LINE];
+	eg_string m_szGotoChoice[MAX_CHOICES];
+	eg_string m_ChoiceStrings[MAX_CHOICES];
+	eg_string m_CompileError;
+	bool m_HadError:1;
 	
 private:
 	STATEMENTRESULT ReadStatement(CDataStream& Stream , char* szOut, int nMaxLen); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
-	void CompileError(char* szErrorMessage);
+	void CompileError( const char* szErrorMessage);
 	bool GotoLabel( const char* StrLabel );
 	void LoadProgram( CDataStream& Stream );
 	void DoPrint( const char* StrLine );
@@ -94,6 +105,7 @@ public:
 	bool LoadMap(char* szFilename);
 	
 	const char* GetMapName()const;
+	const char* GetCompilerError()const;
 	
 	void ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
 
@@ -101,4 +113,6 @@ public:
 	void Restart();
 	
 	size_t GetOutput( char* Output , size_t OutputSize );
+	int GetNumChoices()const{ return m_nNumChoices; }
+	const char* GetChoiceText( int Index )const{ if( 0 <= Index && Index < m_nNumChoices ){ return m_ChoiceStrings[Index]; } return ""; }
 };

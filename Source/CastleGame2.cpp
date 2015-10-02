@@ -20,6 +20,8 @@
 
 CCastleGame::CCastleGame(char* szInitialMap)
 : m_OutputSize(0)
+, m_InputType(INPUT_NONE)
+, m_HadError(false)
 {
 	LoadMap(szInitialMap);
 }
@@ -123,6 +125,9 @@ void CCastleGame::Restart()
 	m_InstrPtr = 0;
 	m_OutputSize = 0;
 	m_Output[0] = '\0';
+	m_InputType = INPUT_NONE;
+	m_HadError = false;
+	m_CompileError = "";
 	ProcessGameUntilBreak();
 }
 
@@ -144,24 +149,51 @@ bool CCastleGame::GotoLabel( const char* StrLabel )
 
 bool CCastleGame::SendInput(int nChoice)
 {
-	nChoice--;
-	if(nChoice<0 || nChoice>=m_nNumChoices)return false;
-
-	if( GotoLabel(m_szGotoChoice[nChoice]) )
+	switch( m_InputType )
 	{
-		ProcessGameUntilBreak();
-		return true;
+		case INPUT_NONE: return false;
+		case INPUT_CHOICESWITCH:
+			if( 0 <= nChoice && nChoice < m_nNumChoices )
+			{
+				if( GotoLabel(m_szGotoChoice[nChoice]) )
+				{
+					ProcessGameUntilBreak();
+					return true;
+				}
+			}
+			break;
+		case INPUT_GETCHOICE:
+			if( 0 <= nChoice && nChoice < m_nNumChoices )
+			{
+				m_nInputChoice = nChoice;
+				ProcessGameUntilBreak();
+				return true;
+			}
+			break;
 	}
+
 	return false;
 }
 
-void CCastleGame::CompileError(char* lpErrorMessage)
+void CCastleGame::CompileError( const char* lpErrorMessage )
 {
-	//MessageBox(NULL, lpErrorMessage, TEXT("WinCastle: Error"), MB_OK|MB_ICONERROR);
+	m_CompileError = lpErrorMessage;
+	m_HadError = true;
+}
+
+const char* CCastleGame::GetCompilerError()const
+{
+	return m_CompileError;
 }
 
 void CCastleGame::DoPrint( const char* StrLine )
 {
+	//If text exists and the last line is not a \n then add a space.
+	if( 0 < m_OutputSize && m_OutputSize <(countof(m_Output)-1) && m_Output[m_OutputSize-1] != '\n' && m_Output[m_OutputSize-1] != ' ' )
+	{
+		m_Output[m_OutputSize] = ' ';
+		m_OutputSize++;
+	}
 	while( *StrLine )
 	{
 		if( m_OutputSize < (countof(m_Output)-1) )
@@ -186,7 +218,7 @@ void CCastleGame::ProcessGameUntilBreak()
 	m_nNumChoices=0;
 
 	int NumLoops = 0;
-	while( m_InstrPtr < m_Program.GetLength() )
+	while( m_InstrPtr < m_Program.GetLength() && !m_HadError )
 	{
 		const SFunction& Instr = m_Program[m_InstrPtr];
 		m_InstrPtr++;
@@ -198,6 +230,27 @@ void CCastleGame::ProcessGameUntilBreak()
 			if( ParseInfo.FunctionName.Equals( "PRINT" ) )
 			{
 				DoPrint( ParseInfo.Parms[0] );
+			}
+			else if( ParseInfo.FunctionName.Equals( "CHOICE" ) )
+			{
+				if( (ParseInfo.NumParms%2) == 0 )
+				{
+					m_InputType = INPUT_CHOICESWITCH;
+					m_nNumChoices = 0;
+					m_nInputChoice = ParseInfo.NumParms/2;
+
+					for( int i=0; i<m_nInputChoice; i++ )
+					{
+						m_ChoiceStrings[i] = ParseInfo.Parms[i*2+0];
+						m_szGotoChoice[i] = ParseInfo.Parms[i*2+1];
+						m_nNumChoices++;
+					}
+					break;
+				}
+				else
+				{
+					CompileError( "CHOICE must have a label for every string." );
+				}
 			}
 			else if( ParseInfo.FunctionName.Equals( "CLS" ) )
 			{
@@ -213,27 +266,50 @@ void CCastleGame::ProcessGameUntilBreak()
 				DoPrint( "\n\nThe End" );
 				break;
 			}
-			else if( ParseInfo.FunctionName.Equals( "CHOICE" ) )
+			else if( ParseInfo.FunctionName.Equals( "GETCHOICE" ) )
 			{
-				DoPrint( ParseInfo.Parms[0] );
-
-				for( eg_uint i=1; i<ParseInfo.NumParms; i++ )
+				m_InputType = INPUT_GETCHOICE;
+				m_nInputChoice = 0;
+				m_nNumChoices = ParseInfo.NumParms;
+				//Print all the choices.
+				for( int i=0; i<m_nNumChoices; i++ )
 				{
-					ParseInfo.Parms[i].CopyTo( m_szGotoChoice[i-1] , countof(m_szGotoChoice[i-1]) );
-					m_nNumChoices++;
+					m_ChoiceStrings[i] = ParseInfo.Parms[i];
 				}
 				break;
+			}
+			else if( ParseInfo.FunctionName.Equals( "JUMPONCHOICE" ) )
+			{
+				if( 0 <= m_nInputChoice && m_nInputChoice < static_cast<int>(ParseInfo.NumParms) )
+				{
+					if( GotoLabel( ParseInfo.Parms[m_nInputChoice] ) )
+					{
+
+					}
+					else
+					{
+						CompileError( "JUMPONCHOICE had an invalid label." );
+					}
+				}
+				else
+				{
+					CompileError( "JUMPONCHIOCE had less labels than the given input." );
+				}
+			}
+			else
+			{
+				CompileError( EGString_Format( "Invalid function %s" , *ParseInfo.FunctionName ) );
 			}
 		}
 		else
 		{
-			CompileError( "Invalid statement." );
+			CompileError( EGString_Format("Invalid statement: %s" , &Instr.Statement ) );
 		}
 
 		//if this loop loops too many times we quit because there is probably
 		//a problem with the script (for example an infinite GOTO loop)
 		NumLoops++;
-		if(NumLoops>1000)
+		if(NumLoops>10000)
 		{
 			CompileError(("Error: Possible Infinite Loop!"));
 			m_nNumChoices = 0;
