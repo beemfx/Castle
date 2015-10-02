@@ -2,6 +2,15 @@
 === Version History of                                ===
 ===        WinCastle: A Text Based Adventure          ===
 =========================================================
+version 6.XX (October 1, 2015)
+	There have been many major changes to how scripts are
+	processed, but the script themselves have also changed
+	namely the CHOICE statement now uses the format
+	CHOICE( "Choice Text 1" , GOTOLABEL1 , "Choice Text 2" , GOTOLABLE2 );
+	That way the wrapper for the game can handle choices
+	however it wants, whether it be by keyboard, or by
+	UI buttons.
+	
 version 5.50 (December 09, 2006)
 	A lot of internal stuff was redone.  Plugin 
 	support was removed.  The edit menu was removed.

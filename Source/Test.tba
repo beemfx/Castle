@@ -1,7 +1,8 @@
 TEST2;
 PRINT("CastleSCRIPT Test\n");
 PRINT("Please make a choice:\n\n");
-CHOICE("1)ONE 2)TWO 3)THREE", ONE, TWO, THREE);
+GETCHOICE( "ONE" , "TWO" , "THREE" );
+JUMPONCHOICE( ONE , TWO , THREE );
 
 ONE:
 CLS();
@@ -17,4 +18,6 @@ GOTO( ONE_FROM_TWO );
 THREE:
 CLS();
 PRINT("You Chose THREE.\n");
+PRINT("But you get to make another choice\n");
+CHOICE( "ONE" , ONE , "TWO" , TWO );
 END();
