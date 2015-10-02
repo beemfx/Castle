@@ -17,6 +17,7 @@ private:
 	static const int MAX_CHARS_PER_LINE = 1024;
 	static const int MAX_PARAMS = 10;
 	static const int MAX_CHOICES = 10;
+	static const int MAX_OUTPUT_SIZE=1024*10;
 
 	enum STATEMENTRESULT
 	{
@@ -75,10 +76,10 @@ private:
 	EGArray<SFunction> m_Program;
 	CLabelMap          m_LabelMap;
 	eg_uint            m_InstrPtr;
-	int m_nCurrentLine; //The line to print on
 	int m_nNumChoices;
 	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
-	char m_lpOutputData[MAX_LINES][MAX_CHARS_PER_LINE]; //The output data.
+	char m_Output[MAX_OUTPUT_SIZE];
+	int  m_OutputSize;
 	char m_szGotoChoice[MAX_CHOICES][MAX_CHARS_PER_LINE];
 	
 private:
@@ -87,12 +88,6 @@ private:
 	bool GotoLabel( const char* StrLabel );
 	void LoadProgram( CDataStream& Stream );
 	void DoPrint( const char* StrLine );
-	int GetNumOutputLines()const{return m_nCurrentLine;}
-	const char* GetOutputLine(int nLine)const
-	{
-		if(nLine>m_nCurrentLine)return "";
-		return m_lpOutputData[nLine];
-	}
 public:
 	CCastleGame(char* szInitialMap);
 	~CCastleGame();
