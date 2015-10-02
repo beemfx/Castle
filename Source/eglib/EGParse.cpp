@@ -1,5 +1,24 @@
 #include "EGParse.h"
 
+//For the string character escape table we'll use the standard C table
+static const struct
+{
+	eg_char EscapeCode;
+	eg_char Char;
+}
+EGParse_EscapeCodes[] =
+{
+	{ 'n' , '\n' },
+	{ 'r' , '\r' },
+	{ 'a' , '\a' },
+	{ 'b' , '\b' },
+	{ 'f' , '\f' },
+	{ 't' , '\t' },
+	{ 'v' , '\v' },
+	{ '?' , '\?' },
+	{ 'x' , 'x'  }, //Special case
+};
+
 static eg_bool EGParse_ParseFunction_IsWhiteSpace( eg_char c )
 {
 	return (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
@@ -71,6 +90,39 @@ static eg_uint EGParse_ParseFunction_IgnoreWhiteSpace( eg_cpstr sLine , eg_uint 
 	return nPos;
 }
 
+static eg_char EGParse_EscapeCodeToChar( eg_char EscapeCode )
+{
+	eg_char CharOut = EscapeCode; //In many cases the char will be the escape code itself e.g. \" -> "
+
+	for( eg_uint i=0; i<countof(EGParse_EscapeCodes); i++ )
+	{
+		if( EscapeCode == EGParse_EscapeCodes[i].EscapeCode )
+		{
+			CharOut = EGParse_EscapeCodes[i].Char;
+			break;
+		}
+	}
+
+	return CharOut;
+}
+
+static eg_uint8 EGParse_HexNumberCharToValue( eg_char Char )
+{
+	if( '0' <= Char && Char <= '9' )
+	{
+		return static_cast<eg_uint8>(Char-'0');
+	}
+	if( 'A' <= Char && Char <= 'F' )
+	{
+		return static_cast<eg_uint8>( (Char-'A') + 0x0A );
+	}
+	if( 'a' <= Char && Char <= 'f' )
+	{
+		return static_cast<eg_uint8>( (Char-'a') + 0x0A );
+	}
+	return 0;
+}
+
 static eg_uint EGParse_ParseFunction_ReadString( eg_cpstr sLine , eg_uint nPos , eg_string& sDest )
 {
 	//We assume that nPos is right after the starting quote.
@@ -83,12 +135,25 @@ static eg_uint EGParse_ParseFunction_ReadString( eg_cpstr sLine , eg_uint nPos ,
 		if('\\' == c)
 		{
 			//Skip ahead a character:
-			c = sLine[nPos];
+			c = EGParse_EscapeCodeToChar(sLine[nPos]);
 			nPos++;
 			if(0 == c)return nPos - 1;
-			if( 'n' == c )
+
+			//x is a special case where we want to get a hex code.
+			if('x' == c )
 			{
-				c = '\n';
+				if( sLine[nPos+0] != 0 && sLine[nPos+1] != 0 && sLine[nPos+0] != '\"' && sLine[nPos+1] != '\"' )
+				{
+					eg_char c1 = sLine[nPos+0];
+					eg_char c2 = sLine[nPos+1];
+
+					c = (EGParse_HexNumberCharToValue(c1)<<4) | (EGParse_HexNumberCharToValue(c2)<<0);
+					nPos+=2;
+				}
+				else
+				{
+					//String format error...
+				}
 			}
 		}
 		sDest += c;
