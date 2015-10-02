@@ -14,6 +14,7 @@ typedef const eg_char8* eg_cpstr8;
 typedef const eg_char16* eg_cpstr16;
 typedef unsigned int eg_uint;
 typedef signed int eg_int;
+typedef unsigned __int8 eg_uint8;
 typedef size_t eg_size_t;
 typedef float eg_real;
 #if defined( _WIN64 )
