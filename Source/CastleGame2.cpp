@@ -19,6 +19,7 @@
 #include "EGParse.h"
 
 CCastleGame::CCastleGame(char* szInitialMap)
+: m_OutputSize(0)
 {
 	LoadMap(szInitialMap);
 }
@@ -36,8 +37,8 @@ bool CCastleGame::LoadMap(char* szFilename)
 	if(!DataStream.Open(szFilename))
 		return false;
 		
-	m_lpOutputData[0][0]=0;
-	m_nCurrentLine=0;
+	m_OutputSize=0;
+	m_Output[0] = '\0';
 	m_nNumChoices=0;
 	
 	ReadStatement( DataStream , m_szMapName , countof(m_szMapName) );
@@ -120,8 +121,8 @@ CCastleGame::STATEMENTRESULT CCastleGame::ReadStatement( CDataStream& Stream , c
 void CCastleGame::Restart()
 {
 	m_InstrPtr = 0;
-	m_nCurrentLine=0;
-	m_lpOutputData[0][0]=NULL;
+	m_OutputSize = 0;
+	m_Output[0] = '\0';
 	ProcessGameUntilBreak();
 }
 
@@ -161,11 +162,23 @@ void CCastleGame::CompileError(char* lpErrorMessage)
 
 void CCastleGame::DoPrint( const char* StrLine )
 {
-	if( m_nCurrentLine < countof(m_lpOutputData) )
+	while( *StrLine )
 	{
-		strcpy_s( m_lpOutputData[m_nCurrentLine] , StrLine );
-		m_nCurrentLine++;
+		if( m_OutputSize < (countof(m_Output)-1) )
+		{
+			m_Output[m_OutputSize] = *StrLine;
+			m_OutputSize++;
+		}
+		else
+		{
+			assert( false ); //Perhaps the output size should be bigger.
+			break;
+		}
+		StrLine++;
 	}
+
+	assert( m_OutputSize < countof(m_Output) );
+	m_Output[m_OutputSize] = '\0';
 }
 
 void CCastleGame::ProcessGameUntilBreak()
@@ -188,8 +201,8 @@ void CCastleGame::ProcessGameUntilBreak()
 			}
 			else if( ParseInfo.FunctionName.Equals( "CLS" ) )
 			{
-				m_lpOutputData[0][0] = '\0';
-				m_nCurrentLine = 0;
+				m_OutputSize = 0;
+				m_Output[0] = '\0';
 			}
 			else if( ParseInfo.FunctionName.Equals( "GOTO" ) )
 			{
@@ -231,19 +244,6 @@ void CCastleGame::ProcessGameUntilBreak()
 
 size_t CCastleGame::GetOutput( char* Output , size_t OutputSize )
 {
-	strcpy_s( Output , OutputSize , "" );
-
-	for(int i=0; i<GetNumOutputLines(); i++)
-	{
-		const char* szTemp = GetOutputLine(i);
-		strcat_s( Output , OutputSize , szTemp );
-		size_t Len = strlen( Output );
-		if( Len > 0 && Output[Len-1] != '\n' )
-		{
-			strcat_s( Output , OutputSize , " " );
-		}
-	}
-
-	Output[OutputSize-1] = '\0';
-	return strlen(Output);
+	strncpy_s( Output , OutputSize , m_Output , countof(m_Output) );
+	return m_OutputSize;
 }
