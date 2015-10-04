@@ -66,6 +66,7 @@ static EGPARSE_PARM_RES EGParse_ParseFunction_ParmChar( eg_char c )
 	if(',' == c)return PARM_ENDPARM;
 	if(')' == c)return PARM_ENDALLPARMS;
 	if('(' == c)return PARM_E_BADCHAR;
+	if(';' == c)return PARM_E_BADCHAR;
 	if(0 == c)return PARM_E_NULLTERMINATE;
 	if(EGParse_ParseFunction_IsWhiteSpace(c))return PARM_BEGINWHITESPACE;
 
@@ -184,14 +185,7 @@ static eg_uint EGParse_ParseFunction_ReadString( eg_cpstr sLine , eg_uint nPos ,
 EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncInfo* pOut )
 {
 	//Setup some default stuff:
-	pOut->SystemName = null;
-	pOut->FunctionName = null;
-	pOut->NumParms = 0;
-	for(eg_uint i = 0; i < pOut->MAX_PARMS; i++)
-	{
-		pOut->Parms[i] = null;
-	}
-	zero( &pOut->Storage );
+	zero( pOut ); //We can just zero the whole thing as this will set pointers to null and storage to zeros.
 
 	eg_uint nPos = 0;
 	eg_uint nStoragePos = 0;
