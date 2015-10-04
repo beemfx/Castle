@@ -1,4 +1,5 @@
 #pragma once
+#include <memory.h>
 
 //////////////////////////////////////////////////
 // EG Types (Since we are using some eg libraries)
