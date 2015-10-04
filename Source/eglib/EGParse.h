@@ -1,3 +1,6 @@
+#pragma once
+#include "EGString.h"
+
 /*******************************************************************************
 EGParse_ParseFunction, parses an expression as follows:
 
@@ -57,9 +60,6 @@ The function only parses the input, it does no verification that the function
 is an actual function, or that the parameter names are the correct type or mean
 anything useful.
 *******************************************************************************/
-#pragma once
-
-#include "EGString.h"
 
 enum EGPARSE_RESULT
 {
@@ -77,15 +77,36 @@ enum EGPARSE_RESULT
 	EGPARSE_E_DOTWITHNOSYSTEM,
 	EGPARSE_E_NOTFOUND,
 	EGPARSE_E_NOFUNCTION,
+	EGPARSE_E_OUTOFMEM,
 };
 
 struct egParseFuncInfo
 {
 	static const eg_uint MAX_PARMS = 10;
 
+	eg_cpstr SystemName;
+	eg_cpstr FunctionName;
+	eg_cpstr Parms[MAX_PARMS];
+	eg_uint  NumParms;
+	eg_char  Storage[1024];
+};
+
+struct egParseFuncInfoAsEgStrings
+{
+	egParseFuncInfoAsEgStrings( const egParseFuncInfo& rhs )
+	{
+		SystemName = rhs.SystemName;
+		FunctionName = rhs.FunctionName;
+		NumParms = rhs.NumParms;
+		for( eg_uint i=0; i<rhs.NumParms; i++ )
+		{
+			Parms[i] = rhs.Parms[i];
+		}
+	}
+
 	eg_string SystemName;
 	eg_string FunctionName;
-	eg_string Parms[MAX_PARMS];
+	eg_string Parms[egParseFuncInfo::MAX_PARMS];
 	eg_uint  NumParms;
 };
 EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncInfo* pOut );

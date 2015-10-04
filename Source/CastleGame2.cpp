@@ -227,11 +227,12 @@ void CCastleGame::ProcessGameUntilBreak()
 		EGPARSE_RESULT ParseRes = EGParse_ParseFunction( Instr.Statement , &ParseInfo );
 		if( EGPARSE_OKAY == ParseRes )
 		{
-			if( ParseInfo.FunctionName.Equals( "PRINT" ) )
+			eg_string FunctionName = ParseInfo.FunctionName;
+			if( FunctionName.Equals( "PRINT" ) )
 			{
 				DoPrint( ParseInfo.Parms[0] );
 			}
-			else if( ParseInfo.FunctionName.Equals( "CHOICE" ) )
+			else if( FunctionName.Equals( "CHOICE" ) )
 			{
 				if( (ParseInfo.NumParms%2) == 0 )
 				{
@@ -252,21 +253,21 @@ void CCastleGame::ProcessGameUntilBreak()
 					CompileError( "CHOICE must have a label for every string." );
 				}
 			}
-			else if( ParseInfo.FunctionName.Equals( "CLS" ) )
+			else if( FunctionName.Equals( "CLS" ) )
 			{
 				m_OutputSize = 0;
 				m_Output[0] = '\0';
 			}
-			else if( ParseInfo.FunctionName.Equals( "GOTO" ) )
+			else if( FunctionName.Equals( "GOTO" ) )
 			{
 				GotoLabel( ParseInfo.Parms[0] );
 			}
-			else if( ParseInfo.FunctionName.Equals( "END" ) )
+			else if( FunctionName.Equals( "END" ) )
 			{
 				DoPrint( "\n\nThe End" );
 				break;
 			}
-			else if( ParseInfo.FunctionName.Equals( "GETCHOICE" ) )
+			else if( FunctionName.Equals( "GETCHOICE" ) )
 			{
 				m_InputType = INPUT_GETCHOICE;
 				m_nInputChoice = 0;
@@ -278,7 +279,7 @@ void CCastleGame::ProcessGameUntilBreak()
 				}
 				break;
 			}
-			else if( ParseInfo.FunctionName.Equals( "JUMPONCHOICE" ) )
+			else if( FunctionName.Equals( "JUMPONCHOICE" ) )
 			{
 				if( 0 <= m_nInputChoice && m_nInputChoice < static_cast<int>(ParseInfo.NumParms) )
 				{
