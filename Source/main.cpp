@@ -10,7 +10,7 @@ main.cpp - Entry point for WinCastle
 #include "resource.h"
 #include "CastleGame2.h"
 
-static const eg_char* Main_CurVersion = TEXT("version 6.XX");
+static const eg_char* Main_CurVersion = TEXT("version 6.00");
 
 static const COLORREF Main_TextColor = RGB( 255 , 255 , 255 );
 static const COLORREF Main_ChoiceColor = RGB( 75 , 75 , 255 );
