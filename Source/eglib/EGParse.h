@@ -80,25 +80,47 @@ enum EGPARSE_RESULT
 	EGPARSE_E_OUTOFMEM,
 };
 
-struct egParseFuncInfo
+struct egParseFuncBase
+{
+	eg_cpstr  SystemName;
+	eg_cpstr  FunctionName;
+	eg_cpstr* Parms;
+	eg_size_t ParmsSize;
+	eg_uint   NumParms;
+	eg_char*  Storage;
+	eg_size_t StorageSize;
+};
+struct egParseFuncInfo: public egParseFuncBase
 {
 	static const eg_uint MAX_PARMS = 10;
 
-	eg_cpstr SystemName;
-	eg_cpstr FunctionName;
-	eg_cpstr Parms[MAX_PARMS];
-	eg_uint  NumParms;
-	eg_char  Storage[1024];
-};
+	eg_cpstr IntParms[MAX_PARMS];
+	eg_char  IntStorage[eg_string::STR_SIZE]; //We're probably parsing an eg_string, so we don't need any more storage than what originally fit in it.
 
+	egParseFuncInfo()
+	{
+		Parms = IntParms;
+		ParmsSize = countof(IntParms);
+		Storage = IntStorage;
+		StorageSize = countof(IntStorage);
+	}
+};
+EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut );
+EGPARSE_RESULT EGParse_ParseCSV( eg_cpstr sLIne , egParseFuncBase* pOut );
+EGPARSE_RESULT EGParse_GetAttValue( eg_cpstr sLine , eg_cpstr sName , eg_string* sOutValue );
+eg_cpstr       EGParse_GetParseResultString( EGPARSE_RESULT r );
+
+//
+// Bonus struct so that we can use parse results as collection of eg_strings if wanted.
+//
 struct egParseFuncInfoAsEgStrings
 {
-	egParseFuncInfoAsEgStrings( const egParseFuncInfo& rhs )
+	egParseFuncInfoAsEgStrings( const egParseFuncBase& rhs )
 	{
 		SystemName = rhs.SystemName;
 		FunctionName = rhs.FunctionName;
-		NumParms = rhs.NumParms;
-		for( eg_uint i=0; i<rhs.NumParms; i++ )
+		NumParms = EG_Min<eg_uint>(rhs.NumParms,countof(Parms));
+		for( eg_uint i=0; i<NumParms; i++ )
 		{
 			Parms[i] = rhs.Parms[i];
 		}
@@ -109,7 +131,3 @@ struct egParseFuncInfoAsEgStrings
 	eg_string Parms[egParseFuncInfo::MAX_PARMS];
 	eg_uint  NumParms;
 };
-EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncInfo* pOut );
-EGPARSE_RESULT EGParse_ParseCSV( eg_cpstr sLIne , egParseFuncInfo* pOut );
-EGPARSE_RESULT EGParse_GetAttValue( eg_cpstr sLine , eg_cpstr sName , eg_string* sOutValue );
-eg_cpstr       EGParse_GetParseResultString( EGPARSE_RESULT r );

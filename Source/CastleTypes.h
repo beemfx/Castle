@@ -51,3 +51,8 @@ template<class T> static EG_INLINE T EG_Clamp(T v1, T min, T max)
 {
 	return ( (v1)>(max)?(max):(v1)<(min)?(min):(v1) );
 }
+
+static void EG_INLINE EGMem_Set( void* Dest , eg_int Value , eg_size_t Size )
+{
+	memset( Dest , Value , Size );
+}
