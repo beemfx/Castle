@@ -11,11 +11,11 @@
 
 class CCastleGame
 {
+public:
+	static const int MAX_CHOICES = 10;
 private:
 	static const int CA_MAX_PATH = 260;
 	static const int MAX_CHARS_PER_LINE = 1024;
-	static const int MAX_PARAMS = 10;
-	static const int MAX_CHOICES = 10;
 	static const int MAX_OUTPUT_SIZE=1024*10;
 
 	enum STATEMENTRESULT

@@ -20,16 +20,29 @@ static const eg_char* Main_WinName = TEXT("Castle: A Text Based Adventure");
 static class CGameShell
 {
 private:
+	static const int BUTTON_HEIGHT = 30;
+	static const int BROWSE_BUTTON_CMDS = 40100;
+
+private:
 	HWND m_hwnd;
+	HWND m_hwndButtons[CCastleGame::MAX_CHOICES];
 	HFONT m_Font;
 	CCastleGame m_CastleGame;
+	LONG m_TextBottom;
 	mutable char m_PaintTextBuffer[1024*10];
+	bool m_UseButtons:1;
 public:
 	CGameShell()
 	: m_hwnd(NULL)
 	, m_Font(NULL)
+	, m_TextBottom(0)
 	, m_CastleGame(TEXT("Adventure.tba"))
+	, m_UseButtons( false )
 	{
+		for( int i=0; i<countof(m_hwndButtons); i++ )
+		{
+			m_hwndButtons[i] = NULL;
+		}
 		m_Font = CreateFont( 
 			24 , 0 , 0 , 0 , FW_DONTCARE 
 			, FALSE , FALSE , FALSE , ANSI_CHARSET 
@@ -119,12 +132,23 @@ public:
 			return DefWindowProc( hwnd , msg , wParam , lParam );
 		} break;
 		case WM_CREATE:
-			break;
+		{
+			CGameShell* _this = (CGameShell*)((LPCREATESTRUCT)lParam)->lpCreateParams;
+			for( int i=0, TextOffset = 0; i<countof(m_hwndButtons); i++ )
+			{
+				RECT rcC;
+				GetClientRect( hwnd, &rcC );
+				
+				_this->m_hwndButtons[i] = CreateWindow( TEXT("BUTTON") , EGString_Format( "Choice %i" , i+1 ) , /*BS_OWNERDRAW|*/WS_TABSTOP|WS_CHILD/*|WS_VISIBLE*/, 0 , TextOffset , rcC.right-rcC.left , BUTTON_HEIGHT , hwnd , NULL , NULL , 0 );
+				// Set the command id
+				SetWindowLongPtr(_this->m_hwndButtons[i], GWLP_ID, static_cast<LONG_PTR>(static_cast<DWORD_PTR>(BROWSE_BUTTON_CMDS+i)));
+				TextOffset += BUTTON_HEIGHT;
+			}
+		} break;
 		case WM_PAINT:
 		{
 			CGameShell* _this = reinterpret_cast<CGameShell*>(GetWindowLongPtr( hwnd , GWLP_USERDATA ));
 			_this->OnPaint( hwnd );
-			
 		} break;
 		case WM_COMMAND:
 		{
@@ -132,8 +156,15 @@ public:
 			_this->MainCommandProc(hwnd, LOWORD(wParam), HIWORD(wParam), (HWND)lParam);
 		} break;
 		case WM_DESTROY:
+		{
+			CGameShell* _this = reinterpret_cast<CGameShell*>(GetWindowLongPtr( hwnd , GWLP_USERDATA ));
+			for( int i=0; i<countof(m_hwndButtons); i++ )
+			{
+				DestroyWindow( _this->m_hwndButtons[i] );
+				_this->m_hwndButtons[i] = NULL;
+			}
 			PostQuitMessage(0);
-			break;
+		} break;
 		case WM_KEYDOWN://Do as soon as key goes down
 		{
 			CGameShell* _this = reinterpret_cast<CGameShell*>(GetWindowLongPtr( hwnd , GWLP_USERDATA ));
@@ -170,19 +201,24 @@ public:
 
 		RECT rcDraw = rcClient;
 		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcDraw , DT_WORDBREAK|DT_CALCRECT );
+		m_TextBottom = rcDraw.bottom;
 		DrawText( hDc , m_PaintTextBuffer , TextLength , &rcDraw , DT_WORDBREAK );
 
-		SetTextColor( hDc , Main_ChoiceColor );
-		for( int i=0; i<m_CastleGame.GetNumChoices(); i++ )
+		if( !m_UseButtons )
 		{
-			eg_string Line = EGString_Format( "%u) %s" , i+1 , m_CastleGame.GetChoiceText(i) );
+			SetTextColor( hDc , Main_ChoiceColor );
+			for( int i=0; i<m_CastleGame.GetNumChoices(); i++ )
+			{
+				eg_string Line = EGString_Format( "%u) %s" , i+1 , m_CastleGame.GetChoiceText(i) );
 
-			rcDraw.top = rcDraw.bottom;
-			rcDraw.bottom = rcClient.bottom;
-			rcDraw.left = rcClient.left;
-			rcDraw.right = rcClient.right;
-			DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK|DT_CALCRECT );
-			DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK );
+				rcDraw.top = rcDraw.bottom;
+				rcDraw.bottom = rcClient.bottom;
+				rcDraw.left = rcClient.left;
+				rcDraw.right = rcClient.right;
+				DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK|DT_CALCRECT );
+				m_TextBottom = rcDraw.bottom;
+				DrawText( hDc , *Line , Line.Length() , &rcDraw , DT_WORDBREAK );
+			}
 		}
 
 		if( m_CastleGame.GetCompilerError()[0] != '\0' )
@@ -195,6 +231,12 @@ public:
 		SelectObject( hDc , OldFont );
 
 		EndPaint(hwnd, &ps);
+
+		if( m_UseButtons )
+		{
+			//OutputDebugString( "Painted\n" );
+			SetupButtons( m_TextBottom );
+		}
 	}
 
 	static BOOL CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -219,48 +261,71 @@ public:
 		return FALSE;
 	}
 
+	void AdvanceGameWithInput( int Choice )
+	{
+		if( m_CastleGame.SendInput( Choice ) )
+		{
+			RedrawWindow( m_hwnd , NULL , NULL , RDW_ERASE|RDW_INVALIDATE );
+		}
+		SetFocus( m_hwnd ); // We want focus to go back to the main window.
+	}
 
+	void SetupButtons( int Offset )
+	{	
+		RECT rcC;
+		GetClientRect( m_hwnd , &rcC );
+		LONG TextOffset = m_TextBottom;
+		RECT rcB = rcC;
+		rcB.bottom = BUTTON_HEIGHT;
+
+		rcB.top += Offset;
+		rcB.bottom += Offset;
+
+		for( int i=0; i<countof(m_hwndButtons); i++ )
+		{
+			bool bVisible = i<m_CastleGame.GetNumChoices();
+			ShowWindow( m_hwndButtons[i] , bVisible ? SW_SHOWNORMAL : SW_HIDE );
+
+			if( bVisible )
+			{
+				SetWindowText( m_hwndButtons[i] , EGString_Format( "%i) %s" , i+1 , m_CastleGame.GetChoiceText(i) ) );
+				MoveWindow( m_hwndButtons[i] , rcB.left , rcB.top , rcB.right-rcB.left , rcB.bottom-rcB.top , TRUE );
+				rcB.top += BUTTON_HEIGHT;
+				rcB.bottom += BUTTON_HEIGHT;
+			}
+		}
+	}
 
 	BOOL MainKeyboardProc(HWND hwnd, int nVirtKey, LPARAM lKeyData)
 	{
-
 		switch(nVirtKey)
 		{
 			case '1': 
-				if(m_CastleGame.SendInput(0))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 0 );
 				break;
 			case '2': 
-				if(m_CastleGame.SendInput(1))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 1 );
 				break;
 			case '3': 
-				if(m_CastleGame.SendInput(2))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 2 );
 				break;
 			case '4': 
-				if(m_CastleGame.SendInput(3))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 3 );
 				break;
 			case '5': 
-				if(m_CastleGame.SendInput(4))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 4 );
 				break;
 			case '6': 
-				if(m_CastleGame.SendInput(5))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 5 );
 				break;
 			case '7': 
-				if(m_CastleGame.SendInput(6))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 6 );
 				break;
 			case '8': 
-				if(m_CastleGame.SendInput(7))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 7 );
 				break;
 			case '9': 
-				if(m_CastleGame.SendInput(8))
-					RedrawWindow(hwnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
+				AdvanceGameWithInput( 8 );
 				break;
 			default:
 				return FALSE;
@@ -270,6 +335,12 @@ public:
 
 	BOOL MainCommandProc(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl)
 	{
+		if( BROWSE_BUTTON_CMDS <= wCommand && wCommand < BROWSE_BUTTON_CMDS+countof(m_hwndButtons) )
+		{
+			AdvanceGameWithInput( wCommand - BROWSE_BUTTON_CMDS );
+			return TRUE;
+		}
+
 		switch(wCommand)
 		{
 			case CM_QUIT:
