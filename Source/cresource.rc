@@ -86,10 +86,10 @@ CAPTION "About Castle"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,83,71,55,20
-    CTEXT           "Caslte: A Text Based Adventure",IDC_STATIC,51,13,118,8
+    CTEXT           "Castle: A Text Based Adventure",IDC_STATIC,51,13,118,8
     CTEXT           "Version 4.00xxxx",ID_VERSION,83,28,54,8
     CTEXT           "Copyright (c) 1997-2015 Beem Media",IDC_STATIC,27,50,166,11
-    ICON            ICON_MAIN,IDC_STATIC,21,11,21,20
+    ICON            ICON_MAIN,IDC_STATIC,21,11,20,20
 END
 
 
