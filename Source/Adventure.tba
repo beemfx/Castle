@@ -1,5 +1,6 @@
 Castle;
 PRINT("Castle: A Text Based Adventure\n");
+PRINT("Written by Jack Everett\n");
 PRINT("Copyright (c) 1997-2015 Beem Media\n");
 PRINT("\n");
 PRINT("Welcome I am the Tunnel Master.\n");
