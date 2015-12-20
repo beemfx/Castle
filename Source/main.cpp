@@ -41,6 +41,7 @@ private:
 	LONG m_TextBottom;
 	SButton m_Buttons[CCastleGame::MAX_CHOICES];
 	POINT   m_LastMousePos;
+	POINT   m_LastWindowDragPos;
 	mutable char m_PaintTextBuffer[1024*10];
 	int  m_HighlightedButton;
 	int  m_CaptureButton;
@@ -69,6 +70,7 @@ public:
 		m_ButtonBgPen = CreatePen( PS_SOLID , Main_ChoiceBorderSize , Main_ChoiceBorderColor );
 		zero( &m_Buttons );
 		zero( &m_LastMousePos );
+		zero( &m_LastWindowDragPos );
 
 		RefreshButtons();
 	}
@@ -220,10 +222,28 @@ public:
 			SHORT xPos = GET_X_LPARAM(lParam); 
 			SHORT yPos = GET_Y_LPARAM(lParam); 
 
+			POINT PrevMousePos = _this->m_LastMousePos;
+
 			_this->m_LastMousePos.x = xPos;
 			_this->m_LastMousePos.y = yPos;
 
 			_this->UpdateHighlightedButton( true );
+
+			bool bLeftMbDown = 0 != (MK_LBUTTON&wParam);
+
+			POINT CursorPos;
+			GetCursorPos( &CursorPos );
+
+			// If no button his highlighted and the right mouse button is down, move the window.
+			if( bLeftMbDown && (CCastleGame::MAX_CHOICES == _this->m_HighlightedButton) && (CCastleGame::MAX_CHOICES==_this->m_CaptureButton) )
+			{
+				RECT rcWin;
+				GetWindowRect( hwnd , &rcWin );
+				OffsetRect( &rcWin , CursorPos.x - _this->m_LastWindowDragPos.x , CursorPos.y - _this->m_LastWindowDragPos.y );
+				MoveWindow( hwnd , rcWin.left , rcWin.top , rcWin.right-rcWin.left , rcWin.bottom-rcWin.top , TRUE );
+			}
+
+			_this->m_LastWindowDragPos = CursorPos;
 
 		} break;
 		case WM_LBUTTONDOWN:
