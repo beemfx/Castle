@@ -5,3 +5,4 @@ Source_Web/build
 *.opensdf
 *.vcxproj.user
 *.aps
+*.opendb
