@@ -6,3 +6,4 @@ Source_Web/build
 *.vcxproj.user
 *.aps
 *.opendb
+*.vc.db
