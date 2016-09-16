@@ -1,7 +1,7 @@
 Castle
 ======
 
-The game Castle, the first game every developed by Beem Software. See the folder
+The game Castle, the first game developed by Beem Software. See the folder
 "Old Versions" for the original QBasic source code. The current version has been
 through quite a bit, but now I pretty much consider this software complete and
 will most likely never do anything with it again.
