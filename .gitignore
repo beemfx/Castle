@@ -7,3 +7,4 @@ Source_Web/build
 *.aps
 *.opendb
 *.vc.db
+.vs/*
