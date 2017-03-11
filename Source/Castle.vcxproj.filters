@@ -23,12 +23,16 @@
     <ClInclude Include="eglib\EGString.h">
       <Filter>eglib</Filter>
     </ClInclude>
+    <ClInclude Include="CastleTypes.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="cresource.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Castle.ico" />
+    <None Include="Adventure.tba" />
+    <None Include="Test.tba" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="eglib">

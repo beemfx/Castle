@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -32,7 +32,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include ""winres.h""\r\n"
     "\0"
 END
 
@@ -53,6 +53,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 ICON_MAIN               ICON                    "Castle.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -88,7 +89,7 @@ BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,83,71,55,20
     CTEXT           "Castle: A Text Based Adventure",IDC_STATIC,51,13,118,8
     CTEXT           "Version 4.00xxxx",ID_VERSION,83,28,54,8
-    CTEXT           "Copyright (c) 1997-2015 Beem Media",IDC_STATIC,27,50,166,11
+    CTEXT           "Copyright (c) 1997-2017 Beem Media",IDC_STATIC,27,50,166,11
     ICON            ICON_MAIN,IDC_STATIC,21,11,20,20
 END
 
