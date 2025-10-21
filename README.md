@@ -1,7 +1,7 @@
 # Castle: A Text Based Adventure v3.xx
-Castle (c) 2000 Beem Media. All rights reserved.
+Castle (c) 2001 Beem Media. All rights reserved.
 
-This is the Win32 C++ version of Castle for command prompt.
+This is the original Win32 C++ version of Castle.
 
 ## Building
 
