@@ -9,7 +9,10 @@
 
 	Language: C++ Win32 API
 
-	version: 4.02
+	version: 4.03
+*/
+/*
+	Octoboer 21, 2025: Got this to compile in VS 2022.
 */
 /*
 	This program will read a castle
@@ -102,7 +105,7 @@
 
 BOOL RegisterWindowClass(HWND hWnd);
 BOOL GetFileName(char *filename, int len, HWND hWnd);
-LRESULT MainWindowProc(HWND hWnd, unsigned msg, WORD wParam, LONG lParam);
+LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL MainCommandProc(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl);
 void MainWindowPaint(HWND hWnd, HDC hDc,
 				 char messagetoprint[MAX_LINES][MAX_CHARS_PER_LINE], int printline);
@@ -237,7 +240,7 @@ void MainWindowPaint(HWND hWnd, HDC hDc, char messagetoprint[MAX_LINES][MAX_CHAR
 }
 
 static int gamestatus;
-LRESULT MainWindowProc(HWND hWnd, unsigned msg, WORD wParam, LONG lParam)
+LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hDc = NULL;
@@ -364,7 +367,7 @@ BOOL RegisterWindowClass(HWND hWnd)
 	ZeroMemory(&wndClass, sizeof(WNDCLASS));
 
 	wndClass.style=CS_HREDRAW|CS_VREDRAW;
-	wndClass.lpfnWndProc=(WNDPROC)MainWindowProc;
+	wndClass.lpfnWndProc=MainWindowProc;
 	wndClass.cbClsExtra=0;
 	wndClass.cbWndExtra=0;
 	wndClass.hInstance=GetModuleHandle(NULL);
