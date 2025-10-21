@@ -1,6 +1,8 @@
 # Castle: A Text Based Adventure v6.xx
 (c) 1997-2015, 2025 Beem Media. All rights reserved.
 
+Read more at [Castle's Web Page](https://www.beemsoft.com/games/castle).
+
 The game Castle, the first game developed by Beem Software. See the various
 branches for a history of the game going all the way back to the original QBasic
 source code from 1997.
