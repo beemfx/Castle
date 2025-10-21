@@ -6,9 +6,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\Castle.cpp">
-      <Filter>SRC</Filter>
-    </ClCompile>
     <ClCompile Include="..\SRC\WCastle.cpp">
       <Filter>SRC</Filter>
     </ClCompile>

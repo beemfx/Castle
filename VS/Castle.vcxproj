@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\Castle.cpp" />
     <ClCompile Include="..\SRC\WCastle.cpp" />
   </ItemGroup>
   <ItemGroup>
