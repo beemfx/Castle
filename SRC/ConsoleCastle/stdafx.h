@@ -17,7 +17,7 @@ typedef unsigned char byte;
 #include <stdlib.h>
 #include <string.h>
 #include "DataStream2.h"
-#include "Castle2.h"
+#include "CastleGame2.h"
 
 
 

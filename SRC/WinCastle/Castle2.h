@@ -38,7 +38,7 @@ private:
 	BOOL ReadLine(LPTSTR lpLine); //Read file until end line character is read, append \0 instead of \n
 	STATEMENTRESULT ReadStatement(LPTSTR lpLine); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
 	int GetParams(LPTSTR lpLine, TCHAR lppParams[MAX_PARAMS][MAX_CHARS_PER_LINE]); //Get parameters of a function
-	void CompileError(LPTSTR lpErrorMessage);
+	void CompileError(LPCTSTR lpErrorMessage);
 	COLORREF crTextColor; 
 public:
 	CCastleGame(LPCTSTR szInitialMap);

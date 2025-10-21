@@ -262,7 +262,9 @@ BOOL MainCommandProc(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl)
 		case CM_CUSTOMGAME:{
 			TCHAR szTempFilename[MAX_PATH];
 			_tcscpy(szTempFilename, TEXT("Text Based Adventure"));
-			if(GetOpenFilename(TEXT("Open File"), TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0"), hWnd, szTempFilename)){
+			TCHAR szTitle[] = TEXT("Open File");
+			TCHAR szParams[] = TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0");
+			if(GetOpenFilename(szTitle, szParams, hWnd, szTempFilename)){
 				g_cCastleGame.LoadMap(szTempFilename);
 				RedrawWindow(hWnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 			}

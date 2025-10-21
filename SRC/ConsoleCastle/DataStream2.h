@@ -12,10 +12,10 @@ private:
 	byte* m_pData;
 public:
 	CDataStream();
-	CDataStream(char* szFile);
+	CDataStream(const char* szFile);
 	~CDataStream();
 	
-	bool Open(char* szFile);
+	bool Open(const char* szFile);
 	void Close();
 	int Read(byte* pBuffer, int count);
 	int GetSize();

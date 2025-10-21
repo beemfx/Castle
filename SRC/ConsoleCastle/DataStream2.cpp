@@ -6,7 +6,7 @@ m_nSize(0),m_nDataPointer(0),m_bOpen(false),m_pData(0)
 
 }
 
-CDataStream::CDataStream(char *szFile):
+CDataStream::CDataStream(const char *szFile):
 m_nSize(0),m_nDataPointer(0),m_bOpen(false),m_pData(0)
 {
 	Open(szFile);
@@ -17,7 +17,7 @@ CDataStream::~CDataStream()
 	Close();
 }
 
-bool CDataStream::Open(char* szFile)
+bool CDataStream::Open(const char* szFile)
 {
 	//If a file is already open, close it.
 	if(m_bOpen)

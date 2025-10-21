@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SRC\WinCastle\CastleGame2.cpp" />
+    <ClCompile Include="..\SRC\WinCastle\DataStream.cpp" />
     <ClCompile Include="..\SRC\WinCastle\main.cpp" />
     <ClCompile Include="..\SRC\WinCastle\Plugin.cpp" />
   </ItemGroup>

@@ -12,7 +12,6 @@
 
 	Copyright (c) 2002, 2003, Blaine Myers
 */
-#pragma comment(lib, "datastream.lib")
 #include "Castle2.h"
 
 CCastleGame::CCastleGame(LPCTSTR szInitialMap){
@@ -327,7 +326,7 @@ BOOL CCastleGame::TakeInput(int nChoice){
 	return TRUE;
 }
 
-void CCastleGame::CompileError(LPTSTR lpErrorMessage){
+void CCastleGame::CompileError(LPCTSTR lpErrorMessage){
 	MessageBox(NULL, lpErrorMessage, TEXT("WinCastle: Error"), MB_OK|MB_ICONERROR);
 }
 

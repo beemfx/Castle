@@ -14,7 +14,7 @@
 */
 #include "stdafx.h"
 
-CCastleGame::CCastleGame(char* szInitialMap)
+CCastleGame::CCastleGame(const char* szInitialMap)
 {
 	LoadMap(szInitialMap);
 }
@@ -25,7 +25,7 @@ CCastleGame::~CCastleGame()
 }
 
 
-bool CCastleGame::LoadMap(char* szFilename)
+bool CCastleGame::LoadMap(const char* szFilename)
 {
 	//Open the file, return false if the file can't be opened.
 	if(!m_pFile.Open(szFilename))
@@ -250,7 +250,7 @@ bool CCastleGame::SendInput(int nChoice){
 	return true;
 }
 
-void CCastleGame::CompileError(char* lpErrorMessage)
+void CCastleGame::CompileError(const char* lpErrorMessage)
 {
 	//MessageBox(NULL, lpErrorMessage, TEXT("WinCastle: Error"), MB_OK|MB_ICONERROR);
 }

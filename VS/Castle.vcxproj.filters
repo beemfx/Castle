@@ -44,6 +44,9 @@
     <ClCompile Include="..\SRC\WinCastle\Plugin.cpp">
       <Filter>SRC\WinCastle</Filter>
     </ClCompile>
+    <ClCompile Include="..\SRC\WinCastle\DataStream.cpp">
+      <Filter>SRC\WinCastle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\SRC\WinCastle\Castle.ico">

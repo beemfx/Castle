@@ -16,7 +16,7 @@ void CustomGame(CCastleGame* pGame)
 	system("cls");
 	printf("Type the name of the map to load:\n");
 	char szTemp[1024];
-	gets(szTemp);
+	gets_s(szTemp, 1024);
 	pGame->LoadMap(szTemp);
 }
 
@@ -36,7 +36,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	DisplayOutput(&pGame);
 	
-	c=getch();
+	c=_getch();
 	if(c=='0')
 		break;
 	else if(c=='r')

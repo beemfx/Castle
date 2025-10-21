@@ -48,16 +48,16 @@ private:
 	
 	FUNCTIONTYPE GetFunction(char* szLine); //Determines function of a line
 	bool ProcessFunction(FUNCTIONTYPE fnResult, char* szFunctionStatement);
-	void CompileError(char* szErrorMessage);
+	void CompileError(const char* szErrorMessage);
 	
 	void GetString(char* szStringOut, char* szLine); //Gets a string out of a line
 	int GetParams(char* szLine, char pszParams[MAX_PARAMS][MAX_CHARS_PER_LINE]); //Get parameters of a function
 	
 	bool Seek(char szLabel[MAX_CHARS_PER_LINE]); //Seek to a position I want to change this to look for labels
 public:
-	CCastleGame(char* szInitialMap);
+	CCastleGame(const char* szInitialMap);
 	~CCastleGame();
-	bool LoadMap(char* szFilename);
+	bool LoadMap(const char* szFilename);
 	
 	int GetMapVersion();
 	char GetMapEdition();

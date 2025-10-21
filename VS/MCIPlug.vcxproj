@@ -104,7 +104,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>false</ExceptionHandling>
-      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/WinCastle</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/MCIPlug</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>false</ExceptionHandling>
-      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/WinCastle</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/MCIPlug</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -136,7 +136,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>false</ExceptionHandling>
-      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/WinCastle</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/MCIPlug</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,7 +153,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>false</ExceptionHandling>
-      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/WinCastle</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../SRC/CastleSDK;../SRC/MCIPlug</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
