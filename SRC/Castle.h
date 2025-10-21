@@ -12,14 +12,15 @@
 typedef class CastleGame
 {
 	public:
-		CastleGame(char *initialmap){
+		CastleGame() { }
+		CastleGame(const char *initialmap){
 			strcpy(mapfilename, initialmap);
 		};
 		~CastleGame(){};
 		int initGame();           //Starts up a game of Castle
 		int getLine();                //reads a line from file input
 		void makeChoice(int choice); //allows the user to make a choice and displays one line
-		int restartGame();
+		void restartGame();
 		char outmessage[100];
 	private:
 		void checkStats();             //Checks the version of Castle map
@@ -30,7 +31,7 @@ typedef class CastleGame
 		FILE *fptr;
 		char gotowhere[GOT_LEN];
 		void gotoF(char *line);      //goes to a particual part of the map
-		void printMsg(char *line);              //prints a message out on the screen
+		void printMsg(const char *line);              //prints a message out on the screen
 		void gameOver();               //Terminates a game of Castle
 	public:
 		int linetoprinton;

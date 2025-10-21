@@ -118,11 +118,11 @@ enum {WAITING, RUNNING, ENDED};
 CASTLEGAME cgame("advent.tba");
 
 
-int WINAPI WinMain(HANDLE hInstance, HANDLE hPrevInstance,
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 										LPSTR lpszCmdLine, int nCmdShow)
 {
 	MSG msg;
-	HWND hWndMain;
+	HWND hWndMain = NULL;
 
 	if (strlen(lpszCmdLine)>0)
 		strcpy(cgame.mapfilename, lpszCmdLine);
@@ -240,7 +240,7 @@ static int gamestatus;
 LRESULT MainWindowProc(HWND hWnd, unsigned msg, WORD wParam, LONG lParam)
 {
 	PAINTSTRUCT ps;
-	HDC hDc;
+	HDC hDc = NULL;
 	static int kbcode;
 
 	static char message[MAX_LINES][MAX_CHARS_PER_LINE];
@@ -370,7 +370,7 @@ BOOL RegisterWindowClass(HWND hWnd)
 	wndClass.hInstance=GetModuleHandle(NULL);
 	wndClass.hIcon=LoadIcon(wndClass.hInstance, MAKEINTRESOURCE(ICON_1));
 	wndClass.hCursor=LoadCursor(NULL, IDC_ARROW);
-	wndClass.hbrBackground=GetStockObject(WHITE_BRUSH);
+	wndClass.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndClass.lpszMenuName=MAKEINTRESOURCE(MENU_1);
 	wndClass.lpszClassName=cgAppName;
 	if(!RegisterClass(&wndClass))
@@ -392,7 +392,7 @@ BOOL RegisterWindowClass(HWND hWnd)
 	be used with, and the edition of the particular map.
 */
 
-int CastleGame::restartGame()
+void CastleGame::restartGame()
 {
 	gameOver();
 
@@ -455,7 +455,7 @@ void CastleGame::gameOver()
 	playingstatus=ENDED;
 }
 
-void CastleGame::printMsg(char *line)
+void CastleGame::printMsg(const char *line)
 {
 	strcpy(outmessage, line);
 }

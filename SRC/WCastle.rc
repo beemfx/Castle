@@ -8,6 +8,8 @@ produced by Borland Resource Workshop
 
 *****************************************************************************/
 
+#include "Windows.h"
+
 #define DIALOG_2	2
 #define ID_NAME 201
 #define ID_EDITION 202
