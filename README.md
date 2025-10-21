@@ -1,5 +1,5 @@
 # WinCastle: A Text Based Adventure (With Plugins)
-Castle (c) 2002 Beem Media. All rights reserved.
+Castle (c) 2003 Beem Media. All rights reserved.
 
 This is a 5.XX version of Castle that had plugin support. I had this _great_
 idea that Castle would be a base engine and support all kinds of things, so
@@ -8,13 +8,13 @@ graphics plugin, and so on.
 
 ## Building
 
-A visual studio 2022 project is provided to build the binary for Windows
-platforms. This version is not supported in any way and isn't expected to build.
+A visual studio 2022 project is provided to build the binaries for Windows
+platforms.
 
 ## History
 
 * Originated: 1997
-* This Version: June 20, 2002
+* This Version: Some time in 2003
 
 ### Original ReadMeDev.txt
 <pre>
