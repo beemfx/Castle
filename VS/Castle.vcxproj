@@ -22,20 +22,33 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SRC\Castle.h" />
-    <ClInclude Include="..\SRC\DirectMidi.h" />
-    <ClInclude Include="..\SRC\resource.h" />
+    <ClInclude Include="..\SRC\CastleSDK\CastleSDK.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\CastleGame2.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\DataStream2.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\stdafx.h" />
+    <ClInclude Include="..\SRC\MCIPlug\MCIPlug.h" />
+    <ClInclude Include="..\SRC\WinCastle\Castle2.h" />
+    <ClInclude Include="..\SRC\WinCastle\DataStream.h" />
+    <ClInclude Include="..\SRC\WinCastle\Defines.h" />
+    <ClInclude Include="..\SRC\WinCastle\Plugin.h" />
+    <ClInclude Include="..\SRC\WinCastle\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\SRC\castle.ico" />
+    <ClCompile Include="..\SRC\ConsoleCastle\CastleGame2.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\ConsoleCastle.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\DataStream2.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\stdafx.cpp" />
+    <ClCompile Include="..\SRC\MCIPlug\Main.c" />
+    <ClCompile Include="..\SRC\MCIPlug\MCIPlug.c" />
+    <ClCompile Include="..\SRC\WinCastle\CastleGame2.cpp" />
+    <ClCompile Include="..\SRC\WinCastle\main.cpp" />
+    <ClCompile Include="..\SRC\WinCastle\Plugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\CastleGame.cpp" />
-    <ClCompile Include="..\SRC\DirectMidi.cpp" />
-    <ClCompile Include="..\SRC\WCastle.cpp" />
+    <Image Include="..\SRC\WinCastle\Castle.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\SRC\cresource.rc" />
+    <ResourceCompile Include="..\SRC\WinCastle\cresource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

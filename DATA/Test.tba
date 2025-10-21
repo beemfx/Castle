@@ -1,17 +1,19 @@
-TEST
-3
-A
-PR WinCastle (TEST)
-PR Copyright (c) 1997, 2000 Beem Software
-PR Welcome to TEST Choose ONE or TWO:
-CH 1)ONE 2) TWO
-:11
-:12
-12
+TEST2;5;A;
+PRINT("CastleSCRIPT Test");
+PRINT("Please make a choice:");
+CHOICE("1)ONE 2)TWO 3)THREE", ONE, TWO, THREE);
 
-PR You Chose TWO
-END
-11
+TWO:
+CLS();
+PRINT("You Chose TWO.");
+END();
 
-PR You Chose ONE
-END
+ONE:
+CLS();
+PRINT("You Chose ONE");
+END();
+
+THREE:
+CLS();
+PRINT("You Chose THREE.");
+END();

@@ -1,0 +1,284 @@
+WinCastle;
+5;
+A;
+
+LOADLIBRARY("MCIPLUG.DLL");
+LOOPSOUND("bl_btear.mid");
+
+PRINT("WinCastle: A Text Based Adventure");
+PRINT("Copyright (c) 1997, 2000, 2001, 2002 Beem Software");
+PRINT("");
+PRINT("Welcome I am the Tunnel Master");
+PRINT("Ready to Begin");
+CHOICE("1)Yes 2) No", 11, 12);
+
+12:
+CLS();
+PRINT("Fine then don't play");
+END();
+
+11:
+CLS();
+PRINT("You've Chosen to play");
+PRINT("You head through the main gate of an old castle.");
+PRINT("Three doors catch you attention.  An old wooden door");
+PRINT("a shiny new gold door, and a releltively ugly brass door.");
+PRINT("Your first instinct is to try to open the wooden door,");
+PRINT("you try to open it, but to no avail, its locked.");
+CHOICE("Which door do you open? 1)Brass 2)Gold:", 13, 14);
+
+13:
+CLS();
+PRINT("You open the brass door and walk through");
+PRINT("As you enter the room out of the corner of your eye");
+PRINT("you see a large monster.");
+CHOICE("Do you 1)Fight the monster or 2)Hide from it:", 15, 16);
+
+15:
+CLS();
+PRINT("You engage in combat. Weaponless you are easily crushed.");
+END();
+
+16:
+CLS();
+PRINT("Deciding to hide you look around the room.");
+PRINT("You immediately sense a Box and a Desk in the room.");
+CHOICE("Do you hide behind the 1)Box or the 2)Desk:", 17, 18);
+
+18:
+CLS();
+PRINT("You scrall under the desk, just not quickly enough.");
+PRINT("The monster breaks the desk into a thousand pieces and");
+PRINT("tears you in half.  Blood rushes all over the floor.");
+END();
+
+17:
+CLS();
+PRINT("You jump behind the box.");
+PRINT("The monster doesn't seem to see you.  Thank Goodness!");
+PRINT("Behind the box is a ventillation system.  You decide");
+PRINT("that it would be best to crawl through it.  After a");
+PRINT("couple of minutes you approach an intersection.");
+CHOICE("Would you like to go 1)Right or 2)Left:", 19, 20);
+
+19:
+CLS();
+PRINT("You move down the right junction, thinking it's the");
+PRINT("'Right' choice.  This time your wrong, very wrong.");
+PRINT("After three hours you become very thirsty, and give");
+PRINT("up.  Years later your toasted skeleton is found.");
+END();
+
+20:
+CLS();
+PRINT("After a couple of minutes you exit the vent, only to");
+PRINT("see a beautiful princess being harassed by an overweight");
+PRINT("monster.");
+CHOICE("Do you wish to 1)Yell at the monster or 2)Fight it:", 21, 22);
+
+21:
+CLS();
+PRINT("You yell, really loud.  The monster doesn't seem to be");
+PRINT("fond of loud yelling.  In an angry rage it approaches");
+PRINT("you, roars, then bites your head off as well as the");
+PRINT("princess'.");
+END();
+
+22:
+CLS();
+PRINT("You chose to fight the monster.  After a brutal battle");
+PRINT("lasting several days, you finally defeat the monster.");
+PRINT("The princess stares at you with passionate eyes. Suddenly");
+PRINT("an idea pops into your head, !!!Makeout Time!!!.  You");
+PRINT("and the Princess begin to kiss. You keep on kissing.");
+PRINT("You love each other so much.");
+PRINT("");
+PRINT("You have succesfully completed");
+PRINT("WinCastle: A Text Based Adventure");
+PRINT("");
+PRINT("Thank You For Playing");
+END();
+
+14:
+CLS();
+PRINT("Upon Entering the room you see two tunnels. Both look");
+PRINT("about the same and you don't want to waste time choosing.");
+CHOICE("Will you go 1)Right or 2)Left:", 24, 25);
+
+24:
+CLS();
+PRINT("You quickly walk down the right tunnel.");
+PRINT("After a moment of traveling you see an Axe.");
+PRINT("It looks very sharp and dangerous.");
+CHOICE("Would you like to 1)Pick it up or 2)Leave it:", 26, 27);
+
+27:
+CLS();
+PRINT("You don't want to touch the Axe because you think that");
+PRINT("it's too dangerous.  Big mistake.  The Axe must have");
+PRINT("been some kind of trap.  It swings through the air");
+PRINT("chopping you in half, vertically.  Blood flows onto");
+PRINT("the floor.");
+END();
+
+26:
+CLS();
+PRINT("You grab the Axe then you swing the smooth weapon back");
+PRINT("and forth through the air.  You are enjoying it very");
+PRINT("much.  You tie it to your waist with a rope you find,");
+PRINT("and move on.");
+PRINT("");
+PRINT("Soon after, you approach a shaft.  A fairly sturdy rope");
+PRINT("extends downward, and a rikety ladder climbs upward.");
+CHOICE("Do you want to climb 1)Down the rope or 2) Up the ladder:", 28, 29);
+
+28:
+CLS();
+PRINT("You grab onto the rope and begin your descent.  After a");
+PRINT("short time you figure that you aren't making any progress");
+PRINT("so you begin to climb back up.  The rope must not have");
+PRINT("been as strong as you thought, as it soon snaps and you");
+PRINT("fall to your death.");
+END();
+
+29:
+CLS();
+PRINT("The ladder shakes violently as you climb up it.");
+PRINT("Once you reach the top of the shaft you climb onto the");
+PRINT("edge, only to find the most ugly monster you have ever");
+PRINT("seen.  You remember the Axe you collected and decide");
+PRINT("that it's time to make a decision.");
+CHOICE("Will you 1)Attack the monster or 2)Think of something else:", 30, 31);
+
+31:
+CLS();
+PRINT("You decide to think of something to do beside slaughter");
+PRINT("an innocent monster.  Not such a good idea.  While you");
+PRINT("were concentrating you hardly noticed that your arms");
+PRINT("and legs were just ripped off.  The monster leaves you");
+PRINT("limbless.  To Die.");
+END(); 
+
+30:
+CLS();
+PRINT("You engage in combat with the monster.");
+PRINT("The battle doesn't last long as you have a weapon and it");
+PRINT("does not.  You easily hack the beast into a thousand");
+PRINT("pieces, but it takes you quite a while.");
+PRINT("");
+PRINT("After the slaughter you dash down a hallway.  After a");
+PRINT("few hours of running you approach a floating barricade.");
+PRINT("There is just enough room to go under or over it.");
+CHOICE("Do you want to 1)Crawl under or 2)Jump over:", 32, 33);
+
+32:
+CLS();
+PRINT("You crawl under it.  Not your best choice. The barricade");
+PRINT("falls down smashing you.  Only your blood can be seen");
+PRINT("seeping out from under it.");
+END();
+
+33:
+CLS();
+PRINT("You hop over the barricade and land on the other side.");
+PRINT("You soon exit the castle.");
+PRINT("");
+PRINT("Upon exiting the castle you meet a funny looking Dwarf.");
+PRINT("A thought pops into your mind.");
+CHOICE("You can 1)Kill the innocent creature or 2)Let it go:", 34, 35);
+
+34:
+CLS();
+PRINT("It's obvious that you are sick.  However compassion");
+PRINT("overwhelms your heart and you change your mind about");
+PRINT("slaughtering it.");
+PRINT("");
+GOTO(40);
+
+35:
+CLS();
+PRINT("You seem to be a desent fellow, sparing the poor creatures");
+PRINT("life and all.");
+PRINT("");
+GOTO(40);
+
+40:
+PRINT("Well after the encounter with the dwarf you feel pretty");
+PRINT("good about yourself.  You decide to go to the local arcade.");
+PRINT("Two games engage your interest, but you can only play one");
+PRINT("of them.");
+CHOICE("Do you wish to play 1)Duke Nukem or 2)Rashers", 41, 42);
+
+41:
+CLS();
+PRINT("You walk over to the Duke Nukem Machine.  After enjoying");
+PRINT("it for a couple of minutes the machine explodes.  Your");
+PRINT("body is blown into chunks of meat and blood.");
+END();
+
+42:
+CLS();
+PRINT("You pop a quarter into the Rashers machine.  You really");
+PRINT("enjoy playing the game.  Your mind is consumed with playing");
+PRINT("video games.  You play video games for the rest of your life.");
+PRINT("");
+PRINT("You have successfully completed");
+PRINT("WinCastle: A Text Based Adventure");
+PRINT("");
+PRINT("Thank You For Playing");
+END();
+
+25:
+CLS();
+PRINT("Keeping your cool you walk down the left tunnel.");
+PRINT("After a while you exit the tunnel.  You realize that you were");
+PRINT("just traveling through a sewar.  Discusted you find a lake and");
+PRINT("bathe nude.  You notice a babe standing by the lake.  Embarrased");
+PRINT("you run to your clothes and put them on.  The babe walks up to you");
+PRINT("and asks if you will kiss her.");
+CHOICE("You can 1)!!!Go For It!!! or 2)Stay cool:", 50, 51);
+
+50:
+CLS();
+PRINT("Hey whats to lose.  You hold her in your arms and start to");
+PRINT("kiss.  Too bad she was really a monster that wanted to eat");
+PRINT("you.  She cleans her teeth out with your bones.");
+END();
+
+51:
+CLS();
+PRINT("Staying cool you decide not to kiss anyone that you don't");
+PRINT("know that well.  She is kind of dissapointed, but respects your");
+PRINT("decission.  She tells you that she was in trouble, but you've");
+PRINT("rescued her.  She continues to ask if you will marry her.");
+CHOICE("Will you 1)Marry her or 2)Leave her:", 52, 53);
+
+52:
+CLS();
+PRINT("Your wedding is the next day.  You live the rest of your lives");
+PRINT("together.  Happily ever after.");
+PRINT("");
+PRINT("You have successfully completed");
+PRINT("WinCastle: A Text Based Adventure");
+PRINT("");
+PRINT("Thank you for playing");
+END();
+
+53:
+CLS();
+PRINT("Special Sad ending:");
+PRINT("");
+PRINT("You decide that you don't want to make any long term commitment,");
+PRINT("and sadly reject her.  The two of you walk off into the sunset.");
+PRINT("");
+PRINT("But that's not the end.  The two of you travel down a road,");
+PRINT("eventually the road forks into an intersection.  One way leads");
+PRINT("to the country the other to the city.  The babe goes to the");
+PRINT("country and you go to the city.  The two of you never see each");
+PRINT("other again...");
+PRINT("");
+PRINT("You have successfully completed");
+PRINT("WinCastle: A Text Based Adventure");
+PRINT("");
+PRINT("Thank You For Playing");
+END();

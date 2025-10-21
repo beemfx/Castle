@@ -1,181 +1,112 @@
-# WinCastle: A Text Based Adventure
-Castle (c) 2001 Beem Media. All rights reserved.
+# WinCastle: A Text Based Adventure (With Plugins)
+Castle (c) 2002 Beem Media. All rights reserved.
 
-This is the second iteration of the Win32 C++ version of Castle. I'm not
-actually sure why I considered this to be diffferent than the 3.XX Win32 version
-since they both read the same tba, this one just has some bug fixes.
+This is a 5.XX version of Castle that had plugin support. I had this _great_
+idea that Castle would be a base engine and support all kinds of things, so
+there would be a music plugin (which was developed), and there would be a
+graphics plugin, and so on.
 
 ## Building
 
 A visual studio 2022 project is provided to build the binary for Windows
-platforms. The code was updated to make that possible.
+platforms. This version is not supported in any way and isn't expected to build.
 
 ## History
 
 * Originated: 1997
-* This Version: November 27, 2001
+* This Version: June 20, 2002
 
-### Original README.TXT
+### Original ReadMeDev.txt
 <pre>
-WinCastle: A Text Based Adventure v4.xx for 32 bit Windows (Windows 9X, ME, 2000, XP)
+ReadMeDev - Readme file pertaining to the source code for WinCastle
 
-Castle BUILD 4
-Copyright (c) 1997, 2000, 2001 Blaine Myers for Beem Software
+Here is the old Log:
 
-This folder contains:
+June 20, 2002
 
-	wCastle.exe - The executable WinCastle game.
-	Advent.tba - Text Based Adventure(TBA) for the castle executable.
-	Readme.txt - This file.
-	Version.txt - A history of the game's versions.
+I've completly redone CastleSCRIPT, the game looks exactly the same,
+however the new CastleSCRIPT has much greater functionality. (ie.  There may
+now be up to nine choices, and the script will better support adding new functions.)
+Right now the script looks a lot like c++, one thing I want to do is change the way
+GOTO(x) works, so that it looks for labels.
 
-WinCastle will read a Text Based Adventure file(usually with extension .tba) and run it.
+/*
+	This program will read a castle
+	map and run it.
 
-Instructions:  To play press either 1 or 2 when prompted.  Use the game|restart menu command to restart your current game.  To play a custom map use game|custom... and select a valid .tba file.
+	Recorded Log (see version.txt for more history):
 
-Programming .tba files:
-There is currently no documentation available for .tba construction.  I might write one someday.
+	November 27, 2001:
 
-Known Issues:
+	I am now compiling under Microsoft Visual C++
+	The code is working fine except that the dialog boxes are not appearing
+	correctly.
 
-Issue #1: If you press cancel while in the custom game loader then use the restart feature the program will mysteriously terminate.  This does not occur under Windows XP.
+	Now everything is perfectly fine.
+	  
+	September 20, 2001:
 
-Issue #2: Selecting an invalid map as a custom game will cause random errors.
+	I converted the code to C++ by implementing the CastleGame class which
+	plays the game of castle.  This way I beleive it will be easier to convert
+	it to a Windows API.
 
-Future of Castle:
-We have not planned anymore updated versions of WinCastle.  Though, we do admit we would like to add a few more featurs to the Castle script.  Namely: The ability to take user input  strings (ie. a name, or a number).  The ability to use simple mathmatics within an adventure (ie. a score, or an amount of cash).  The ability to make more than two choices.  The ability to use mouse to make choices.  Music.  The ability to display a picture during an adventure.
+	Notice: WinCastle source code should be work with any C++ compiler with
+	a Windows API SDK of 3.1 or higher.  It was written with Borland C++ 4.5x
+	and the project file should be compatible with most Borland IDE's.
+	For microsoft, you'll have to put together the makefile yourself.
 
-Technical Stuff:
+	October 3, 2001
 
-WinCastle copyright © 1997, 2000, 2001, Blaine Myers.  Beem Software, Castle, Castle BUILD, Castle Script, WinCastle and their respective logos are trademarks or registered trademarks of Blaine Myers in the U.S. and/or other countries.  Beem Software is a division of Blaine Myers.  All other trademarks belong to their respective owners.
+	I've introduced the windows API.
+	Right now all the functions execpt makeChoice() are working.  To implement
+	makeChoice I need to learn how to scan from the keyboard in a Win API.
 
-Castle BUILD:
+	The functions that print out to the screen print the entire line, not just
+	what should be printed.  It won't be too hard to fix that.(Fixed)
 
-The Castle BUILD is the engine used to run castle games, here is some information about all the BUILD's
+	I also need to implement the ability to open a custom map, and restart the
+	current map.  I doubt either will be too hard.
 
-BUILD 1: The original QuickBasic build of Castle, a fairly crude, very outdated text adventure.  Had extensive use of the obsolete GOTO statement.  BUILD 1 is any 1.xx version of Castle.
+	I'd also like to add a help, about menu item.  Maybe even a game help item.
 
-BUILD 2: The second build of castle.  Written in the C language it had a much better interface.  The user was no longer required to type in commands.  Only hit a single keystroke.  Story was somewhat rewritten, lots of spelling mistakes corrected.  Build 2 is any 2.xx version of castle.
+	October 4, 2001
 
-BUILD 3: Castle finally got a script to run, allowing custom text adventures.  The script was simple and worked very effectively with four different functions.  Build 3 is versions 3.xx.
+	I've added the keyboard support.  After working out a few bugs I'm glad to
+	quote that kid in star wars that said: "It's working.  It's woooooorking!"
 
-BUILD 4: The most current build of Castle.  The Main program was renamed WinCastle instead of just Castle.  Now Castle is in a Win32 API supporting win 9x and probably ME.  Uses the same script as BUILD 3 and most parts of the game functions are the same.  Advantages are that it uses menus to control the special features in the game.  BUILD 4 is version 4.xx of Castle.
-</pre>
+	Now only one problem exists.  The game does not refresh the screen when a
+	a button is pressed.  This is very strange indeed.
 
-### Original VERSION.TXT
-<pre>
-=========================================================
-=== Version History of                                ===
-===        WinCastle: A Text Based Adventure          ===
-=========================================================
-version 4.07 (June 02, 2002)
-	Now fully supports WindowsXP.
+	Used RedrawWindow to update the playing screen with the tags RDW_ERASE and
+	RDW_INVALIDATE it works fine.
 
-version 4.06 (March 24, 2002)
-	Improved WinXP support.
+	The GOT function of CastleScript is my only problem.  Already fixed it, the
+	buff array for seeker was the wrong size.  Now all is so fucking fine.  I
+	am one happy bastard.  WinCastle really kicks ass.  Honestly it doesn't
+	kick ass so much as makes me happy that it actually works.
 
-version 4.05 (March 11, 2002)
-	General C++ optimizations, none of which are
-	noticable to the user.
+	All that is left is to implement the restart game and custom game menu
+	commands.  True it will be much difficult but I'll get it done.  Tell you the
+	truth it shouldn't be that hard.  I won't have to learn much to figure it out
+	though.
 
-version 4.04 (November 29, 2001)
-	Added accelerators to speed things up.  Such as
-	restart game which is F3.
+	After that I think I'll want to add a help menu with an about option.  Maybe
+	even a help file if I'm willing to learn how to create one.
 
-version 4.03 (November 27, 2001)
-	Dialogs now appear as they should, as I am now
-	compiling under microsoft visual c++ instead of
-	borland.  The error on terminatoin bug when
-	using a custom game is now gone.
+	On a personal note I should be receiving my amazon.com order tomorrow which
+	should include the classic hit Stand By Me.
 
-version 4.02 (November 01, 2001)
-	Improved Dialog by adding an icon.  The text
-	displaying the version is now altered by the
-	program for easier update.  To change the
-	version change the definition of CURVERSION.
-	
-	Map statistics are no longer displayed at the
-	bottom of the screen.  You may go under the
-	map|properties to view the stats.
+	October 6, 2001
+	Implemented Restart Game after much difficulty.
 
-	You may also play a custom map by using the file
-	name as a perameter (drag the file into the exe)
+	Implemented Custom Game, had to create a constructor and destructor to
+	initialize a game.  One thing I'm not satisfied with is that if you use
+	the custom game commnad, the program will give an error when terminated.
 
-version 4.01 (October 30, 2001)
-	Minor changes to the code, now menus have
-	underlined values.  Window is no longer resizable.
-	Added About Dialog Box as well.
+	October 30, 2001 added the about dialog box.  It doesn't appear if the IDE
+	isn't running and I can't figure out why.  Made a definition to filter out
+	the dialob.
 
-version 4.00 (October 6, 2001)
-	Caslte updated to WinCastle uses a Win32 API much
-	improved over previous versions.  Uses menus for
-	special commands.
-
-version 3.02 (September 20, 2001)
-	This change only applies to the source code.  The
-	game is still played exactly the same.  I added
-	a class called CasteGame which contains all the
-	functions of a game of castle.  Declaring a game
-	and then running the playGame function will the
-	filename parameter as the map you wish to play
-	will take care of everything.
-
-version 3.01 (May 24, 2001)
-	Added support for user maps.  Either drag them
-	over the .exe file, use the map name as an argument,
-	or us windows Open With command.
-
-version 3.00 (December 31, 2000)
-	Complete redo of the game.  The main .exe now reads
-	a .tba file and plays the adventure from that. The
-	story is the same but I fixed some grammar and
-	spelling errors.  I will admit spelling errors
-	probably still exist. I also dropped Roleplaying
-	out of the title because it really isn't a
-	roleplaying game.
-
-version 2.08 (December 10, 2000)
-	Redid the enter your name feature now it will print
-	out your last name.  Minor code repair.
-
-version 2.07 (August 4, 2000)
-	You are now prompted to type your name, and it 
-	will appear 2x in the game.  When you begin, and
-	when you die.
-
-version 2.06 (July 23, 2000)
-	Eliminated the use of the goto statement, by having
-	the program call different functions.
-
-version 2.05 (July 10, 2000)
-	Used the getch() function rather than the getchar()
-	and getc() functions to take input. So now you
-	only have to press the number of your choice and
-	not press enter.  This eliminates major bugs.
-
-version 2.00 (June 27, 2000)
-	Castle was converted to the C language and the 
-	name was changed to Castle: A Text Based 
-	Roleplaying Adventure.  The game only required you
-	to type a number an press enter, rather than 
-	typing an entire word out.
-
-version 1.4
-	The Third Release of Castle.  Major repairs in 
-	the code that allowed you to continue playing 
-	even if your character is killed.  Still major 
-	problems with the software.
-
-version 1.xx*
-	The Second Release of Castle.  Some of the code
-	was changed to make it more appealing to the eye.
-	A few portions of the game no longer need you to
-	type the whole word.
-
-	*Versions were not used by B.M. Software in this
-	 release.  But it is between 1.00 and 1.4.
-
-version 1.00
-	The Orignal Release of Castle.  Written in the
-	QBasic Language.
+	June 02, 2002 Now works under WindowsXP just freaking fine
+*/
 </pre>
