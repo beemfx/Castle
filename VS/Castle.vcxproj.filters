@@ -6,8 +6,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\castle.c">
+    <ClCompile Include="..\SRC\Castle.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC\Castle.h">
+      <Filter>SRC</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
