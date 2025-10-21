@@ -20,12 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SRC\Castle.cpp" />
+    <ClCompile Include="..\SRC\WCastle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\Castle.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\SRC\WCastle.def" />
+    <None Include="..\SRC\WCastle.rh" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\SRC\castle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\SRC\WCastle.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

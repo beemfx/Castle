@@ -1,8 +1,9 @@
-CASTLE
+WINCASTLE
 3
 A
-PR Castle: A Text Based Adventure v3.01
+PR WinCastle: A Text Based Adventure
 PR Copyright (c) 1997, 2000, 2001 Beem Software
+PR  
 PR Welcome I am the Tunnel Master
 PR Ready to Begin
 CH 1)Yes 2) No
@@ -101,7 +102,7 @@ PR and the Princess begin to kiss. You keep on kissing.
 PR You love each other so much.
 PR
 PR You have succesfully completed
-PR Castle: A Text Based Adventure
+PR WinCastle: A Text Based Adventure
 PR
 PR Thank You For Playing
 END
@@ -199,9 +200,9 @@ END
 
 CLS
 PR You hop over the barricade and land on the other side.
-PR You soon exit the Castle.
+PR You soon exit the castle.
 PR
-PR Upon exiting the Castle you meet a funny looking Dwarf.
+PR Upon exiting the castle you meet a funny looking Dwarf.
 PR A thought pops into your mind.
 CH You can 1)Kill the innocent creature or 2)Let it go:
 :34
@@ -245,7 +246,7 @@ PR enjoy playing the game.  Your mind is consumed with playing
 PR video games.  You play video games for the rest of your life.
 PR
 PR You have successfully completed
-PR Castle: A Text Based Adventure
+PR WinCastle: A Text Based Adventure
 PR
 PR Thank You For Playing
 END
@@ -285,7 +286,7 @@ PR Your wedding is the next day.  You live the rest of your lives
 PR together.  Happily ever after.
 PR
 PR You have successfully completed
-PR Castle: A Text Based Adventure
+PR WinCastle: A Text Based Adventure
 PR
 PR Thank you for playing
 END
@@ -304,7 +305,7 @@ PR country and you go to the city.  The two of you never see each
 PR other again...
 PR
 PR You have successfully completed
-PR Castle: A Text Based Adventure
+PR WinCastle: A Text Based Adventure
 PR
 PR Thank You For Playing
 END

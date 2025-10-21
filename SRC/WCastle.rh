@@ -1,0 +1,13 @@
+#define DIALOG_2 2
+#define CM_GAMESTATISTICS 105
+#define ID_NAME 201
+#define ID_EDITION 202
+#define ID_SCRIPTV 203
+#define ID_VERSION 106
+#define DIALOG_ABOUT 1
+#define ICON_1	1
+#define MENU_1	1
+#define CM_CUSTOMGAME	102
+#define CM_QUIT	103
+#define CM_RESTART	101
+#define CM_ABOUT 104

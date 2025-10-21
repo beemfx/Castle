@@ -9,19 +9,34 @@
 #define END (line[0] == 'E' && line[1] == 'N' && line[2] == 'D')
 #define GOT (line[0] == 'G' && line[1] == 'O' && line[2] == 'T')
 
-class CastleGame
+typedef class CastleGame
 {
 	public:
-		int playGame(const char *filename);           //Starts up a game of Castle
+		CastleGame(char *initialmap){
+			strcpy(mapfilename, initialmap);
+		};
+		~CastleGame(){};
+		int initGame();           //Starts up a game of Castle
+		int getLine();                //reads a line from file input
+		void makeChoice(int choice); //allows the user to make a choice and displays one line
+		int restartGame();
+		char outmessage[100];
 	private:
-		void gameOver(FILE *fin);               //Terminates a game of Castle
-		void checkStats(FILE *fin);             //Checks the version of Castle map
-		void printMsg(char *line);              //prints a message out on the screen
-		void getLine(FILE *fin);                //reads a line from file input
-		void makeChoice(FILE *fin, char *line); //allows the user to make a choice and displays one line
-		void gotoF(char *line, FILE *fin);      //goes to a particual part of the map
-		int fseeker(char search[2], FILE *fin); //seeks for a certain part of the map
-		void seeker(char *sstring, FILE *fin);  //part of fseeker
-		enum {LINE_LEN = 80, GOT_LEN = 20};     //just some variables
+		void checkStats();             //Checks the version of Castle map
+		enum {LINE_LEN = 200, GOT_LEN = 20};     //just some variables
+		int fseeker(char search[2]); //seeks for a certain part of the map
+		void seeker(char *sstring);  //part of fseeker
 		enum {FSUCCESS, FFAIL};                  //more enumerated variables
-};
+		FILE *fptr;
+		char gotowhere[GOT_LEN];
+		void gotoF(char *line);      //goes to a particual part of the map
+		void printMsg(char *line);              //prints a message out on the screen
+		void gameOver();               //Terminates a game of Castle
+	public:
+		int linetoprinton;
+		int playingstatus;
+		int mapVersion;
+		int mapEdition;
+		char map_name[20];
+		char mapfilename[32000];
+} CASTLEGAME;

@@ -9,6 +9,9 @@
     <ClCompile Include="..\SRC\Castle.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
+    <ClCompile Include="..\SRC\WCastle.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\Castle.h">
@@ -17,5 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="..\SRC\WCastle.def">
+      <Filter>SRC</Filter>
+    </None>
+    <None Include="..\SRC\WCastle.rh">
+      <Filter>SRC</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\SRC\castle.ico">
+      <Filter>SRC</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\SRC\WCastle.rc">
+      <Filter>SRC</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -1,19 +1,17 @@
 # Castle: A Text Based Adventure v3.xx
 Castle (c) 2000 Beem Media. All rights reserved.
 
-This is the C++ version of Castle for command prompt.
+This is the Win32 C++ version of Castle for command prompt.
 
 ## Building
 
 A visual studio 2022 project is provided to build the binary for Windows
-platforms. The code was updated to make that possible. So it is technically
-version 3.03. Non-windows platforms will require modifications since the clear
-screen is dependen on Windows.
+platforms. The code was updated to make that possible.
 
 ## History
 
 Originated: 1997
-This Version: December 31, 2000
+This Version: September 20, 2001
 
 ### Original README.TXT
 Castle: A Text Based Adventure v3.xx
