@@ -85,14 +85,14 @@ public:
 	eg_bool operator==(const eg_string_base& rhs)const{ return Equals(rhs); }
 	eg_bool operator!=(eg_cpstr8 rhs)const{ return !Equals(rhs); }
 	eg_bool operator!=(const eg_string_base& rhs)const{ return !Equals(rhs); }
-	EG_INLINE eg_bool eg_string_base::operator==(eg_cpstr16 rhs)const
+	EG_INLINE eg_bool operator==(eg_cpstr16 rhs)const
 	{ 
 		eg_char TmpRhsMem[1024];
 		eg_string_base TmpRhs( TmpRhsMem , countof(TmpRhsMem) );
 		TmpRhs.Set( rhs );
 		return Equals(TmpRhs); 
 	}
-	EG_INLINE eg_bool eg_string_base::operator!=(eg_cpstr16 rhs)const
+	EG_INLINE eg_bool operator!=(eg_cpstr16 rhs)const
 	{ 
 		eg_char TmpRhsMem[1024];
 		eg_string_base TmpRhs( TmpRhsMem , countof(TmpRhsMem) );

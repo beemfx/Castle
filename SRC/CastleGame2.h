@@ -100,9 +100,9 @@ private:
 	void LoadProgram( CDataStream& Stream );
 	void DoPrint( const char* StrLine );
 public:
-	CCastleGame(char* szInitialMap);
+	CCastleGame(const char* szInitialMap);
 	~CCastleGame();
-	bool LoadMap(char* szFilename);
+	bool LoadMap(const char* szFilename);
 	
 	const char* GetMapName()const;
 	const char* GetCompilerError()const;

@@ -19,7 +19,7 @@ public:
 	CDataStream(char* szFile);
 	~CDataStream();
 	
-	bool Open(char* szFile);
+	bool Open(const char* szFile);
 	void Close();
 	int Read(unsigned char* pBuffer, int count);
 	int GetSize();

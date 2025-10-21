@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SRC">
+      <UniqueIdentifier>{f9286456-91bc-4e92-9d6d-0b4018b8e0a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SRC\eglib">
+      <UniqueIdentifier>{09f1348b-17b4-475f-9672-cff73cbb66a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\SRC\Castle.ico">
+      <Filter>SRC</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SRC\CastleGame2.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\DataStream2.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\main.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\eglib\EGParse.cpp">
+      <Filter>SRC\eglib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\eglib\EGString.cpp">
+      <Filter>SRC\eglib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC\CastleGame2.h">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\CastleTypes.h">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\DataStream2.h">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\resource.h">
+      <Filter>SRC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\eglib\EGArray.h">
+      <Filter>SRC\eglib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\eglib\EGParse.h">
+      <Filter>SRC\eglib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\eglib\EGString.h">
+      <Filter>SRC\eglib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\SRC\cresource.rc">
+      <Filter>SRC</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -54,7 +54,7 @@ public:
 	, m_ButtonBgHlBrush(NULL)
 	, m_ButtonBgPen(NULL)
 	, m_TextBottom(0)
-	, m_CastleGame(TEXT("Adventure.tba"))
+	, m_CastleGame("Adventure.tba")
 	, m_HighlightedButton(CCastleGame::MAX_CHOICES) // Set out of range.
 	, m_CaptureButton(CCastleGame::MAX_CHOICES)
 	{
@@ -381,7 +381,7 @@ public:
 		m_NeedButtonRefresh = false;
 	}
 
-	static BOOL CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+	static INT_PTR CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (msg)
 		{
@@ -467,7 +467,9 @@ public:
 			{
 				TCHAR szTempFilename[MAX_PATH];
 				_tcscpy_s(szTempFilename, TEXT("Text Based Adventure"));
-				if(GetOpenFilename(TEXT("Open File"), TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0"), hWnd, szTempFilename))
+				TCHAR szTitle[] = TEXT("Open File");
+				TCHAR szFilter[] = TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0");
+				if(GetOpenFilename(szTitle, szFilter, hWnd, szTempFilename))
 				{
 					m_CastleGame.LoadMap(szTempFilename);
 					RefreshButtons();

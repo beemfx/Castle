@@ -18,7 +18,7 @@
 #include "CastleGame2.h"
 #include "EGParse.h"
 
-CCastleGame::CCastleGame(char* szInitialMap)
+CCastleGame::CCastleGame(const char* szInitialMap)
 : m_OutputSize(0)
 , m_InputType(INPUT_NONE)
 , m_HadError(false)
@@ -32,7 +32,7 @@ CCastleGame::~CCastleGame()
 }
 
 
-bool CCastleGame::LoadMap(char* szFilename)
+bool CCastleGame::LoadMap(const char* szFilename)
 {
 	//Open the file, return false if the file can't be opened.
 	CDataStream DataStream;

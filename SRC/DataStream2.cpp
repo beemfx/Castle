@@ -20,7 +20,7 @@ CDataStream::~CDataStream()
 	Close();
 }
 
-bool CDataStream::Open(char* szFile)
+bool CDataStream::Open(const char* szFile)
 {
 	//If a file is already open, close it.
 	if(m_bOpen)
