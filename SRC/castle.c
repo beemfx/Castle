@@ -15,19 +15,21 @@
 #include <conio.h> // For the clrscr() function, and getch() funtion.
 #include <stdlib.h> // For the exit() funtion.
 
-char name[30];
+char name[80];
+void deathend();
+void playgame();
 
 void main(void){
 	playgame();
 }
 
-playgame(){
+void playgame(){
 	int c;
-	printf("Castle: A Text Based Roleplaying Adventure v2.07\n");
+	printf("Castle: A Text Based Roleplaying Adventure v2.08\n");
 	printf("(C) Copywrite 1997, 2000 B.M. Software\n");
 	printf("\nWelcome! I am the Tunnel Master.\n");
 	printf("What is your name:");
-	scanf("%s", name);
+	gets( name );
 	printf("\nHello %s, thats a nice name\n", name);
 	while (1){
 	printf("Ready to begin? 1)Yes 2)No:");
@@ -434,7 +436,7 @@ playgame(){
 return 0;
 }
 
-deathend(){
+void deathend(){
 	int c;
 	while (1){
 		printf("\nYou have died %s. Do you wish to play again 1)Yes 2)No:", name);
