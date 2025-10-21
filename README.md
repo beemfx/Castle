@@ -3,9 +3,11 @@
 This is the C version of Castle.
 
 ## Building
-Compile castle.c with your favorite C compiler. It's my first C program so it
-might not be compatible with some. It was originally compiled with Borland C++
-4.52.
+Being that this was my first C program it is not ANSI compliant and has limited
+compiler support. It was originally compiled using Borland C++ 4.52 and that
+can compile it to a working binary (an ide project is provided). The code could
+be modified to compile on modern compiles with a few tweaks, but I want to
+preserve the original code as is.
 
 ## History
 Originated: 1997
