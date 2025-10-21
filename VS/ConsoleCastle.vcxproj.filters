@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SRC">
+      <UniqueIdentifier>{f9286456-91bc-4e92-9d6d-0b4018b8e0a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SRC\CastleSDK">
+      <UniqueIdentifier>{e4ecd95c-240b-4a3b-a31c-fb9fdcfb1529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SRC\ConsoleCastle">
+      <UniqueIdentifier>{a8c0ecc7-fe6e-4967-8321-ee3df182f537}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SRC\CastleSDK\CastleSDK.h">
+      <Filter>SRC\CastleSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\ConsoleCastle\CastleGame2.h">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\ConsoleCastle\DataStream2.h">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRC\ConsoleCastle\stdafx.h">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SRC\ConsoleCastle\CastleGame2.cpp">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\ConsoleCastle\ConsoleCastle.cpp">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\ConsoleCastle\DataStream2.cpp">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\ConsoleCastle\stdafx.cpp">
+      <Filter>SRC\ConsoleCastle</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

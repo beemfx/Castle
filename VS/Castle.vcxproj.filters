@@ -7,12 +7,6 @@
     <Filter Include="SRC\CastleSDK">
       <UniqueIdentifier>{e4ecd95c-240b-4a3b-a31c-fb9fdcfb1529}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SRC\ConsoleCastle">
-      <UniqueIdentifier>{a8c0ecc7-fe6e-4967-8321-ee3df182f537}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SRC\MCIPlug">
-      <UniqueIdentifier>{fe22e5f4-629c-4eb3-af41-47d58ac271a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SRC\WinCastle">
       <UniqueIdentifier>{cb854ce3-6952-447b-bcfd-c094fddda427}</UniqueIdentifier>
     </Filter>
@@ -23,18 +17,6 @@
   <ItemGroup>
     <ClInclude Include="..\SRC\CastleSDK\CastleSDK.h">
       <Filter>SRC\CastleSDK</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SRC\ConsoleCastle\CastleGame2.h">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SRC\ConsoleCastle\DataStream2.h">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SRC\ConsoleCastle\stdafx.h">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SRC\MCIPlug\MCIPlug.h">
-      <Filter>SRC\MCIPlug</Filter>
     </ClInclude>
     <ClInclude Include="..\SRC\WinCastle\Castle2.h">
       <Filter>SRC\WinCastle</Filter>
@@ -53,24 +35,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\ConsoleCastle\CastleGame2.cpp">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SRC\ConsoleCastle\ConsoleCastle.cpp">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SRC\ConsoleCastle\DataStream2.cpp">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SRC\ConsoleCastle\stdafx.cpp">
-      <Filter>SRC\ConsoleCastle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SRC\MCIPlug\Main.c">
-      <Filter>SRC\MCIPlug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SRC\MCIPlug\MCIPlug.c">
-      <Filter>SRC\MCIPlug</Filter>
-    </ClCompile>
     <ClCompile Include="..\SRC\WinCastle\CastleGame2.cpp">
       <Filter>SRC\WinCastle</Filter>
     </ClCompile>

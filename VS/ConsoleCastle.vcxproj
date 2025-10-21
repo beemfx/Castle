@@ -23,27 +23,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\CastleSDK\CastleSDK.h" />
-    <ClInclude Include="..\SRC\WinCastle\Castle2.h" />
-    <ClInclude Include="..\SRC\WinCastle\DataStream.h" />
-    <ClInclude Include="..\SRC\WinCastle\Defines.h" />
-    <ClInclude Include="..\SRC\WinCastle\Plugin.h" />
-    <ClInclude Include="..\SRC\WinCastle\resource.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\CastleGame2.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\DataStream2.h" />
+    <ClInclude Include="..\SRC\ConsoleCastle\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\WinCastle\CastleGame2.cpp" />
-    <ClCompile Include="..\SRC\WinCastle\main.cpp" />
-    <ClCompile Include="..\SRC\WinCastle\Plugin.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\SRC\WinCastle\Castle.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\SRC\WinCastle\cresource.rc" />
+    <ClCompile Include="..\SRC\ConsoleCastle\CastleGame2.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\ConsoleCastle.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\DataStream2.cpp" />
+    <ClCompile Include="..\SRC\ConsoleCastle\stdafx.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3143bd82-3fa0-4dd5-99c4-e0c34a7138c4}</ProjectGuid>
+    <ProjectGuid>{CC68DEC5-756E-4EA2-AC59-B9A790C153FB}</ProjectGuid>
     <RootNamespace>Castle</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -95,22 +88,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)_BUILD\$(Platform)_$(Configuration)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
-    <TargetName>W$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)_BUILD\$(Platform)_$(Configuration)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
-    <TargetName>W$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)_BUILD\$(Platform)_$(Configuration)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
-    <TargetName>W$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)_BUILD\$(Platform)_$(Configuration)\</OutDir>
     <IntDir>$(OutDir)</IntDir>
-    <TargetName>W$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
