@@ -9,10 +9,7 @@
 
 	Language: C++ Win32 API
 
-	version: 4.03
-*/
-/*
-	Octoboer 21, 2025: Got this to compile in VS 2022.
+	version: 4.05
 */
 /*
 	This program will read a castle
@@ -20,6 +17,14 @@
 
 	Recorded Log (see version.txt for more history):
 
+	November 27, 2001:
+
+	I am now compiling under Microsoft Visual C++
+	The code is working fine except that the dialog boxes are not appearing
+	correctly.
+
+	Now everything is perfectly fine.
+	  
 	September 20, 2001:
 
 	I converted the code to C++ by implementing the CastleGame class which
@@ -82,17 +87,14 @@
 	October 30, 2001 added the about dialog box.  It doesn't appear if the IDE
 	isn't running and I can't figure out why.  Made a definition to filter out
 	the dialob.
-*/
 
+	June 02, 2002 Now works under WindowsXP just freaking fine
+*/
 //#define DEBUG
 #define WORKINGDIALOG
 
-#define CURVERSION "version 4.02"
+#define CURVERSION "version 4.07"
 
-#define MAX_LINES 20 //The maximum amount of lines that may be printed out at a time
-#define MAX_CHARS_PER_LINE 200
-
-#define EXIT exit(0)
 
 #include <windows.h>
 #include <stdio.h>
@@ -100,65 +102,90 @@
 #include <string.h>
 #include <conio.h>
 #include "castle.h"
-#include "wcastle.rh"
+#include "resource.h"
+#include <mmsystem.h>
+
+#ifdef MIDIEXPER
+#include "directmidi.h"
+#endif
 
 
-BOOL RegisterWindowClass(HWND hWnd);
+BOOL RegisterWindowClass(HINSTANCE hInst);
 BOOL GetFileName(char *filename, int len, HWND hWnd);
 LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL MainCommandProc(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl);
-void MainWindowPaint(HWND hWnd, HDC hDc,
-				 char messagetoprint[MAX_LINES][MAX_CHARS_PER_LINE], int printline);
-LRESULT MainKeyboardProc(HWND hWnd, int code, WPARAM wParam, LPARAM lParam);
-BOOL AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
-BOOL StatisticsBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+void MainWindowPaint(HWND hWnd, char messagetoprint[MAX_LINES][MAX_CHARS_PER_LINE], int printline);
+BOOL MainKeyboardProc(HWND hWnd, int code, WPARAM wParam, LPARAM lParam);
+BOOL CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+void ProcessGame(HWND hWnd);
 
 char cgAppName[]="WinCastle";
-enum {NOT_STARTED, PRE_INIT, PLAYING, GAMEOVER};
-enum {WAITING, RUNNING, ENDED};
 
 
 CASTLEGAME cgame("advent.tba");
 
+#if defined MIDIEXPER
+CDirectMidi g_cMidiPlayer;
+#endif
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-										LPSTR lpszCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
 	MSG msg;
-	HWND hWndMain = NULL;
+	HWND hWndMain;
+	HACCEL hAccelTable;
 
-	if (strlen(lpszCmdLine)>0)
+	if(strlen(lpszCmdLine)>0)
 		strcpy(cgame.mapfilename, lpszCmdLine);
 
-	if(!hPrevInstance)
-		RegisterWindowClass(hWndMain);
+	if(!RegisterWindowClass(hInstance))return 0; 
 
 	hWndMain=CreateWindow(cgAppName,
-								 "WinCastle: A Text Based Adventure",
-								 WS_MINIMIZEBOX|WS_SYSMENU|
-								 WS_DLGFRAME,
-								 //WS_OVERLAPPEDWINDOW,
-								 CW_USEDEFAULT,
-								 CW_USEDEFAULT,
-								 500,
-								 320,
-								 NULL,
-								 NULL,
-								 hInstance,
-								 NULL);
-	ShowWindow(hWndMain, SW_SHOWNORMAL);
+							"WinCastle: A Text Based Adventure",
+							WS_MINIMIZEBOX|WS_SYSMENU|
+							WS_DLGFRAME,
+							//WS_OVERLAPPEDWINDOW,
+							CW_USEDEFAULT,
+							CW_USEDEFAULT,
+							500,
+							320,
+							NULL,
+							NULL,
+							hInstance,
+							NULL);
+
+	ShowWindow(hWndMain, nCmdShow);
 	UpdateWindow(hWndMain); //May not be necessary.
 
 	//cgame.mapfilename="advent.tba";
-
-	while(GetMessage(&msg, hWndMain, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	#if defined MIDIEXPER
+	g_cMidiPlayer.Load("bl_btear.mid");
+	g_cMidiPlayer.Play();
+	#endif
+	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDR_ACCELERATOR);
+	
+	ProcessGame(hWndMain);
+	while(GetMessage(&msg, NULL, 0, 0)){
+		if(!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)){
+			TranslateMessage(&msg); DispatchMessage(&msg);
+			ProcessGame(hWndMain);
+		}
 	}
 	return msg.wParam;
+	/*
+	while(TRUE){
+		ProcessGame(hWndMain);
+		if(!GetMessage(&msg, NULL, 0, 0)){
+			//MessageBox(NULL, "Successfully Quit", "Notice", MB_OK);
+			return msg.wParam;
+		}
+		
+		if(!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)){
+			TranslateMessage(&msg); DispatchMessage(&msg);
+		}
+	}
+	*/
 }
-BOOL StatisticsBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+BOOL CALLBACK StatisticsBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	char buf[30];
 	switch (msg)
@@ -170,94 +197,74 @@ BOOL StatisticsBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			SetDlgItemText(hDlg, ID_EDITION, buf);
 			sprintf(buf, "%c", cgame.mapVersion);
 			SetDlgItemText(hDlg, ID_SCRIPTV, buf);
-			return TRUE;
+			return FALSE;
 		case WM_COMMAND:
 			if(wParam==IDOK){
-				EndDialog(hDlg, TRUE);
+				EndDialog(hDlg, 0);
 				return TRUE;
 			}
 			break;
 	}
 	return FALSE;
 }
-BOOL AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+BOOL CALLBACK AboutBox(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
 		case WM_INITDIALOG:
 			SetDlgItemText(hDlg, ID_VERSION, CURVERSION);
-			return TRUE;
+			return FALSE;
 		case WM_COMMAND:
 			if(wParam==IDOK){
-				EndDialog(hDlg, TRUE);
+				EndDialog(hDlg, 0);
 				return TRUE;
 			}
 			break;
 	}
 	return FALSE;
 }
-LRESULT MainKeyboardProc(HWND hWnd, int code, WPARAM wParam, LPARAM lParam)
+BOOL MainKeyboardProc(HWND hWnd, int code, WPARAM wParam, LPARAM lParam)
 {
 		code = wParam;
 		if(cgame.playingstatus==WAITING){
 			cgame.makeChoice(code);
-			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
-			//The previous line took me forever to figure out.  Now that I have
-			//makes me the happiess person in the word.  I tryed the RedrawWindow
-			//function before, just in the wrong places.
 			return 0;
 		}
 		return 1;
 }
 
-void MainWindowPaint(HWND hWnd, HDC hDc, char messagetoprint[MAX_LINES][MAX_CHARS_PER_LINE],
-																						int printline)
+void MainWindowPaint(HWND hWnd, char messagetoprint[MAX_LINES][MAX_CHARS_PER_LINE], int printline)
 {
+	
 	PAINTSTRUCT ps;
+	HDC hDc;
 	RECT vWindow;
 	TEXTMETRIC textMetric;
 	int i;
-	char buffer[80];
 
 	hDc = BeginPaint(hWnd, &ps);
 
 	GetClientRect(hWnd, &vWindow);
 	GetTextMetrics(hDc, &textMetric);
-
-
-
+	
 	for(i=0;i<printline;i++){
-		TextOut(hDc, 1, i*(textMetric.tmHeight)+1, messagetoprint[i], strlen(messagetoprint[i])-1);
+		TextOut(hDc, 1, i*(textMetric.tmHeight)+1, messagetoprint[i], (strlen(messagetoprint[i])-1)/sizeof(char));
 	}
-	#ifdef SHOWSTATSINWINDOW
-	cgame.map_name[strlen(cgame.map_name)-1] = ' ';
-
-	sprintf(buffer, "Map name: %s   Map version: %c   Map Editon: %c",
-									cgame.map_name, cgame.mapVersion, cgame.mapEdition);
-	TextOut(hDc, 1, vWindow.bottom-textMetric.tmHeight, buffer, strlen(buffer));
-   #endif
 	EndPaint(hWnd, &ps);
+	
 }
 
-static int gamestatus;
-LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void ProcessGame(HWND hWnd)
 {
-	PAINTSTRUCT ps;
-	HDC hDc = NULL;
-	static int kbcode;
-
-	static char message[MAX_LINES][MAX_CHARS_PER_LINE];
-
-
-	switch (gamestatus)
+	switch (cgame.gamestatus)
 	{
 		case NOT_STARTED:
 			cgame.initGame();
-			gamestatus = PRE_INIT;
+			cgame.gamestatus = PRE_INIT;
 			//break;
 
 		case PRE_INIT:
-			gamestatus = PLAYING;
+			cgame.gamestatus = PLAYING;
 			cgame.playingstatus=RUNNING;
 			cgame.linetoprinton=0;
 			//break;
@@ -265,16 +272,14 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 		case PLAYING:
 				if(cgame.playingstatus==RUNNING){
 					cgame.getLine();
-					strcpy(message[cgame.linetoprinton-1], cgame.outmessage);
-
-
-					UpdateWindow(hWnd);
+					strcpy(cgame.message[cgame.linetoprinton-1], cgame.outmessage);
+					RedrawWindow(hWnd, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 
 				}else if(cgame.playingstatus==WAITING){
-					strcpy(message[cgame.linetoprinton-1], cgame.outmessage);
+					strcpy(cgame.message[cgame.linetoprinton-1], cgame.outmessage);
 				}else if(cgame.playingstatus==ENDED){
-					strcpy(message[cgame.linetoprinton-1], cgame.outmessage);
-					gamestatus=GAMEOVER;
+					strcpy(cgame.message[cgame.linetoprinton-1], cgame.outmessage);
+					cgame.gamestatus=GAMEOVER;
 				}else{
 					cgame.playingstatus=RUNNING;
 				}
@@ -284,70 +289,70 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 			break;
 
 		default:
-			gamestatus=NOT_STARTED;
+			cgame.gamestatus=NOT_STARTED;
 			break;
-	}
+	}	
+}
+LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	static int kbcode;
+	
 	switch(msg)
 	{
+		case WM_CREATE:break;
 		case WM_PAINT:
-			MainWindowPaint(hWnd, hDc, message, cgame.linetoprinton);
-			return 0;
-			//break;
-
+			MainWindowPaint(hWnd, cgame.message, cgame.linetoprinton);
+			break;
 		case WM_COMMAND:
 			MainCommandProc(hWnd, LOWORD(wParam), HIWORD(wParam), (HWND)lParam);
-			return 0;
-
+			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
-
-			EXIT;
-			return 0;
-
-		case WM_KEYUP://Do as soon as key is let up
+			break;
+		case WM_KEYDOWN://Do as soon as key goes down
 			MainKeyboardProc(hWnd, kbcode, wParam, lParam);
-			return 0;
-			//break;
-		//default:
-		//	break;
+			break;
+		default:
+			return DefWindowProc(hWnd, msg, wParam, lParam);
+			break;
 	}
-	return DefWindowProc(hWnd, msg, wParam, lParam);
+	return 0L;
 }
 BOOL MainCommandProc(HWND hWnd, WORD wCommand, WORD wNotify, HWND hControl)
 {
 	switch(wCommand){
 		case CM_QUIT:
 			DestroyWindow(hWnd);
-			return 0;
 			break;
 		case CM_RESTART:
 			cgame.restartGame();
-			gamestatus=NOT_STARTED;
+			cgame.gamestatus=NOT_STARTED;
 			RedrawWindow(hWnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
-			return 0;
+			break;
 		case CM_CUSTOMGAME:
-			if(GetFileName(cgame.mapfilename, sizeof(cgame.mapfilename), hWnd)==TRUE){
+			if(GetFileName(cgame.mapfilename, MAX_PATH, hWnd)==TRUE){
 				cgame.restartGame();
-				gamestatus=NOT_STARTED;
+				cgame.gamestatus=NOT_STARTED;
 				RedrawWindow(hWnd, NULL, NULL, RDW_ERASE|RDW_INVALIDATE);
 			}
-			return 0;
+			break;
 		case CM_ABOUT:
 			#ifndef WORKINGDIALOG
 			MessageBox(hWnd, "WinCaslte: A Text Based Adventure\n\nVersion 4.01", "About", MB_OK|MB_ICONINFORMATION);
 			#else
-			DialogBox(NULL,MAKEINTRESOURCE(DIALOG_ABOUT), hWnd, DLGPROC(AboutBox));
+			DialogBox(NULL,MAKEINTRESOURCE(DIALOG_ABOUT), hWnd, AboutBox);
 			#endif
-			return 0;
+			break;
 		case CM_GAMESTATISTICS:
-			DialogBox(NULL,MAKEINTRESOURCE(DIALOG_2), hWnd, DLGPROC(StatisticsBox));
-			return 0;
+			DialogBox(NULL,MAKEINTRESOURCE(DIALOG_2), hWnd, StatisticsBox);
+			break;
 	}
 	return TRUE;
 }
 
 BOOL GetFileName(char *filename, int len, HWND hWnd)
 {
+
 	OPENFILENAME ofn;
 
 	ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -361,196 +366,23 @@ BOOL GetFileName(char *filename, int len, HWND hWnd)
 	return GetOpenFileName(&ofn);
 }
 
-BOOL RegisterWindowClass(HWND hWnd)
+BOOL RegisterWindowClass(HINSTANCE hInst)
 {
-	WNDCLASS wndClass;
-	ZeroMemory(&wndClass, sizeof(WNDCLASS));
+	WNDCLASSEX wndClass;
+	ZeroMemory(&wndClass, sizeof(WNDCLASSEX));
 
-	wndClass.style=CS_HREDRAW|CS_VREDRAW;
+	wndClass.cbSize=sizeof(WNDCLASSEX);
+	wndClass.hIconSm=NULL;
+	wndClass.style=0;//CS_HREDRAW|CS_VREDRAW;
 	wndClass.lpfnWndProc=MainWindowProc;
 	wndClass.cbClsExtra=0;
 	wndClass.cbWndExtra=0;
-	wndClass.hInstance=GetModuleHandle(NULL);
-	wndClass.hIcon=LoadIcon(wndClass.hInstance, MAKEINTRESOURCE(ICON_1));
+	wndClass.hInstance=hInst;//GetModuleHandle(NULL);
+	wndClass.hIcon=LoadIcon(hInst, MAKEINTRESOURCE(ICON_1));
 	wndClass.hCursor=LoadCursor(NULL, IDC_ARROW);
 	wndClass.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
 	wndClass.lpszMenuName=MAKEINTRESOURCE(MENU_1);
 	wndClass.lpszClassName=cgAppName;
-	if(!RegisterClass(&wndClass))
-		return FALSE;
+	if(!RegisterClassEx(&wndClass))return FALSE;
+	return TRUE;
 }
-
-
-
-
-
-
-
-
-
-
-
-/*
-	CheckStats checks the name of the map, the version of castle it is to
-	be used with, and the edition of the particular map.
-*/
-
-void CastleGame::restartGame()
-{
-	gameOver();
-
-}
-int CastleGame::initGame()
-{
-	char buffer[80];
-
-	if((fptr = fopen(mapfilename, "r")) == NULL){
-		sprintf(buffer, "Failed to open: %s\n", mapfilename);
-		printMsg(buffer);
-		exit(1);
-	}
-	checkStats();
-	return 0;
-}
-void CastleGame::gotoF(char *line)
-{
-	char buff[2];
-
-	buff[0] = line[4];
-	buff[1] = line[5];
-	seeker(buff);
-}
-
-void CastleGame::checkStats()
-{
-	char buffer[80];
-
-	fgets(map_name, sizeof(map_name), fptr);
-	/*
-	if(strncmp(map_name, "WINCASTLE", strlen("WINCASTLE")) == 0 ){
-		//printMsg("Using Default Map\n");
-	}else {
-		sprintf(buffer, "Using user map: %s\n", map_name);
-		//printMsg(buffer);
-	}
-	*/
-	fseek(fptr, 0, SEEK_CUR);
-	mapVersion = fgetc(fptr);
-	if(mapVersion != '3'){
-		sprintf(buffer, "Map ver %c not supported.", mapVersion);
-		printMsg(buffer);
-		gameOver();
-	}
-
-	fseek(fptr, NEWLINE, SEEK_CUR);
-	mapEdition = fgetc(fptr);
-	sprintf(buffer, "Map Edition %c", mapEdition);
-	//printMsg(buffer);
-}
-/*
-	GameOver just ends the game when its called.
-*/
-void CastleGame::gameOver()
-{
-	linetoprinton++;
-	printMsg("Game Over:");
-	fclose(fptr);
-	playingstatus=ENDED;
-}
-
-void CastleGame::printMsg(const char *line)
-{
-	strcpy(outmessage, line);
-}
-int CastleGame::getLine()
-{
-	int i;
-	char line[LINE_LEN];
-
-	fseek(fptr,NEWLINE,SEEK_CUR);
-	fgets(line, LINE_LEN, fptr);
-	fseek(fptr,-NEWLINE, SEEK_CUR);
-
-	if (PR){
-		for(i=3;i<strlen(line);i++)
-			line[i-3]=line[i];
-		for(i=1;i<5;i++)
-			line[strlen(line)-i]=' ';
-		printMsg(line);
-		playingstatus=RUNNING;
-		linetoprinton++;
-	}else if (END){
-		//printMsg("Gameover should happen");
-		gameOver();
-	}else if (CLS){
-		linetoprinton=0;
-		//printMsg("Clearing Screen");
-	}else if (CH){
-		for(i=3;i<strlen(line);i++)
-			line[i-3]=line[i];
-		for(i=1;i<5;i++)
-			line[strlen(line)-i]=' ';
-		printMsg(line);
-		linetoprinton++;
-		fseek(fptr, NEWLINE, SEEK_CUR);
-		fgets(gotowhere, GOT_LEN, fptr);
-		playingstatus = WAITING;
-		return WAITING;
-	}else if (GOT){
-		gotoF(line);
-		//playingstatus=RUNNING;
-	}else{
-		printMsg("File is no longer open");
-	}
-}
-
-void CastleGame::makeChoice(int choice)
-{
-	char buffer[2];
-	switch (choice){
-		case '1':
-			buffer[0] = gotowhere[1];
-			buffer[1] = gotowhere[2];
-			seeker(buffer);
-			playingstatus=RUNNING;
-			break;
-		case '2':
-			fseek(fptr, 0, SEEK_CUR);
-			fgets(gotowhere, GOT_LEN, fptr);
-			buffer[0] = gotowhere[1];
-			buffer[1] = gotowhere[2];
-			fseek(fptr, -NEWLINE, SEEK_CUR);
-			seeker(buffer);
-			playingstatus=RUNNING;
-			break;
-		default:
-			;//linetoprinton=0;
-			//printMsg("Error 502: Occured Ending Program");
-	}
-}
-
-void CastleGame::seeker(char *sstring)
-{
-	rewind(fptr);
-	while(fseeker(sstring) != FSUCCESS){}
-}
-
-int CastleGame::fseeker(char search[2])
-{
-	char searcher[80];
-	int i;
-	i = 0;
-	while ((searcher[i] = fgetc(fptr)) != '\n'){
-		i++;
-	}
-	if ((searcher[0] == search[0]) && (searcher[1] == search[1])){
-// We've found a match.
-
-		return FSUCCESS;
-	}
-	else{
-//No match lets try again.
-		return FFAIL;
-	}
-}
-

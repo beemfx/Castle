@@ -6,23 +6,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\SRC\WCastle.cpp">
-      <Filter>SRC</Filter>
-    </ClCompile>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\Castle.h">
       <Filter>SRC</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-    <None Include="..\SRC\WCastle.def">
+    <ClInclude Include="..\SRC\DirectMidi.h">
       <Filter>SRC</Filter>
-    </None>
-    <None Include="..\SRC\WCastle.rh">
+    </ClInclude>
+    <ClInclude Include="..\SRC\resource.h">
       <Filter>SRC</Filter>
-    </None>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\SRC\castle.ico">
@@ -30,7 +25,18 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\SRC\WCastle.rc">
+    <ClCompile Include="..\SRC\CastleGame.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\DirectMidi.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRC\WCastle.cpp">
+      <Filter>SRC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\SRC\cresource.rc">
       <Filter>SRC</Filter>
     </ResourceCompile>
   </ItemGroup>
