@@ -5,11 +5,10 @@ This is the C++ version of Castle for command prompt.
 
 ## Building
 
-Being that this was my first C program it is not ANSI compliant and has limited
-compiler support. It was originally compiled using Borland C++ 4.52 and that
-can compile it to a working binary (an ide project is provided). The code could
-be modified to compile on modern compilers with a few tweaks, but I want to
-preserve the original code as is.
+A visual studio 2022 project is provided to build the binary for Windows
+platforms. The code was updated to make that possible. So it is technically
+version 3.03. Non-windows platforms will require modifications since the clear
+screen is dependen on Windows.
 
 ## History
 

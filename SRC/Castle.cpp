@@ -7,7 +7,7 @@
 
 	Language: ANSI C++
 
-	version: 3.02
+	version: 3.03
 */
 /*
 	This program will read a castle
@@ -23,6 +23,12 @@
 
 	Notice: Castle source code should be fully ANSI compliant.
 	I've tested compiling it with both Borland C++ 4.52 and DJGPP 2.01.
+
+	October 21, 2025
+	I fixed some buffer overrun crashes as well as made the code compile
+	correctly with Visual Studio 2022. I made as minimal changes to make
+	sure the code would at least build. Other than that the code is
+	intact for historical purposes.
 */
 //#define DEBUG
 
@@ -32,9 +38,18 @@
 #include <conio.h>
 #include "castle.h"
 
+#if defined(_WIN32)
+	static void clrscr()
+	{
+		system("cls");
+	}
+
+	#define getch _getch
+#endif
+
 int main(int argc, char *argv[])
 {
-	char *filename;
+	const char *filename;
 	CastleGame game;
 
 	if(argv[1] != NULL){
@@ -52,7 +67,7 @@ int main(int argc, char *argv[])
 	be used with, and the edition of the particular map.
 */
 
-int CastleGame::playGame(char *filename)
+int CastleGame::playGame(const char *filename)
 {
 	FILE *fptr;
 
@@ -70,7 +85,7 @@ int CastleGame::playGame(char *filename)
 }
 void CastleGame::gotoF(char *line, FILE *fin)
 {
-	char buff[1];
+	char buff[2];
 
 	buff[0] = line[4];
 	buff[1] = line[5];
@@ -106,7 +121,7 @@ void CastleGame::checkStats(FILE *fin)
 */
 void CastleGame::gameOver(FILE *fin)
 {
-	int endit;
+	int endit = 0;
 	putchar('\n');
 	printf("Game Over: Press Enter to Continue:");
 	while (endit != 13){
@@ -152,7 +167,7 @@ void CastleGame::makeChoice(FILE *fin, char *line)
 	int i;
 	int select;
 	char gotowhere[GOT_LEN];
-	char buffer[1];
+	char buffer[2];
 
 	putchar('\n');
 	printMsg(line);

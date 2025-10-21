@@ -1,7 +1,6 @@
 # Visual Studio 2022 Project
-You can view the source code in this VS Solution, but it won't compile since it
-has a lot of legacy calls, you'd have to modify the code to get it to compile.
+October 21, 2025
+The code was updated the build witih Visual Studio 2022.
 
-* getch needs to be changed to _getch.
-* clrscr needs to be replaced with something for Windows.
-* Other warnings should be addressed as well.
+To properly run the game from the debugger the debugging directory should be set
+to the DATA directory or the binary won't find the game data.

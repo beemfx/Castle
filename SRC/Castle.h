@@ -12,7 +12,7 @@
 class CastleGame
 {
 	public:
-		int playGame(char *filename);           //Starts up a game of Castle
+		int playGame(const char *filename);           //Starts up a game of Castle
 	private:
 		void gameOver(FILE *fin);               //Terminates a game of Castle
 		void checkStats(FILE *fin);             //Checks the version of Castle map
