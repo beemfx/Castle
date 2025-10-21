@@ -1,5 +1,10 @@
+// (c) 2025 Beem Media. All rights reserved.
+
 #pragma once
+
 #include <memory.h>
+#include <string>
+#include <vector>
 
 //////////////////////////////////////////////////
 // EG Types (Since we are using some eg libraries)
@@ -24,7 +29,7 @@ typedef unsigned __int64 eg_uintptr_t;
 typedef unsigned __int32 eg_uintptr_t;
 #endif
 
-static_assert( sizeof(eg_uintptr_t) == sizeof(void*) , "Wrong size!" );
+static_assert(sizeof(eg_uintptr_t) == sizeof(void*), "Wrong size!");
 
 #define EG_INLINE inline
 #define null nullptr
@@ -32,27 +37,27 @@ static_assert( sizeof(eg_uintptr_t) == sizeof(void*) , "Wrong size!" );
 #define assert( a ) { if( !( a ) ){ __debugbreak(); } }
 #define countof(b) (sizeof(b)/sizeof(0[(b)]))
 
-template<class T> static void zero( T Obj )
+template<class T> static void zero(T Obj)
 {
-	memset( Obj , 0 , sizeof(*Obj) );
+	memset(Obj, 0, sizeof(*Obj));
 }
 
 template<class T> static EG_INLINE T EG_Max(T v1, T v2)
 {
-	return ((v1)>(v2))?(v1):(v2);
+	return ((v1) > (v2)) ? (v1) : (v2);
 }
 
 template<class T> static EG_INLINE T EG_Min(T v1, T v2)
 {
-	return ((v1)<(v2))?(v1):(v2);
+	return ((v1) < (v2)) ? (v1) : (v2);
 }
 
 template<class T> static EG_INLINE T EG_Clamp(T v1, T min, T max)
 {
-	return ( (v1)>(max)?(max):(v1)<(min)?(min):(v1) );
+	return ((v1) > (max) ? (max) : (v1) < (min) ? (min) : (v1));
 }
 
-static void EG_INLINE EGMem_Set( void* Dest , eg_int Value , eg_size_t Size )
+static void EG_INLINE EGMem_Set(void* Dest, eg_int Value, eg_size_t Size)
 {
-	memset( Dest , Value , Size );
+	memset(Dest, Value, Size);
 }

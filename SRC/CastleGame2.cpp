@@ -19,16 +19,13 @@
 #include "EGParse.h"
 
 CCastleGame::CCastleGame(const char* szInitialMap)
-: m_OutputSize(0)
-, m_InputType(INPUT_NONE)
-, m_HadError(false)
 {
 	LoadMap(szInitialMap);
 }
 
 CCastleGame::~CCastleGame()
 {
-	
+
 }
 
 
@@ -36,84 +33,86 @@ bool CCastleGame::LoadMap(const char* szFilename)
 {
 	//Open the file, return false if the file can't be opened.
 	CDataStream DataStream;
-	if(!DataStream.Open(szFilename))
+	if (!DataStream.Open(szFilename))
+	{
 		return false;
-		
-	m_OutputSize=0;
-	m_Output[0] = '\0';
-	m_nNumChoices=0;
-	
-	ReadStatement( DataStream , m_szMapName , countof(m_szMapName) );
-	LoadProgram( DataStream );
+	}
+
+	m_Output.resize(0);
+	m_ChoiceStrings.resize(0);
+
+	ReadStatement(DataStream, m_szMapName);
+	LoadProgram(DataStream);
 	Restart();
 	return true;
 }
 
-void CCastleGame::LoadProgram( CDataStream& Stream )
+void CCastleGame::LoadProgram(CDataStream& Stream)
 {
-	m_Program.Resize(0);
+	m_Program.resize(0);
 	m_LabelMap.Clear();
 
-	char szCurrentString[MAX_CHARS_PER_LINE];
+	std::string szCurrentString;
 
-	while( Stream.Tell() < Stream.GetSize() )
+	while (Stream.Tell() < Stream.GetSize())
 	{
 		//Read the next statement
-		STATEMENTRESULT stResult=ReadStatement( Stream , szCurrentString , countof(szCurrentString) );
-		if(stResult == ST_FUNCTION)
+		szCurrentString.resize(0);
+		STATEMENTRESULT stResult = ReadStatement(Stream, szCurrentString);
+		if (stResult == ST_FUNCTION)
 		{
 			SFunction NewFunction;
 			NewFunction.Statement = szCurrentString;
-			m_Program.Append( NewFunction );
+			m_Program.emplace_back(NewFunction);
 		}
-		else if(stResult==ST_LABEL)
+		else if (stResult == ST_LABEL)
 		{
-			m_LabelMap.AddLabel( szCurrentString , m_Program.GetLength() );
+			m_LabelMap.AddLabel(szCurrentString.c_str(), m_Program.size());
 		}
 		else
 		{
-			CompileError(("Error: An error occured while translating the script!"));
+			CompileError(("Error: An error occurred while translating the script!"));
 		}
 	}
 }
 
-const char* CCastleGame::GetMapName()const
-{
-	return m_szMapName;
-}
-
 //Read File till ; is encountered
-CCastleGame::STATEMENTRESULT CCastleGame::ReadStatement( CDataStream& Stream , char* szOut , int nMaxLen )
+CCastleGame::STATEMENTRESULT CCastleGame::ReadStatement(CDataStream& Stream, std::string& Out)
 {
-	bool bInsideQuotes=false;
+	bool bInsideQuotes = false;
 	//int dwBytesRead=0;
-	char sChar=0;
+	char sChar = 0;
 
-	int i=0;
-	while(true)
+	int i = 0;
+	while (true)
 	{
 		//Read one character.
-		if((Stream.Read((unsigned char*)&sChar, sizeof(char))==0) || i>=nMaxLen)
+		if ((Stream.Read((unsigned char*)&sChar, sizeof(char)) == 0))
 			return ST_FAIL;
-		
-		if(sChar==' ' && !bInsideQuotes)
+
+		if (sChar == ' ' && !bInsideQuotes)
 			;
 		//This line will remove tabs newlines null characters and return carriages
-		else if(sChar==('\n') || sChar==('\t') || sChar==('\0') || sChar==('\r'))
+		else if (sChar == ('\n') || sChar == ('\t') || sChar == ('\0') || sChar == ('\r'))
 			;
-		else if( (sChar==(';')) && (!bInsideQuotes) ){
-			szOut[i]=NULL;
+		else if ((sChar == (';')) && (!bInsideQuotes))
+		{
 			return ST_FUNCTION;
-		}else if( (sChar==(':')) && (!bInsideQuotes) ){
-			szOut[i]=NULL;
+		}
+		else if ((sChar == (':')) && (!bInsideQuotes))
+		{
 			return ST_LABEL;
-		}else if(sChar==('"')){
-			if(bInsideQuotes)bInsideQuotes=false;
-			else bInsideQuotes=true;
-			szOut[i]=('"');
+		}
+		else if (sChar == ('"'))
+		{
+			if (bInsideQuotes)bInsideQuotes = false;
+			else bInsideQuotes = true;
+			Out += '"';
 			i++;
-		}else{
-			szOut[i]=sChar;
+		}
+		else
+		{
+			Out += sChar;
 			i++;
 		}
 	}
@@ -123,25 +122,24 @@ CCastleGame::STATEMENTRESULT CCastleGame::ReadStatement( CDataStream& Stream , c
 void CCastleGame::Restart()
 {
 	m_InstrPtr = 0;
-	m_OutputSize = 0;
-	m_Output[0] = '\0';
+	m_Output.resize(0);
 	m_InputType = INPUT_NONE;
 	m_HadError = false;
 	m_CompileError = "";
 	ProcessGameUntilBreak();
 }
 
-bool CCastleGame::GotoLabel( const char* StrLabel )
+bool CCastleGame::GotoLabel(const std::string& StrLabel)
 {
-	eg_uint NextInstr = m_LabelMap.GetProgramIndex( StrLabel );
-	if( CLabelMap::INVALID_INDEX != NextInstr )
+	const std::size_t NextInstr = m_LabelMap.GetProgramIndex(StrLabel);
+	if (CLabelMap::INVALID_INDEX != NextInstr)
 	{
 		m_InstrPtr = NextInstr;
 		return true;
 	}
 	else
 	{
-		CompileError( "Invalid Label" );
+		CompileError("Invalid Label");
 	}
 
 	return false;
@@ -149,178 +147,154 @@ bool CCastleGame::GotoLabel( const char* StrLabel )
 
 bool CCastleGame::SendInput(int nChoice)
 {
-	switch( m_InputType )
+	switch (m_InputType)
 	{
-		case INPUT_NONE: return false;
-		case INPUT_CHOICESWITCH:
-			if( 0 <= nChoice && nChoice < m_nNumChoices )
+	case INPUT_NONE: return false;
+	case INPUT_CHOICESWITCH:
+		if (0 <= nChoice && nChoice < m_ChoiceStrings.size())
+		{
+			if (GotoLabel(m_szGotoChoice[nChoice]))
 			{
-				if( GotoLabel(m_szGotoChoice[nChoice]) )
-				{
-					ProcessGameUntilBreak();
-					return true;
-				}
-			}
-			break;
-		case INPUT_GETCHOICE:
-			if( 0 <= nChoice && nChoice < m_nNumChoices )
-			{
-				m_nInputChoice = nChoice;
 				ProcessGameUntilBreak();
 				return true;
 			}
-			break;
+		}
+		break;
+	case INPUT_GETCHOICE:
+		if (0 <= nChoice && nChoice < m_ChoiceStrings.size())
+		{
+			m_nInputChoice = nChoice;
+			ProcessGameUntilBreak();
+			return true;
+		}
+		break;
 	}
 
 	return false;
 }
 
-void CCastleGame::CompileError( const char* lpErrorMessage )
+void CCastleGame::CompileError(const char* lpErrorMessage)
 {
 	m_CompileError = lpErrorMessage;
 	m_HadError = true;
 }
 
-const char* CCastleGame::GetCompilerError()const
-{
-	return m_CompileError;
-}
-
-void CCastleGame::DoPrint( const char* StrLine )
+void CCastleGame::DoPrint(const char* StrLine)
 {
 	//If text exists and the last line is not a \n then add a space.
-	if( 0 < m_OutputSize && m_OutputSize <(countof(m_Output)-1) && m_Output[m_OutputSize-1] != '\n' && m_Output[m_OutputSize-1] != ' ' )
+	if (0 < m_Output.size() && m_Output[m_Output.size() - 1] != '\n' && m_Output[m_Output.size() - 1] != ' ')
 	{
-		m_Output[m_OutputSize] = ' ';
-		m_OutputSize++;
-	}
-	while( *StrLine )
-	{
-		if( m_OutputSize < (countof(m_Output)-1) )
-		{
-			m_Output[m_OutputSize] = *StrLine;
-			m_OutputSize++;
-		}
-		else
-		{
-			assert( false ); //Perhaps the output size should be bigger.
-			break;
-		}
-		StrLine++;
+		m_Output += ' ';
 	}
 
-	assert( m_OutputSize < countof(m_Output) );
-	m_Output[m_OutputSize] = '\0';
+	while (*StrLine)
+	{
+		m_Output += *StrLine;
+		StrLine++;
+	}
 }
 
 void CCastleGame::ProcessGameUntilBreak()
 {
-	m_nNumChoices=0;
+	m_ChoiceStrings.resize(0);
 
 	int NumLoops = 0;
-	while( m_InstrPtr < m_Program.GetLength() && !m_HadError )
+	while (m_InstrPtr < m_Program.size() && !m_HadError)
 	{
 		const SFunction& Instr = m_Program[m_InstrPtr];
 		m_InstrPtr++;
-		
+
 		egParseFuncInfo ParseInfo;
-		EGPARSE_RESULT ParseRes = EGParse_ParseFunction( Instr.Statement , &ParseInfo );
-		if( EGPARSE_OKAY == ParseRes )
+		EGPARSE_RESULT ParseRes = EGParse_ParseFunction(Instr.Statement.c_str(), &ParseInfo);
+		if (EGPARSE_OKAY == ParseRes)
 		{
 			eg_string FunctionName = ParseInfo.FunctionName;
-			if( FunctionName.Equals( "PRINT" ) )
+			if (FunctionName.Equals("PRINT"))
 			{
-				DoPrint( ParseInfo.Parms[0] );
+				DoPrint(ParseInfo.Parms[0]);
 			}
-			else if( FunctionName.Equals( "CHOICE" ) )
+			else if (FunctionName.Equals("CHOICE"))
 			{
-				if( (ParseInfo.NumParms%2) == 0 )
+				if ((ParseInfo.NumParms % 2) == 0)
 				{
 					m_InputType = INPUT_CHOICESWITCH;
-					m_nNumChoices = 0;
-					m_nInputChoice = ParseInfo.NumParms/2;
+					m_ChoiceStrings.resize(0);
+					m_szGotoChoice.resize(0);
+					m_nInputChoice = ParseInfo.NumParms / 2;
 
-					for( int i=0; i<m_nInputChoice; i++ )
+					for (int i = 0; i < m_nInputChoice; i++)
 					{
-						m_ChoiceStrings[i] = ParseInfo.Parms[i*2+0];
-						m_szGotoChoice[i] = ParseInfo.Parms[i*2+1];
-						m_nNumChoices++;
+						m_ChoiceStrings.push_back(ParseInfo.Parms[i * 2 + 0]);
+						m_szGotoChoice.push_back(ParseInfo.Parms[i * 2 + 1]);
 					}
 					break;
 				}
 				else
 				{
-					CompileError( "CHOICE must have a label for every string." );
+					CompileError("CHOICE must have a label for every string.");
 				}
 			}
-			else if( FunctionName.Equals( "CLS" ) )
+			else if (FunctionName.Equals("CLS"))
 			{
-				m_OutputSize = 0;
-				m_Output[0] = '\0';
+				m_Output.resize(0);
 			}
-			else if( FunctionName.Equals( "GOTO" ) )
+			else if (FunctionName.Equals("GOTO"))
 			{
-				GotoLabel( ParseInfo.Parms[0] );
+				GotoLabel(ParseInfo.Parms[0]);
 			}
-			else if( FunctionName.Equals( "END" ) )
+			else if (FunctionName.Equals("END"))
 			{
-				DoPrint( "\n\nThe End" );
+				DoPrint("\n\nThe End");
 				break;
 			}
-			else if( FunctionName.Equals( "GETCHOICE" ) )
+			else if (FunctionName.Equals("GETCHOICE"))
 			{
 				m_InputType = INPUT_GETCHOICE;
 				m_nInputChoice = 0;
-				m_nNumChoices = ParseInfo.NumParms;
+				m_ChoiceStrings.resize(ParseInfo.NumParms);
 				//Print all the choices.
-				for( int i=0; i<m_nNumChoices; i++ )
+				for (int i = 0; i < m_ChoiceStrings.size(); i++)
 				{
 					m_ChoiceStrings[i] = ParseInfo.Parms[i];
 				}
 				break;
 			}
-			else if( FunctionName.Equals( "JUMPONCHOICE" ) )
+			else if (FunctionName.Equals("JUMPONCHOICE"))
 			{
-				if( 0 <= m_nInputChoice && m_nInputChoice < static_cast<int>(ParseInfo.NumParms) )
+				if (0 <= m_nInputChoice && m_nInputChoice < static_cast<int>(ParseInfo.NumParms))
 				{
-					if( GotoLabel( ParseInfo.Parms[m_nInputChoice] ) )
+					if (GotoLabel(ParseInfo.Parms[m_nInputChoice]))
 					{
 
 					}
 					else
 					{
-						CompileError( "JUMPONCHOICE had an invalid label." );
+						CompileError("JUMPONCHOICE had an invalid label.");
 					}
 				}
 				else
 				{
-					CompileError( "JUMPONCHIOCE had less labels than the given input." );
+					CompileError("JUMPONCHIOCE had less labels than the given input.");
 				}
 			}
 			else
 			{
-				CompileError( EGString_Format( "Invalid function %s" , *ParseInfo.FunctionName ) );
+				CompileError(EGString_Format("Invalid function %s", *ParseInfo.FunctionName));
 			}
 		}
 		else
 		{
-			CompileError( EGString_Format("Invalid statement: %s" , &Instr.Statement ) );
+			CompileError(EGString_Format("Invalid statement: %s", &Instr.Statement));
 		}
 
 		//if this loop loops too many times we quit because there is probably
 		//a problem with the script (for example an infinite GOTO loop)
 		NumLoops++;
-		if(NumLoops>10000)
+		if (NumLoops > 10000)
 		{
 			CompileError(("Error: Possible Infinite Loop!"));
-			m_nNumChoices = 0;
+			m_ChoiceStrings.resize(0);
 			return;
 		}
 	}
-}
-
-size_t CCastleGame::GetOutput( char* Output , size_t OutputSize )
-{
-	strncpy_s( Output , OutputSize , m_Output , countof(m_Output) );
-	return m_OutputSize;
 }

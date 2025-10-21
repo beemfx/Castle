@@ -12,17 +12,13 @@
 class CCastleGame
 {
 public:
-	static const int MAX_CHOICES = 10;
-private:
-	static const int CA_MAX_PATH = 260;
-	static const int MAX_CHARS_PER_LINE = 1024;
-	static const int MAX_OUTPUT_SIZE=1024*10;
+	using CStringArray = std::vector<std::string>;
 
 	enum STATEMENTRESULT
 	{
-		ST_FUNCTION, 
-		ST_LABEL, 
-		ST_FAIL, 
+		ST_FUNCTION,
+		ST_LABEL,
+		ST_FAIL,
 		ST_UNKNOWN,
 	};
 
@@ -35,7 +31,7 @@ private:
 
 	struct SFunction
 	{
-		eg_string Statement;
+		std::string Statement;
 	};
 
 	class CLabelMap
@@ -45,28 +41,28 @@ private:
 	private:
 		struct SLabel
 		{
-			eg_string Label;
-			eg_uint   ProgramIndex;
+			std::string Label;
+			std::size_t ProgramIndex = 0;
 		};
 
 		EGArray<SLabel> m_Labels; // Could be optimized by using a map
 
 	public:
-		void Clear(){ m_Labels.Resize(0); }
-		void AddLabel( eg_cpstr Label , eg_uint ProgramIndex )
+		void Clear() { m_Labels.Resize(0); }
+		void AddLabel(eg_cpstr Label, std::size_t ProgramIndex)
 		{
 			SLabel NewLabel;
 			NewLabel.Label = Label;
 			NewLabel.ProgramIndex = ProgramIndex;
-			m_Labels.Append( NewLabel );
+			m_Labels.Append(NewLabel);
 		}
 
-		eg_uint GetProgramIndex( eg_cpstr Label )const
+		std::size_t GetProgramIndex(const std::string& Label)const
 		{
-			for( eg_uint i=0; i<m_Labels.GetLength(); i++ )
+			for (eg_uint i = 0; i < m_Labels.GetLength(); i++)
 			{
-				const SLabel& Lbl  = m_Labels[i];
-				if( Lbl.Label.Equals( Label ) )
+				const SLabel& Lbl = m_Labels[i];
+				if (Lbl.Label == Label)
 				{
 					return Lbl.ProgramIndex;
 				}
@@ -76,43 +72,39 @@ private:
 		}
 	};
 
-
-
 private:
-	EGArray<SFunction> m_Program;
-	CLabelMap          m_LabelMap;
-	eg_uint            m_InstrPtr;
-	e_input_t m_InputType;
-	int m_nNumChoices;
+	std::vector<SFunction> m_Program;
+	CLabelMap m_LabelMap;
+	std::size_t m_InstrPtr = 0;
+	e_input_t m_InputType = INPUT_NONE;
 	int m_nInputChoice;
-	char m_szMapName[CA_MAX_PATH]; //The name of the map default map is WINCASTLE
-	char m_Output[MAX_OUTPUT_SIZE];
-	int  m_OutputSize;
-	eg_string m_szGotoChoice[MAX_CHOICES];
-	eg_string m_ChoiceStrings[MAX_CHOICES];
-	eg_string m_CompileError;
-	bool m_HadError:1;
-	
+	std::string m_szMapName; //The name of the map default map is WINCASTLE
+	std::string m_Output;
+	CStringArray m_szGotoChoice;
+	CStringArray m_ChoiceStrings;
+	std::string m_CompileError;
+	bool m_HadError = false;
+
 private:
-	STATEMENTRESULT ReadStatement(CDataStream& Stream , char* szOut, int nMaxLen); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
-	void CompileError( const char* szErrorMessage);
-	bool GotoLabel( const char* StrLabel );
-	void LoadProgram( CDataStream& Stream );
-	void DoPrint( const char* StrLine );
+	STATEMENTRESULT ReadStatement(CDataStream& Stream, std::string& Out); //Read file until ; (end of statement) is found, remove white space (except for the stuff inside quoatations)
+	void CompileError(const char* szErrorMessage);
+	bool GotoLabel(const std::string& StrLabel);
+	void LoadProgram(CDataStream& Stream);
+	void DoPrint(const char* StrLine);
 public:
 	CCastleGame(const char* szInitialMap);
 	~CCastleGame();
 	bool LoadMap(const char* szFilename);
-	
-	const char* GetMapName()const;
-	const char* GetCompilerError()const;
-	
+
+	const std::string& GetMapName() const { return m_szMapName; }
+	const std::string& GetCompilerError() const { return m_CompileError; }
+
 	void ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
 
 	bool SendInput(int nChoice);
 	void Restart();
-	
-	size_t GetOutput( char* Output , size_t OutputSize );
-	int GetNumChoices()const{ return m_nNumChoices; }
-	const char* GetChoiceText( int Index )const{ if( 0 <= Index && Index < m_nNumChoices ){ return m_ChoiceStrings[Index]; } return ""; }
+
+	const std::string& GetOutput() const { return m_Output; }
+	std::size_t GetNumChoices() const { return m_ChoiceStrings.size(); }
+	const char* GetChoiceText(int Index)const { if (0 <= Index && Index < m_ChoiceStrings.size()) { return m_ChoiceStrings[Index].c_str(); } return ""; }
 };
