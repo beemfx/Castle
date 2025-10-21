@@ -1,4 +1,4 @@
-# Castle: A Text Based Adventure v3.xx
+# WinCastle: A Text Based Adventure
 Castle (c) 2001 Beem Media. All rights reserved.
 
 This is the original Win32 C++ version of Castle.
