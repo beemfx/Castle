@@ -1,7 +1,9 @@
 # WinCastle: A Text Based Adventure
 Castle (c) 2001 Beem Media. All rights reserved.
 
-This is the second iteration of the Win32 C++ version of Castle.
+This is the second iteration of the Win32 C++ version of Castle. I'm not
+actually sure why I considered this to be diffferent than the 3.XX Win32 version
+since they both read the same tba, this one just has some bug fixes.
 
 ## Building
 

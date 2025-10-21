@@ -68,7 +68,7 @@ void CastleGame::gameOver()
 	playingstatus=ENDED;
 }
 
-void CastleGame::printMsg(char *line)
+void CastleGame::printMsg(const char *line)
 {
 	strcpy(outmessage, line);
 }

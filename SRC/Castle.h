@@ -22,7 +22,7 @@ enum GamePlayingStatusType{WAITING, RUNNING, ENDED};
 typedef class CastleGame
 {
 	public:
-		CastleGame(char *initialmap){
+		CastleGame(const char *initialmap){
 			strcpy(mapfilename, initialmap);
 		};
 		~CastleGame(){fclose(fptr);};
@@ -42,7 +42,7 @@ typedef class CastleGame
 		FILE *fptr;
 		char gotowhere[GOT_LEN];
 		void gotoF(char *line);      //goes to a particual part of the map
-		void printMsg(char *line);              //prints a message out on the screen
+		void printMsg(const char *line);              //prints a message out on the screen
 		void gameOver();               //Terminates a game of Castle
 	public:
 		int linetoprinton;
