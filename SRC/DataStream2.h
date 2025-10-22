@@ -4,12 +4,15 @@
 
 class CDataStream
 {
-private:
-	bool m_bOpen;
-	int m_nSize;
-	int m_nDataPointer;
+public:
+	using ds_byte = unsigned char;
+	static_assert(sizeof(ds_byte) == 1, "A byte must have a size of 1.");
 
-	unsigned char* m_pData;
+private:
+	std::vector<ds_byte> m_Data;
+	std::size_t m_ReadPtr = 0;
+	bool m_bOpen = false;
+
 public:
 	enum MOVE_T
 	{
@@ -17,15 +20,16 @@ public:
 		MOVE_END = 1,
 		MOVE_CUR = 2,
 	};
+
 public:
-	CDataStream();
-	CDataStream(char* szFile);
+	CDataStream() = default;
+	CDataStream(const char* Filename);
 	~CDataStream();
 
-	bool Open(const char* szFile);
+	bool Open(const char* Filename);
 	void Close();
-	int Read(unsigned char* pBuffer, int count);
-	int GetSize();
-	int Seek(signed long nDistance, MOVE_T nMethod);
-	int Tell();
+	std::size_t Read(ds_byte* pBuffer, std::size_t count);
+	std::size_t GetSize() const;
+	std::size_t Seek(signed long nDistance, MOVE_T nMethod);
+	std::size_t Tell() const;
 };

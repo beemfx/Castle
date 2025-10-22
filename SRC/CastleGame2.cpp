@@ -1,8 +1,5 @@
 // (c) 2025 Beem Media. All rights reserved.
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "CastleGame2.h"
 #include "EGParse.h"
 
