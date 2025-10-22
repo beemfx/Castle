@@ -4,8 +4,6 @@
 #include "CastleGame2.h"
 #include <windows.h>
 #include <windowsx.h>
-#include <tchar.h>
-#include <stdio.h>
 #include "resource.h"
 
 static const TCHAR* Main_CurVersion = TEXT("version 6.00");
@@ -457,8 +455,7 @@ public:
 			break;
 		case CM_CUSTOMGAME:
 		{
-			TCHAR szTempFilename[MAX_PATH];
-			_tcscpy_s(szTempFilename, TEXT("Text Based Adventure"));
+			TCHAR szTempFilename[MAX_PATH] = {};
 			TCHAR szTitle[] = TEXT("Open File");
 			TCHAR szFilter[] = TEXT("Text Based Adventure (*.tba)\0*.tba\0All Files (*.*)\0*.*\0");
 			if (GetOpenFilename(szTitle, szFilter, hWnd, szTempFilename))

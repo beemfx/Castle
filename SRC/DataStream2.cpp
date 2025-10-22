@@ -34,8 +34,8 @@ bool CDataStream::Open(const eg_path& Filename)
 		return false;
 	}
 
-	const std::size_t FileSize = std::filesystem::file_size(FileToOpen);
-	m_Data.resize(FileSize);
+	const std::uintmax_t FileSize = std::filesystem::file_size(FileToOpen);
+	m_Data.resize(static_cast<std::size_t>(FileSize));
 	if (m_Data.size() == FileSize)
 	{
 		std::ifstream File(FileToOpen, std::ios::binary);
