@@ -72,7 +72,7 @@ CCastleGame::STATEMENTRESULT CCastleGame::ReadStatement(CDataStream& Stream, std
 	while (true)
 	{
 		//Read one character.
-		if ((Stream.Read((unsigned char*)&sChar, sizeof(char)) == 0))
+		if (Stream.Read(reinterpret_cast<CDataStream::ds_byte*>(&sChar), sizeof(sChar)) == 0)
 			return ST_FAIL;
 
 		if (sChar == ' ' && !bInsideQuotes)

@@ -7,7 +7,7 @@
 class CDataStream
 {
 public:
-	using ds_byte = unsigned char;
+	using ds_byte = std::uint8_t;
 	static_assert(sizeof(ds_byte) == 1, "A byte must have a size of 1.");
 
 private:
