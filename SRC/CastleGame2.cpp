@@ -1,17 +1,5 @@
-/*
-	CastleGame2.cpp - Routines and functions for
-	CCastleGame class.
+// (c) 2025 Beem Media. All rights reserved.
 
-	The CCastleGame class is a much more advanced version of
-	the original CastleGame class.  This new class translates
-	type 4 maps.  Type 4 maps look more like c++, and allow use
-	of white space and comments.  The compiler functions work a lot
-	better than the original class.  The code is also much better
-	organized (now that I know a hell of a lot more about Windows
-	programming).
-
-	Copyright (c) 2002, 2003, Blaine Myers
-*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

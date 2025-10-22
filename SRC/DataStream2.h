@@ -1,11 +1,13 @@
+// (c) 2025 Beem Media. All rights reserved.
+
 #pragma once
 
 class CDataStream
 {
 private:
 	bool m_bOpen;
-	int  m_nSize;
-	int  m_nDataPointer;
+	int m_nSize;
+	int m_nDataPointer;
 
 	unsigned char* m_pData;
 public:

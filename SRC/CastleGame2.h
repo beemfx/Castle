@@ -1,8 +1,4 @@
-/*
-	Castle2.h Header for CCastleGame class
-
-	Copyright (c) 2002, 2003, Blaine Myers
-*/
+// (c) 2025 Beem Media. All rights reserved.
 
 #include "DataStream2.h"
 #include "CastleTypes.h"

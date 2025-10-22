@@ -1,8 +1,4 @@
-/******************************************************************************
-main.cpp - Entry point for WinCastle
-(c) 1997-2015 Beem Software
-******************************************************************************/
-
+// (c) 2025 Beem Media. All rights reserved.
 
 #include <windows.h>
 #include <windowsx.h>
@@ -22,7 +18,7 @@ static const COLORREF Main_ChoiceBorderColor = RGB(150, 150, 150);
 static const int      Main_ChoiceBorderSize = 2;
 static const eg_char* Main_WinName = TEXT("Castle: A Text Based Adventure");
 
-static class CGameShell
+class CGameShell
 {
 private:
 	static const std::size_t MAX_CHOICES = 10;
@@ -497,9 +493,11 @@ public:
 		return GetOpenFileName(&ofn);
 	}
 
-} Main_GameShell;
+};
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
+	CGameShell Main_GameShell;
+
 	Main_GameShell.Run(hInstance, nCmdShow);
 }

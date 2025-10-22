@@ -1,3 +1,5 @@
+// (c) 2025 Beem Media. All rights reserved.
+
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
