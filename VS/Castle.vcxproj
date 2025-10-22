@@ -24,14 +24,14 @@
   <ItemGroup>
     <ClCompile Include="..\SRC\CastleGame2.cpp" />
     <ClCompile Include="..\SRC\DataStream2.cpp" />
-    <ClCompile Include="..\SRC\eglib\EGParse.cpp" />
-    <ClCompile Include="..\SRC\main.cpp" />
+    <ClCompile Include="..\SRC\EGParse.cpp" />
+    <ClCompile Include="..\SRC\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\CastleGame2.h" />
     <ClInclude Include="..\SRC\CastleTypes.h" />
     <ClInclude Include="..\SRC\DataStream2.h" />
-    <ClInclude Include="..\SRC\eglib\EGParse.h" />
+    <ClInclude Include="..\SRC\EGParse.h" />
     <ClInclude Include="..\SRC\resource.h" />
   </ItemGroup>
   <ItemGroup>

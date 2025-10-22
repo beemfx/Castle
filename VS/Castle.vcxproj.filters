@@ -4,9 +4,6 @@
     <Filter Include="SRC">
       <UniqueIdentifier>{f9286456-91bc-4e92-9d6d-0b4018b8e0a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SRC\eglib">
-      <UniqueIdentifier>{09f1348b-17b4-475f-9672-cff73cbb66a4}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\SRC\Castle.ico">
@@ -20,11 +17,11 @@
     <ClCompile Include="..\SRC\DataStream2.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRC\main.cpp">
+    <ClCompile Include="..\SRC\EGParse.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRC\eglib\EGParse.cpp">
-      <Filter>SRC\eglib</Filter>
+    <ClCompile Include="..\SRC\WinMain.cpp">
+      <Filter>SRC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,8 +37,8 @@
     <ClInclude Include="..\SRC\resource.h">
       <Filter>SRC</Filter>
     </ClInclude>
-    <ClInclude Include="..\SRC\eglib\EGParse.h">
-      <Filter>SRC\eglib</Filter>
+    <ClInclude Include="..\SRC\EGParse.h">
+      <Filter>SRC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
