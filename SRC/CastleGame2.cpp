@@ -208,12 +208,12 @@ void CCastleGame::ProcessGameUntilBreak()
 		EGPARSE_RESULT ParseRes = EGParse_ParseFunction(Instr.Statement.c_str(), &ParseInfo);
 		if (EGPARSE_OKAY == ParseRes)
 		{
-			eg_string FunctionName = ParseInfo.FunctionName;
-			if (FunctionName.Equals("PRINT"))
+			std::string FunctionName = ParseInfo.FunctionName;
+			if (FunctionName == "PRINT")
 			{
 				DoPrint(ParseInfo.Parms[0]);
 			}
-			else if (FunctionName.Equals("CHOICE"))
+			else if (FunctionName == "CHOICE")
 			{
 				if ((ParseInfo.NumParms % 2) == 0)
 				{
@@ -234,20 +234,20 @@ void CCastleGame::ProcessGameUntilBreak()
 					CompileError("CHOICE must have a label for every string.");
 				}
 			}
-			else if (FunctionName.Equals("CLS"))
+			else if (FunctionName == "CLS")
 			{
 				m_Output.resize(0);
 			}
-			else if (FunctionName.Equals("GOTO"))
+			else if (FunctionName == "GOTO")
 			{
 				GotoLabel(ParseInfo.Parms[0]);
 			}
-			else if (FunctionName.Equals("END"))
+			else if (FunctionName == "END")
 			{
 				DoPrint("\n\nThe End");
 				break;
 			}
-			else if (FunctionName.Equals("GETCHOICE"))
+			else if (FunctionName == "GETCHOICE")
 			{
 				m_InputType = INPUT_GETCHOICE;
 				m_nInputChoice = 0;
@@ -259,7 +259,7 @@ void CCastleGame::ProcessGameUntilBreak()
 				}
 				break;
 			}
-			else if (FunctionName.Equals("JUMPONCHOICE"))
+			else if (FunctionName == "JUMPONCHOICE")
 			{
 				if (0 <= m_nInputChoice && m_nInputChoice < static_cast<int>(ParseInfo.NumParms))
 				{
@@ -279,12 +279,12 @@ void CCastleGame::ProcessGameUntilBreak()
 			}
 			else
 			{
-				CompileError(EGString_Format("Invalid function %s", *ParseInfo.FunctionName));
+				CompileError(std::format("Invalid function {}", ParseInfo.FunctionName).c_str());
 			}
 		}
 		else
 		{
-			CompileError(EGString_Format("Invalid statement: %s", &Instr.Statement));
+			CompileError(std::format("Invalid statement: {}", Instr.Statement).c_str());
 		}
 
 		//if this loop loops too many times we quit because there is probably

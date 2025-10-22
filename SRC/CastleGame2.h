@@ -6,8 +6,6 @@
 
 #include "DataStream2.h"
 #include "CastleTypes.h"
-#include "EGString.h"
-#include "EGArray.h"
 
 class CCastleGame
 {
@@ -45,21 +43,21 @@ public:
 			std::size_t ProgramIndex = 0;
 		};
 
-		EGArray<SLabel> m_Labels; // Could be optimized by using a map
+		std::vector<SLabel> m_Labels; // Could be optimized by using a map
 
 	public:
-		void Clear() { m_Labels.Resize(0); }
+		void Clear() { m_Labels.resize(0); }
 		void AddLabel(eg_cpstr Label, std::size_t ProgramIndex)
 		{
 			SLabel NewLabel;
 			NewLabel.Label = Label;
 			NewLabel.ProgramIndex = ProgramIndex;
-			m_Labels.Append(NewLabel);
+			m_Labels.push_back(NewLabel);
 		}
 
 		std::size_t GetProgramIndex(const std::string& Label)const
 		{
-			for (eg_uint i = 0; i < m_Labels.GetLength(); i++)
+			for (eg_uint i = 0; i < m_Labels.size(); i++)
 			{
 				const SLabel& Lbl = m_Labels[i];
 				if (Lbl.Label == Label)

@@ -312,7 +312,7 @@ public:
 			SetTextColor(hDc, Main_ChoiceColor);
 			for (int i = 0; i < m_CastleGame.GetNumChoices(); i++)
 			{
-				eg_string Line = EGString_Format("%u) %s", i + 1, m_CastleGame.GetChoiceText(i));
+				const std::string Line = std::format("{}) {}", i + 1, m_CastleGame.GetChoiceText(i));
 
 				rcDraw.top = m_TextBottom + BUTTON_PADDING;
 				rcDraw.bottom = rcClient.bottom;
@@ -320,7 +320,7 @@ public:
 				rcDraw.right = rcClient.right - TEXT_PADDING;
 
 				// Calculate the size of the text.
-				DrawText(hDc, *Line, Line.Length(), &rcDraw, DT_WORDBREAK | DT_CALCRECT);
+				DrawText(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK | DT_CALCRECT);
 
 				bool bIsHighlighted = false;
 
@@ -359,7 +359,7 @@ public:
 				rcDraw.right -= Main_ChoiceBorderSize;
 				rcDraw.top += Main_ChoiceBorderSize / 2;
 				SetBkColor(hDc, bIsHighlighted ? Main_ChoiceBgHlColor : Main_ChoiceBgColor);
-				DrawText(hDc, *Line, Line.Length(), &rcDraw, DT_WORDBREAK);
+				DrawText(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK);
 			}
 		}
 

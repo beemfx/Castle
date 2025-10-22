@@ -1,5 +1,6 @@
+// (c) 2025 Beem Media. All rights reserved.
+
 #pragma once
-#include "EGString.h"
 
 /*******************************************************************************
 EGParse_ParseFunction, parses an expression as follows:
@@ -87,15 +88,18 @@ struct egParseFuncBase
 	eg_cpstr* Parms;
 	eg_size_t ParmsSize;
 	eg_uint   NumParms;
-	eg_char*  Storage;
+	eg_char* Storage;
 	eg_size_t StorageSize;
 };
-struct egParseFuncInfo: public egParseFuncBase
+
+static constexpr std::size_t EGPARSE_STR_SIZE = 1024;
+
+struct egParseFuncInfo : public egParseFuncBase
 {
 	static const eg_uint MAX_PARMS = 10;
 
 	eg_cpstr IntParms[MAX_PARMS];
-	eg_char  IntStorage[eg_string::STR_SIZE]; //We're probably parsing an eg_string, so we don't need any more storage than what originally fit in it.
+	eg_char  IntStorage[EGPARSE_STR_SIZE]; //We're probably parsing an eg_string, so we don't need any more storage than what originally fit in it.
 
 	egParseFuncInfo()
 	{
@@ -105,29 +109,29 @@ struct egParseFuncInfo: public egParseFuncBase
 		StorageSize = countof(IntStorage);
 	}
 };
-EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut );
-EGPARSE_RESULT EGParse_ParseCSV( eg_cpstr sLIne , egParseFuncBase* pOut );
-EGPARSE_RESULT EGParse_GetAttValue( eg_cpstr sLine , eg_cpstr sName , eg_string* sOutValue );
-eg_cpstr       EGParse_GetParseResultString( EGPARSE_RESULT r );
+EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut);
+EGPARSE_RESULT EGParse_ParseCSV(eg_cpstr sLIne, egParseFuncBase* pOut);
+EGPARSE_RESULT EGParse_GetAttValue(eg_cpstr sLine, eg_cpstr sName, std::string& sOutValue);
+eg_cpstr EGParse_GetParseResultString(EGPARSE_RESULT r);
 
 //
 // Bonus struct so that we can use parse results as collection of eg_strings if wanted.
 //
 struct egParseFuncInfoAsEgStrings
 {
-	egParseFuncInfoAsEgStrings( const egParseFuncBase& rhs )
+	egParseFuncInfoAsEgStrings(const egParseFuncBase& rhs)
 	{
 		SystemName = rhs.SystemName;
 		FunctionName = rhs.FunctionName;
-		NumParms = EG_Min<eg_uint>(rhs.NumParms,countof(Parms));
-		for( eg_uint i=0; i<NumParms; i++ )
+		NumParms = EG_Min<eg_uint>(rhs.NumParms, countof(Parms));
+		for (eg_uint i = 0; i < NumParms; i++)
 		{
 			Parms[i] = rhs.Parms[i];
 		}
 	}
 
-	eg_string SystemName;
-	eg_string FunctionName;
-	eg_string Parms[egParseFuncInfo::MAX_PARMS];
-	eg_uint  NumParms;
+	std::string SystemName;
+	std::string FunctionName;
+	std::string Parms[egParseFuncInfo::MAX_PARMS];
+	eg_uint NumParms = 0;
 };

@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <string>
 #include <vector>
+#include <format>
 
 //////////////////////////////////////////////////
 // EG Types (Since we are using some eg libraries)

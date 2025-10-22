@@ -19,7 +19,7 @@ EGParse_EscapeCodes[] =
 	{ 'x' , 'x'  }, //Special case
 };
 
-static eg_bool EGParse_ParseFunction_IsWhiteSpace( eg_char c )
+static eg_bool EGParse_ParseFunction_IsWhiteSpace(eg_char c)
 {
 	return (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
 }
@@ -33,16 +33,16 @@ enum EGPARSE_NAME_RES
 };
 
 
-static EGPARSE_NAME_RES EGParse_ParseFunction_NameChar( eg_char c )
+static EGPARSE_NAME_RES EGParse_ParseFunction_NameChar(eg_char c)
 {
 	//Valid characters:
-	if('a' <= c && c <= 'z')return NAME_OKAY;
-	if('A' <= c && c <= 'Z')return NAME_OKAY;
-	if('0' <= c && c <= '9')return NAME_OKAY;
-	if('_' == c)return NAME_OKAY;
+	if ('a' <= c && c <= 'z')return NAME_OKAY;
+	if ('A' <= c && c <= 'Z')return NAME_OKAY;
+	if ('0' <= c && c <= '9')return NAME_OKAY;
+	if ('_' == c)return NAME_OKAY;
 	//Switching to either system or the function call:
-	if('.' == c)return NAME_FUNCTION_START;
-	if('(' == c)return NAME_FUNCTION_DONE;
+	if ('.' == c)return NAME_FUNCTION_START;
+	if ('(' == c)return NAME_FUNCTION_DONE;
 	//Invalid character (handles null termination).
 	return NAME_ERROR;
 }
@@ -59,45 +59,45 @@ enum EGPARSE_PARM_RES
 };
 
 
-static EGPARSE_PARM_RES EGParse_ParseFunction_ParmChar( eg_char c )
+static EGPARSE_PARM_RES EGParse_ParseFunction_ParmChar(eg_char c)
 {
 	//Valid characters:
-	if('"' == c)return PARM_BEGINSTRING;
-	if(',' == c)return PARM_ENDPARM;
-	if(')' == c)return PARM_ENDALLPARMS;
-	if('(' == c)return PARM_E_BADCHAR;
-	if(';' == c)return PARM_E_BADCHAR;
-	if(0 == c)return PARM_E_NULLTERMINATE;
-	if(EGParse_ParseFunction_IsWhiteSpace(c))return PARM_BEGINWHITESPACE;
+	if ('"' == c)return PARM_BEGINSTRING;
+	if (',' == c)return PARM_ENDPARM;
+	if (')' == c)return PARM_ENDALLPARMS;
+	if ('(' == c)return PARM_E_BADCHAR;
+	if (';' == c)return PARM_E_BADCHAR;
+	if (0 == c)return PARM_E_NULLTERMINATE;
+	if (EGParse_ParseFunction_IsWhiteSpace(c))return PARM_BEGINWHITESPACE;
 
 #if 1
 	return PARM_OKAY; //The calling function will need to decide if the parms are okay.
 #else
-	if('a' <= c && c <= 'z')return PARM_OKAY;
-	if('A' <= c && c <= 'Z')return PARM_OKAY;
-	if('0' <= c && c <= '9')return PARM_OKAY;
-	if('_' == c || '.' == c || '-' == c)return PARM_OKAY;
+	if ('a' <= c && c <= 'z')return PARM_OKAY;
+	if ('A' <= c && c <= 'Z')return PARM_OKAY;
+	if ('0' <= c && c <= '9')return PARM_OKAY;
+	if ('_' == c || '.' == c || '-' == c)return PARM_OKAY;
 
 	return PARM_E_BADCHAR;
 #endif
 }
 
-static eg_uint EGParse_ParseFunction_IgnoreWhiteSpace( eg_cpstr sLine , eg_uint nPos )
+static eg_uint EGParse_ParseFunction_IgnoreWhiteSpace(eg_cpstr sLine, eg_uint nPos)
 {
-	while(EGParse_ParseFunction_IsWhiteSpace(sLine[nPos]))
+	while (EGParse_ParseFunction_IsWhiteSpace(sLine[nPos]))
 	{
 		nPos++;
 	}
 	return nPos;
 }
 
-static eg_char EGParse_EscapeCodeToChar( eg_char EscapeCode )
+static eg_char EGParse_EscapeCodeToChar(eg_char EscapeCode)
 {
 	eg_char CharOut = EscapeCode; //In many cases the char will be the escape code itself e.g. \" -> "
 
-	for( eg_uint i=0; i<countof(EGParse_EscapeCodes); i++ )
+	for (eg_uint i = 0; i < countof(EGParse_EscapeCodes); i++)
 	{
-		if( EscapeCode == EGParse_EscapeCodes[i].EscapeCode )
+		if (EscapeCode == EGParse_EscapeCodes[i].EscapeCode)
 		{
 			CharOut = EGParse_EscapeCodes[i].Char;
 			break;
@@ -107,26 +107,26 @@ static eg_char EGParse_EscapeCodeToChar( eg_char EscapeCode )
 	return CharOut;
 }
 
-static eg_uint8 EGParse_HexNumberCharToValue( eg_char Char )
+static eg_uint8 EGParse_HexNumberCharToValue(eg_char Char)
 {
-	if( '0' <= Char && Char <= '9' )
+	if ('0' <= Char && Char <= '9')
 	{
-		return static_cast<eg_uint8>(Char-'0');
+		return static_cast<eg_uint8>(Char - '0');
 	}
-	if( 'A' <= Char && Char <= 'F' )
+	if ('A' <= Char && Char <= 'F')
 	{
-		return static_cast<eg_uint8>( (Char-'A') + 0x0A );
+		return static_cast<eg_uint8>((Char - 'A') + 0x0A);
 	}
-	if( 'a' <= Char && Char <= 'f' )
+	if ('a' <= Char && Char <= 'f')
 	{
-		return static_cast<eg_uint8>( (Char-'a') + 0x0A );
+		return static_cast<eg_uint8>((Char - 'a') + 0x0A);
 	}
 	return 0;
 }
 
-static eg_bool EGParse_AppendCharToStorage( eg_char Char , eg_char* Storage , eg_size_t StorageSize , eg_uint* StoragePosInOut )
+static eg_bool EGParse_AppendCharToStorage(eg_char Char, eg_char* Storage, eg_size_t StorageSize, eg_uint* StoragePosInOut)
 {
-	if( *StoragePosInOut < StorageSize-1 )
+	if (*StoragePosInOut < StorageSize - 1)
 	{
 		Storage[*StoragePosInOut] = Char;
 		(*StoragePosInOut)++;
@@ -136,34 +136,34 @@ static eg_bool EGParse_AppendCharToStorage( eg_char Char , eg_char* Storage , eg
 }
 
 
-static eg_uint EGParse_ParseFunction_ReadString( eg_cpstr sLine , eg_uint nPos , eg_char* Storage , eg_size_t StorageSize , eg_uint* StoragePosInOut , EGPARSE_RESULT* ErrorOut )
+static eg_uint EGParse_ParseFunction_ReadString(eg_cpstr sLine, eg_uint nPos, eg_char* Storage, eg_size_t StorageSize, eg_uint* StoragePosInOut, EGPARSE_RESULT* ErrorOut)
 {
-	if( ErrorOut ){ *ErrorOut = EGPARSE_OKAY; }
+	if (ErrorOut) { *ErrorOut = EGPARSE_OKAY; }
 
 	//We assume that nPos is right after the starting quote.
-	while(true)
+	while (true)
 	{
 		eg_char c = sLine[nPos];
 		nPos++;
-		if(0 == c)return nPos - 1;
-		if('"' == c)return nPos;
-		if('\\' == c)
+		if (0 == c)return nPos - 1;
+		if ('"' == c)return nPos;
+		if ('\\' == c)
 		{
 			//Skip ahead a character:
 			c = EGParse_EscapeCodeToChar(sLine[nPos]);
 			nPos++;
-			if(0 == c)return nPos - 1;
+			if (0 == c)return nPos - 1;
 
 			//x is a special case where we want to get a hex code.
-			if('x' == c )
+			if ('x' == c)
 			{
-				if( sLine[nPos+0] != 0 && sLine[nPos+1] != 0 && sLine[nPos+0] != '\"' && sLine[nPos+1] != '\"' )
+				if (sLine[nPos + 0] != 0 && sLine[nPos + 1] != 0 && sLine[nPos + 0] != '\"' && sLine[nPos + 1] != '\"')
 				{
-					eg_char c1 = sLine[nPos+0];
-					eg_char c2 = sLine[nPos+1];
+					eg_char c1 = sLine[nPos + 0];
+					eg_char c2 = sLine[nPos + 1];
 
-					c = (EGParse_HexNumberCharToValue(c1)<<4) | (EGParse_HexNumberCharToValue(c2)<<0);
-					nPos+=2;
+					c = (EGParse_HexNumberCharToValue(c1) << 4) | (EGParse_HexNumberCharToValue(c2) << 0);
+					nPos += 2;
 				}
 				else
 				{
@@ -171,33 +171,33 @@ static eg_uint EGParse_ParseFunction_ReadString( eg_cpstr sLine , eg_uint nPos ,
 				}
 			}
 		}
-		if( EGParse_AppendCharToStorage( c , Storage , StorageSize , StoragePosInOut ) )
+		if (EGParse_AppendCharToStorage(c, Storage, StorageSize, StoragePosInOut))
 		{
 		}
 		else
 		{
-			if( ErrorOut ){ *ErrorOut = EGPARSE_E_OUTOFMEM; }
+			if (ErrorOut) { *ErrorOut = EGPARSE_E_OUTOFMEM; }
 		}
 	}
 	return nPos;
 }
 
-EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
+EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 {
-	if( null == sLine || null == pOut )
+	if (null == sLine || null == pOut)
 	{
 		return EGPARSE_E_OUTOFMEM;
 	}
 	//Setup some default stuff:
 	pOut->SystemName = null;
 	pOut->FunctionName = null;
-	for( eg_uint i=0; i<pOut->ParmsSize; i++ )
+	for (eg_uint i = 0; i < pOut->ParmsSize; i++)
 	{
 		pOut->Parms[i] = null;
 	}
-	EGMem_Set( pOut->Storage , 0 , pOut->StorageSize );
+	EGMem_Set(pOut->Storage, 0, pOut->StorageSize);
 
-	if( null == pOut->Storage || null == pOut->Parms || 0 == pOut->StorageSize || 0 == pOut->ParmsSize )
+	if (null == pOut->Storage || null == pOut->Parms || 0 == pOut->StorageSize || 0 == pOut->ParmsSize)
 	{
 		return EGPARSE_E_OUTOFMEM;
 	}
@@ -222,7 +222,7 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 	NAME_STATE NameState = SYSTEM_OR_FUNCTION;
 
 	eg_bool StillSearching = true;
-	while( StillSearching )
+	while (StillSearching)
 	{
 		eg_char c = sLine[nPos];
 		nPos++;
@@ -231,8 +231,8 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 
 		switch (r)
 		{
-		case NAME_OKAY: 
-			if( EGParse_AppendCharToStorage( c , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+		case NAME_OKAY:
+			if (EGParse_AppendCharToStorage(c, pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 			}
 			else
@@ -242,12 +242,12 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 			break;
 		case NAME_FUNCTION_START:
 		{
-			if(SYSTEM_OR_FUNCTION == NameState)
+			if (SYSTEM_OR_FUNCTION == NameState)
 			{
-				if(pOut->FunctionName[0] == '\0')return EGPARSE_E_DOTWITHNOSYSTEM;
+				if (pOut->FunctionName[0] == '\0')return EGPARSE_E_DOTWITHNOSYSTEM;
 
 				pOut->SystemName = pOut->FunctionName;
-				if( EGParse_AppendCharToStorage( '\0' , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+				if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 				{
 				}
 				else
@@ -264,20 +264,20 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 		} break;
 		case NAME_FUNCTION_DONE:
 		{
-			if( pOut->FunctionName[0] == '\0')return EGPARSE_E_NOFUNCTION;
+			if (pOut->FunctionName[0] == '\0')return EGPARSE_E_NOFUNCTION;
 
 			StillSearching = false;
 		} break;
 		case NAME_ERROR:
 		{
-			if(0 == c)return EGPARSE_E_NOPARMS;
+			if (0 == c)return EGPARSE_E_NOPARMS;
 			else return EGPARSE_E_INVALIDNAME;
 		} break;
 		}
 	}
 
 	//Append an end of string to the storage, since we will now be filling out the parameters.
-	if( EGParse_AppendCharToStorage( '\0' , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+	if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 	{
 	}
 	else
@@ -294,13 +294,13 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 	//If the first character we encountered was a ')' then there were no parms
 	//this breaks the NFA rule, since we'll consider this character twice if
 	//it wasn't.
-	if(PARM_ENDALLPARMS == EGParse_ParseFunction_ParmChar(sLine[nPos]))
+	if (PARM_ENDALLPARMS == EGParse_ParseFunction_ParmChar(sLine[nPos]))
 	{
 		nPos++;
 		StillSearching = false;
 	}
 
-	while(StillSearching)
+	while (StillSearching)
 	{
 		eg_char c = sLine[nPos];
 		nPos++;
@@ -309,8 +309,8 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 		switch (r)
 		{
 		case PARM_OKAY:
-			if(IsString)return EGPARSE_E_STRINGWITHIDENTIFIER;
-			if( EGParse_AppendCharToStorage( c , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+			if (IsString)return EGPARSE_E_STRINGWITHIDENTIFIER;
+			if (EGParse_AppendCharToStorage(c, pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 			}
 			else
@@ -321,24 +321,24 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 		case PARM_BEGINSTRING:
 		{
 			IsString = true;
-			if(pOut->Parms[nParm][0] != '\0')return EGPARSE_E_STRINGWITHIDENTIFIER;
+			if (pOut->Parms[nParm][0] != '\0')return EGPARSE_E_STRINGWITHIDENTIFIER;
 
 			EGPARSE_RESULT ParseStringRes = EGPARSE_OKAY;
-			nPos = EGParse_ParseFunction_ReadString(sLine, nPos, pOut->Storage , pOut->StorageSize , &nStoragePos , &ParseStringRes );
-			if( ParseStringRes != EGPARSE_OKAY )
+			nPos = EGParse_ParseFunction_ReadString(sLine, nPos, pOut->Storage, pOut->StorageSize, &nStoragePos, &ParseStringRes);
+			if (ParseStringRes != EGPARSE_OKAY)
 			{
 				return ParseStringRes;
 			}
 		} break;
 		case PARM_ENDPARM:
-			if(!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
+			if (!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
 
-			if( EGParse_AppendCharToStorage( '\0' , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+			if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 				nParm++;
 				pOut->Parms[nParm] = &pOut->Storage[nStoragePos];
 				IsString = false;
-				if(pOut->ParmsSize == nParm)return EGPARSE_E_TOOMANYPARMS;
+				if (pOut->ParmsSize == nParm)return EGPARSE_E_TOOMANYPARMS;
 
 				nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 			}
@@ -348,8 +348,8 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 			}
 			break;
 		case PARM_ENDALLPARMS:
-			if(!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
-			if( EGParse_AppendCharToStorage( '\0' , pOut->Storage , pOut->StorageSize , &nStoragePos ) )
+			if (!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
+			if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 				nParm++;
 				IsString = false;
@@ -370,7 +370,7 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 			//or ENDALLPARMS afterwards.
 			nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 			EGPARSE_PARM_RES r = EGParse_ParseFunction_ParmChar(sLine[nPos]);
-			if(PARM_ENDPARM != r && PARM_ENDALLPARMS != r && PARM_E_NULLTERMINATE != r)return EGPARSE_E_WHITESPACE;
+			if (PARM_ENDPARM != r && PARM_ENDALLPARMS != r && PARM_E_NULLTERMINATE != r)return EGPARSE_E_WHITESPACE;
 		} break;
 		}
 	}
@@ -381,15 +381,15 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 	nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 
 	//We better be at the end of the string:
-	if(0 != sLine[nPos])return EGPARSE_E_TRAILINGCHARS;
+	if (0 != sLine[nPos])return EGPARSE_E_TRAILINGCHARS;
 
 	//We don't want any null pointers, so assing any remaining pars to the last
 	//character.
-	for( eg_uint i = nParm; i<pOut->ParmsSize; i++ )
+	for (eg_uint i = nParm; i < pOut->ParmsSize; i++)
 	{
 		pOut->Parms[i] = &pOut->Storage[nStoragePos];
 	}
-	if( null == pOut->SystemName )
+	if (null == pOut->SystemName)
 	{
 		pOut->SystemName = &pOut->Storage[nStoragePos];
 	}
@@ -397,18 +397,18 @@ EGPARSE_RESULT EGParse_ParseFunction( eg_cpstr sLine , egParseFuncBase* pOut )
 	return EGPARSE_OKAY;
 }
 
-EGPARSE_RESULT EGParse_ParseCSV( eg_cpstr sLine , egParseFuncBase* pOut )
+EGPARSE_RESULT EGParse_ParseCSV(eg_cpstr sLine, egParseFuncBase* pOut)
 {
-	eg_string sT = EGString_Format("F(%s)", sLine);
-	EGPARSE_RESULT r = EGParse_ParseFunction(sT, pOut);
-	if( EGPARSE_OKAY == r )
+	std::string sT = std::format("F({})", sLine);
+	EGPARSE_RESULT r = EGParse_ParseFunction(sT.c_str(), pOut);
+	if (EGPARSE_OKAY == r)
 	{
 		pOut->Storage[0] = '\0'; //This will make the functionname 0.
 	}
 	return r;
 }
 
-static EGPARSE_RESULT EGParse_GetAttValue_GetValue( eg_cpstr sLineAfterName , eg_string* sOutValue )
+static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std::string& sOutValue)
 {
 	eg_uint nPos = 0;
 	enum STATE
@@ -420,84 +420,84 @@ static EGPARSE_RESULT EGParse_GetAttValue_GetValue( eg_cpstr sLineAfterName , eg
 
 	STATE State = LOOKING_FOR_EQUALS;
 
-	while(0 != sLineAfterName[nPos])
+	while (0 != sLineAfterName[nPos])
 	{
 		eg_char c = sLineAfterName[nPos];
 
-		if(LOOKING_FOR_EQUALS == State)
+		if (LOOKING_FOR_EQUALS == State)
 		{
-			if('=' == c)
+			if ('=' == c)
 			{
 				State = LOOKING_FOR_STARTQUOTE;
 			}
-			else if(!EGParse_ParseFunction_IsWhiteSpace(c))
+			else if (!EGParse_ParseFunction_IsWhiteSpace(c))
 			{
 				return EGPARSE_E_NOTFOUND;
 			}
 		}
-		else if(LOOKING_FOR_STARTQUOTE == State)
+		else if (LOOKING_FOR_STARTQUOTE == State)
 		{
-			if('\"' == c)
+			if ('\"' == c)
 			{
 				State = READING_CHARS;
 			}
-			else if(!EGParse_ParseFunction_IsWhiteSpace(c))
+			else if (!EGParse_ParseFunction_IsWhiteSpace(c))
 			{
 				return EGPARSE_E_NOTFOUND;
 			}
 		}
-		else if(READING_CHARS == State)
+		else if (READING_CHARS == State)
 		{
-			if('\"' == c)
+			if ('\"' == c)
 			{
 				return EGPARSE_OKAY;
 			}
-			else if('\\' == c)
+			else if ('\\' == c)
 			{
-				if(0 != sLineAfterName[nPos + 1])
+				if (0 != sLineAfterName[nPos + 1])
 				{
-					*sOutValue += sLineAfterName[nPos + 1];
+					sOutValue += sLineAfterName[nPos + 1];
 					nPos++;
 				}
 				else
 				{
-					sOutValue->Clear();
+					sOutValue = "";
 					return EGPARSE_E_NOTFOUND;
 				}
 			}
 			else
 			{
-				*sOutValue += c;
+				sOutValue += c;
 			}
 		}
 
 		nPos++;
 	}
-	sOutValue->Clear();
+	sOutValue = "";
 	return EGPARSE_E_NOTFOUND;
 }
 
-EGPARSE_RESULT EGParse_GetAttValue( eg_cpstr sLine , eg_cpstr sName , eg_string* sOutValue )
+EGPARSE_RESULT EGParse_GetAttValue(eg_cpstr sLine, eg_cpstr sName, std::string& sOutValue)
 {
-	sOutValue->Clear();
+	sOutValue = "";
 	eg_uint nPos = 0;
-	eg_string sAtt;
+	std::string sAtt;
 	eg_bool bWordEndFound = false;
-	while(0 != sLine[nPos])
+	while (0 != sLine[nPos])
 	{
 		eg_char c = sLine[nPos];
-		if('=' == c || EGParse_ParseFunction_IsWhiteSpace(c))
+		if ('=' == c || EGParse_ParseFunction_IsWhiteSpace(c))
 		{
 			bWordEndFound = true;
 			//See if the word was correct.
-			if(!sAtt.Compare(sName))
+			if (!sAtt.compare(sName))
 				return EGParse_GetAttValue_GetValue(&sLine[nPos], sOutValue);
 		}
 		else
 		{
-			if(bWordEndFound)
+			if (bWordEndFound)
 			{
-				sAtt.Clear();
+				sAtt = "";
 				bWordEndFound = false;
 			}
 			sAtt += c;
@@ -508,7 +508,7 @@ EGPARSE_RESULT EGParse_GetAttValue( eg_cpstr sLine , eg_cpstr sName , eg_string*
 	return EGPARSE_E_NOTFOUND;
 }
 
-eg_cpstr EGParse_GetParseResultString( EGPARSE_RESULT r )
+eg_cpstr EGParse_GetParseResultString(EGPARSE_RESULT r)
 {
 	static const struct
 	{
@@ -534,11 +534,11 @@ eg_cpstr EGParse_GetParseResultString( EGPARSE_RESULT r )
 		{ EGPARSE_E_OUTOFMEM                 , ("Insufficient storage") },
 	};
 
-	for( eg_uint i=0; i<countof(Table); i++ )
+	for (eg_uint i = 0; i < countof(Table); i++)
 	{
-		if( r == Table[i].Res )return Table[i].Str;
+		if (r == Table[i].Res)return Table[i].Str;
 	}
 
-	assert( false );
+	assert(false);
 	return "Unknown";
 }
