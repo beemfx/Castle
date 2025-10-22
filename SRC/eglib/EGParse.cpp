@@ -1,3 +1,5 @@
+// (c) 2025 Beem Media. All rights reserved.
+
 #include "EGParse.h"
 
 //For the string character escape table we'll use the standard C table
@@ -57,7 +59,6 @@ enum EGPARSE_PARM_RES
 	PARM_BEGINWHITESPACE,
 	PARM_E_BADCHAR,
 };
-
 
 static EGPARSE_PARM_RES EGParse_ParseFunction_ParmChar(eg_char c)
 {
@@ -136,9 +137,9 @@ static eg_bool EGParse_AppendCharToStorage(eg_char Char, eg_char* Storage, eg_si
 }
 
 
-static eg_uint EGParse_ParseFunction_ReadString(eg_cpstr sLine, eg_uint nPos, eg_char* Storage, eg_size_t StorageSize, eg_uint* StoragePosInOut, EGPARSE_RESULT* ErrorOut)
+static eg_uint EGParse_ParseFunction_ReadString(eg_cpstr sLine, eg_uint nPos, eg_char* Storage, eg_size_t StorageSize, eg_uint* StoragePosInOut, eg_parse_result* ErrorOut)
 {
-	if (ErrorOut) { *ErrorOut = EGPARSE_OKAY; }
+	if (ErrorOut) { *ErrorOut = eg_parse_result::OKAY; }
 
 	//We assume that nPos is right after the starting quote.
 	while (true)
@@ -176,17 +177,17 @@ static eg_uint EGParse_ParseFunction_ReadString(eg_cpstr sLine, eg_uint nPos, eg
 		}
 		else
 		{
-			if (ErrorOut) { *ErrorOut = EGPARSE_E_OUTOFMEM; }
+			if (ErrorOut) { *ErrorOut = eg_parse_result::E_OUTOFMEM; }
 		}
 	}
 	return nPos;
 }
 
-EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
+eg_parse_result EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 {
 	if (null == sLine || null == pOut)
 	{
-		return EGPARSE_E_OUTOFMEM;
+		return eg_parse_result::E_OUTOFMEM;
 	}
 	//Setup some default stuff:
 	pOut->SystemName = null;
@@ -199,7 +200,7 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 
 	if (null == pOut->Storage || null == pOut->Parms || 0 == pOut->StorageSize || 0 == pOut->ParmsSize)
 	{
-		return EGPARSE_E_OUTOFMEM;
+		return eg_parse_result::E_OUTOFMEM;
 	}
 
 	eg_uint nPos = 0;
@@ -237,14 +238,14 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 			}
 			else
 			{
-				return EGPARSE_E_OUTOFMEM;
+				return eg_parse_result::E_OUTOFMEM;
 			}
 			break;
 		case NAME_FUNCTION_START:
 		{
 			if (SYSTEM_OR_FUNCTION == NameState)
 			{
-				if (pOut->FunctionName[0] == '\0')return EGPARSE_E_DOTWITHNOSYSTEM;
+				if (pOut->FunctionName[0] == '\0')return eg_parse_result::E_DOTWITHNOSYSTEM;
 
 				pOut->SystemName = pOut->FunctionName;
 				if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
@@ -252,26 +253,26 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 				}
 				else
 				{
-					return EGPARSE_E_OUTOFMEM;
+					return eg_parse_result::E_OUTOFMEM;
 				}
 				pOut->FunctionName = &pOut->Storage[nStoragePos];
 				NameState = FUNCTION;
 			}
 			else
 			{
-				return EGPARSE_E_MULTIPLESYSTEMSEPARATORS;
+				return eg_parse_result::E_MULTIPLESYSTEMSEPARATORS;
 			}
 		} break;
 		case NAME_FUNCTION_DONE:
 		{
-			if (pOut->FunctionName[0] == '\0')return EGPARSE_E_NOFUNCTION;
+			if (pOut->FunctionName[0] == '\0')return eg_parse_result::E_NOFUNCTION;
 
 			StillSearching = false;
 		} break;
 		case NAME_ERROR:
 		{
-			if (0 == c)return EGPARSE_E_NOPARMS;
-			else return EGPARSE_E_INVALIDNAME;
+			if (0 == c)return eg_parse_result::E_NOPARMS;
+			else return eg_parse_result::E_INVALIDNAME;
 		} break;
 		}
 	}
@@ -282,7 +283,7 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 	}
 	else
 	{
-		return EGPARSE_E_OUTOFMEM;
+		return eg_parse_result::E_OUTOFMEM;
 	}
 
 	//Now we get the parameters:
@@ -309,46 +310,46 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 		switch (r)
 		{
 		case PARM_OKAY:
-			if (IsString)return EGPARSE_E_STRINGWITHIDENTIFIER;
+			if (IsString)return eg_parse_result::E_STRINGWITHIDENTIFIER;
 			if (EGParse_AppendCharToStorage(c, pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 			}
 			else
 			{
-				return EGPARSE_E_OUTOFMEM;
+				return eg_parse_result::E_OUTOFMEM;
 			}
 			break;
 		case PARM_BEGINSTRING:
 		{
 			IsString = true;
-			if (pOut->Parms[nParm][0] != '\0')return EGPARSE_E_STRINGWITHIDENTIFIER;
+			if (pOut->Parms[nParm][0] != '\0')return eg_parse_result::E_STRINGWITHIDENTIFIER;
 
-			EGPARSE_RESULT ParseStringRes = EGPARSE_OKAY;
+			eg_parse_result ParseStringRes = eg_parse_result::OKAY;
 			nPos = EGParse_ParseFunction_ReadString(sLine, nPos, pOut->Storage, pOut->StorageSize, &nStoragePos, &ParseStringRes);
-			if (ParseStringRes != EGPARSE_OKAY)
+			if (ParseStringRes != eg_parse_result::OKAY)
 			{
 				return ParseStringRes;
 			}
 		} break;
 		case PARM_ENDPARM:
-			if (!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
+			if (!IsString && pOut->Parms[nParm][0] == '\0')return eg_parse_result::E_EMPTYPARM;
 
 			if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 				nParm++;
 				pOut->Parms[nParm] = &pOut->Storage[nStoragePos];
 				IsString = false;
-				if (pOut->ParmsSize == nParm)return EGPARSE_E_TOOMANYPARMS;
+				if (pOut->ParmsSize == nParm)return eg_parse_result::E_TOOMANYPARMS;
 
 				nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 			}
 			else
 			{
-				return EGPARSE_E_OUTOFMEM;
+				return eg_parse_result::E_OUTOFMEM;
 			}
 			break;
 		case PARM_ENDALLPARMS:
-			if (!IsString && pOut->Parms[nParm][0] == '\0')return EGPARSE_E_EMPTYPARM;
+			if (!IsString && pOut->Parms[nParm][0] == '\0')return eg_parse_result::E_EMPTYPARM;
 			if (EGParse_AppendCharToStorage('\0', pOut->Storage, pOut->StorageSize, &nStoragePos))
 			{
 				nParm++;
@@ -357,20 +358,20 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 			}
 			else
 			{
-				return EGPARSE_E_OUTOFMEM;
+				return eg_parse_result::E_OUTOFMEM;
 			}
 			break;
 		case PARM_E_NULLTERMINATE:
-			return EGPARSE_E_INCOMPLETEPARMS;
+			return eg_parse_result::E_INCOMPLETEPARMS;
 		case PARM_E_BADCHAR:
-			return EGPARSE_E_BADIDENTIFIER;
+			return eg_parse_result::E_BADIDENTIFIER;
 		case PARM_BEGINWHITESPACE:
 		{
 			//We ignore all whitespace and we better encounter a ENDPARM
 			//or ENDALLPARMS afterwards.
 			nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 			EGPARSE_PARM_RES r = EGParse_ParseFunction_ParmChar(sLine[nPos]);
-			if (PARM_ENDPARM != r && PARM_ENDALLPARMS != r && PARM_E_NULLTERMINATE != r)return EGPARSE_E_WHITESPACE;
+			if (PARM_ENDPARM != r && PARM_ENDALLPARMS != r && PARM_E_NULLTERMINATE != r)return eg_parse_result::E_WHITESPACE;
 		} break;
 		}
 	}
@@ -381,7 +382,7 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 	nPos = EGParse_ParseFunction_IgnoreWhiteSpace(sLine, nPos);
 
 	//We better be at the end of the string:
-	if (0 != sLine[nPos])return EGPARSE_E_TRAILINGCHARS;
+	if (0 != sLine[nPos])return eg_parse_result::E_TRAILINGCHARS;
 
 	//We don't want any null pointers, so assing any remaining pars to the last
 	//character.
@@ -394,21 +395,10 @@ EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut)
 		pOut->SystemName = &pOut->Storage[nStoragePos];
 	}
 
-	return EGPARSE_OKAY;
+	return eg_parse_result::OKAY;
 }
 
-EGPARSE_RESULT EGParse_ParseCSV(eg_cpstr sLine, egParseFuncBase* pOut)
-{
-	std::string sT = std::format("F({})", sLine);
-	EGPARSE_RESULT r = EGParse_ParseFunction(sT.c_str(), pOut);
-	if (EGPARSE_OKAY == r)
-	{
-		pOut->Storage[0] = '\0'; //This will make the functionname 0.
-	}
-	return r;
-}
-
-static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std::string& sOutValue)
+static eg_parse_result EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std::string& sOutValue)
 {
 	eg_uint nPos = 0;
 	enum STATE
@@ -432,7 +422,7 @@ static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std:
 			}
 			else if (!EGParse_ParseFunction_IsWhiteSpace(c))
 			{
-				return EGPARSE_E_NOTFOUND;
+				return eg_parse_result::E_NOTFOUND;
 			}
 		}
 		else if (LOOKING_FOR_STARTQUOTE == State)
@@ -443,14 +433,14 @@ static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std:
 			}
 			else if (!EGParse_ParseFunction_IsWhiteSpace(c))
 			{
-				return EGPARSE_E_NOTFOUND;
+				return eg_parse_result::E_NOTFOUND;
 			}
 		}
 		else if (READING_CHARS == State)
 		{
 			if ('\"' == c)
 			{
-				return EGPARSE_OKAY;
+				return eg_parse_result::OKAY;
 			}
 			else if ('\\' == c)
 			{
@@ -462,7 +452,7 @@ static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std:
 				else
 				{
 					sOutValue = "";
-					return EGPARSE_E_NOTFOUND;
+					return eg_parse_result::E_NOTFOUND;
 				}
 			}
 			else
@@ -474,64 +464,33 @@ static EGPARSE_RESULT EGParse_GetAttValue_GetValue(eg_cpstr sLineAfterName, std:
 		nPos++;
 	}
 	sOutValue = "";
-	return EGPARSE_E_NOTFOUND;
+	return eg_parse_result::E_NOTFOUND;
 }
 
-EGPARSE_RESULT EGParse_GetAttValue(eg_cpstr sLine, eg_cpstr sName, std::string& sOutValue)
-{
-	sOutValue = "";
-	eg_uint nPos = 0;
-	std::string sAtt;
-	eg_bool bWordEndFound = false;
-	while (0 != sLine[nPos])
-	{
-		eg_char c = sLine[nPos];
-		if ('=' == c || EGParse_ParseFunction_IsWhiteSpace(c))
-		{
-			bWordEndFound = true;
-			//See if the word was correct.
-			if (!sAtt.compare(sName))
-				return EGParse_GetAttValue_GetValue(&sLine[nPos], sOutValue);
-		}
-		else
-		{
-			if (bWordEndFound)
-			{
-				sAtt = "";
-				bWordEndFound = false;
-			}
-			sAtt += c;
-		}
-
-		nPos++;
-	}
-	return EGPARSE_E_NOTFOUND;
-}
-
-eg_cpstr EGParse_GetParseResultString(EGPARSE_RESULT r)
+eg_cpstr EGParse_GetParseResultString(eg_parse_result r)
 {
 	static const struct
 	{
-		EGPARSE_RESULT Res;
+		eg_parse_result Res;
 		eg_cpstr       Str;
 	}
 	Table[] =
 	{
-		{ EGPARSE_OKAY                       , ("Okay") } ,
-		{ EGPARSE_E_MULTIPLESYSTEMSEPARATORS , ("Unexpected '.', at most one system is allowed") } ,
-		{ EGPARSE_E_INVALIDNAME              , ("Unexpected character found in name") } ,
-		{ EGPARSE_E_NOPARMS                  , ("No '(' encountered, parms must be specified") } ,
-		{ EGPARSE_E_TOOMANYPARMS             , ("Too many parms specified") } ,
-		{ EGPARSE_E_INCOMPLETEPARMS          , ("Missing ')', parm list was incomplete") } ,
-		{ EGPARSE_E_TRAILINGCHARS            , ("Characters encountered after closing ')', end of line expected") } ,
-		{ EGPARSE_E_WHITESPACE               , ("White space was found in the middle of an identifier") } ,
-		{ EGPARSE_E_STRINGWITHIDENTIFIER     , ("A parm must be a string or identifier, not both") } ,
-		{ EGPARSE_E_BADIDENTIFIER            , ("A parm contained an invalid character") } ,
-		{ EGPARSE_E_EMPTYPARM                , ("A parm contained no identifier or string") } ,
-		{ EGPARSE_E_DOTWITHNOSYSTEM          , ("No system was specified but '.' was used") } ,
-		{ EGPARSE_E_NOTFOUND                 , ("The desired attribute was not found") } ,
-		{ EGPARSE_E_NOFUNCTION               , ("No function name specified") },
-		{ EGPARSE_E_OUTOFMEM                 , ("Insufficient storage") },
+		{ eg_parse_result::OKAY                       , ("Okay") } ,
+		{ eg_parse_result::E_MULTIPLESYSTEMSEPARATORS , ("Unexpected '.', at most one system is allowed") } ,
+		{ eg_parse_result::E_INVALIDNAME              , ("Unexpected character found in name") } ,
+		{ eg_parse_result::E_NOPARMS                  , ("No '(' encountered, parms must be specified") } ,
+		{ eg_parse_result::E_TOOMANYPARMS             , ("Too many parms specified") } ,
+		{ eg_parse_result::E_INCOMPLETEPARMS          , ("Missing ')', parm list was incomplete") } ,
+		{ eg_parse_result::E_TRAILINGCHARS            , ("Characters encountered after closing ')', end of line expected") } ,
+		{ eg_parse_result::E_WHITESPACE               , ("White space was found in the middle of an identifier") } ,
+		{ eg_parse_result::E_STRINGWITHIDENTIFIER     , ("A parm must be a string or identifier, not both") } ,
+		{ eg_parse_result::E_BADIDENTIFIER            , ("A parm contained an invalid character") } ,
+		{ eg_parse_result::E_EMPTYPARM                , ("A parm contained no identifier or string") } ,
+		{ eg_parse_result::E_DOTWITHNOSYSTEM          , ("No system was specified but '.' was used") } ,
+		{ eg_parse_result::E_NOTFOUND                 , ("The desired attribute was not found") } ,
+		{ eg_parse_result::E_NOFUNCTION               , ("No function name specified") },
+		{ eg_parse_result::E_OUTOFMEM                 , ("Insufficient storage") },
 	};
 
 	for (eg_uint i = 0; i < countof(Table); i++)

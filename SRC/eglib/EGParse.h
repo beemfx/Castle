@@ -62,34 +62,34 @@ is an actual function, or that the parameter names are the correct type or mean
 anything useful.
 *******************************************************************************/
 
-enum EGPARSE_RESULT
+enum class eg_parse_result
 {
-	EGPARSE_OKAY,
-	EGPARSE_E_MULTIPLESYSTEMSEPARATORS,
-	EGPARSE_E_INVALIDNAME,
-	EGPARSE_E_NOPARMS,
-	EGPARSE_E_TOOMANYPARMS,
-	EGPARSE_E_INCOMPLETEPARMS,
-	EGPARSE_E_TRAILINGCHARS,
-	EGPARSE_E_WHITESPACE,
-	EGPARSE_E_STRINGWITHIDENTIFIER,
-	EGPARSE_E_BADIDENTIFIER,
-	EGPARSE_E_EMPTYPARM,
-	EGPARSE_E_DOTWITHNOSYSTEM,
-	EGPARSE_E_NOTFOUND,
-	EGPARSE_E_NOFUNCTION,
-	EGPARSE_E_OUTOFMEM,
+	OKAY,
+	E_MULTIPLESYSTEMSEPARATORS,
+	E_INVALIDNAME,
+	E_NOPARMS,
+	E_TOOMANYPARMS,
+	E_INCOMPLETEPARMS,
+	E_TRAILINGCHARS,
+	E_WHITESPACE,
+	E_STRINGWITHIDENTIFIER,
+	E_BADIDENTIFIER,
+	E_EMPTYPARM,
+	E_DOTWITHNOSYSTEM,
+	E_NOTFOUND,
+	E_NOFUNCTION,
+	E_OUTOFMEM,
 };
 
 struct egParseFuncBase
 {
-	eg_cpstr  SystemName;
-	eg_cpstr  FunctionName;
-	eg_cpstr* Parms;
-	eg_size_t ParmsSize;
-	eg_uint   NumParms;
-	eg_char* Storage;
-	eg_size_t StorageSize;
+	eg_cpstr SystemName = nullptr;
+	eg_cpstr FunctionName = nullptr;
+	eg_cpstr* Parms = nullptr;
+	eg_size_t ParmsSize = 0;
+	eg_uint NumParms = 0;
+	eg_char* Storage = nullptr;
+	eg_size_t StorageSize = 0;
 };
 
 static constexpr std::size_t EGPARSE_STR_SIZE = 1024;
@@ -98,8 +98,8 @@ struct egParseFuncInfo : public egParseFuncBase
 {
 	static const eg_uint MAX_PARMS = 10;
 
-	eg_cpstr IntParms[MAX_PARMS];
-	eg_char  IntStorage[EGPARSE_STR_SIZE]; //We're probably parsing an eg_string, so we don't need any more storage than what originally fit in it.
+	eg_cpstr IntParms[MAX_PARMS] = {};
+	eg_char IntStorage[EGPARSE_STR_SIZE] = {}; //We're probably parsing an eg_string, so we don't need any more storage than what originally fit in it.
 
 	egParseFuncInfo()
 	{
@@ -109,29 +109,6 @@ struct egParseFuncInfo : public egParseFuncBase
 		StorageSize = countof(IntStorage);
 	}
 };
-EGPARSE_RESULT EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut);
-EGPARSE_RESULT EGParse_ParseCSV(eg_cpstr sLIne, egParseFuncBase* pOut);
-EGPARSE_RESULT EGParse_GetAttValue(eg_cpstr sLine, eg_cpstr sName, std::string& sOutValue);
-eg_cpstr EGParse_GetParseResultString(EGPARSE_RESULT r);
 
-//
-// Bonus struct so that we can use parse results as collection of eg_strings if wanted.
-//
-struct egParseFuncInfoAsEgStrings
-{
-	egParseFuncInfoAsEgStrings(const egParseFuncBase& rhs)
-	{
-		SystemName = rhs.SystemName;
-		FunctionName = rhs.FunctionName;
-		NumParms = EG_Min<eg_uint>(rhs.NumParms, countof(Parms));
-		for (eg_uint i = 0; i < NumParms; i++)
-		{
-			Parms[i] = rhs.Parms[i];
-		}
-	}
-
-	std::string SystemName;
-	std::string FunctionName;
-	std::string Parms[egParseFuncInfo::MAX_PARMS];
-	eg_uint NumParms = 0;
-};
+eg_parse_result EGParse_ParseFunction(eg_cpstr sLine, egParseFuncBase* pOut);
+eg_cpstr EGParse_GetParseResultString(eg_parse_result r);

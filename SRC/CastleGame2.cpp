@@ -205,8 +205,8 @@ void CCastleGame::ProcessGameUntilBreak()
 		m_InstrPtr++;
 
 		egParseFuncInfo ParseInfo;
-		EGPARSE_RESULT ParseRes = EGParse_ParseFunction(Instr.Statement.c_str(), &ParseInfo);
-		if (EGPARSE_OKAY == ParseRes)
+		eg_parse_result ParseRes = EGParse_ParseFunction(Instr.Statement.c_str(), &ParseInfo);
+		if (eg_parse_result::OKAY == ParseRes)
 		{
 			std::string FunctionName = ParseInfo.FunctionName;
 			if (FunctionName == "PRINT")
