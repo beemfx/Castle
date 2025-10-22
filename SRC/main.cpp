@@ -1,22 +1,23 @@
 // (c) 2025 Beem Media. All rights reserved.
 
+#include "CastleTypes.h"
+#include "CastleGame2.h"
 #include <windows.h>
 #include <windowsx.h>
 #include <tchar.h>
 #include <stdio.h>
 #include "resource.h"
-#include "CastleGame2.h"
 
-static const eg_char* Main_CurVersion = TEXT("version 6.00");
-
+static const TCHAR* Main_CurVersion = TEXT("version 6.00");
 static const COLORREF Main_TextColor = RGB(255, 255, 255);
 static const COLORREF Main_ChoiceColor = RGB(255, 230, 200);
 static const COLORREF Main_BgColor = RGB(0, 0, 0);
 static const COLORREF Main_ChoiceBgColor = RGB(30, 30, 30);
 static const COLORREF Main_ChoiceBgHlColor = RGB(90, 90, 90);
 static const COLORREF Main_ChoiceBorderColor = RGB(150, 150, 150);
-static const int      Main_ChoiceBorderSize = 2;
-static const eg_char* Main_WinName = TEXT("Castle: A Text Based Adventure");
+static const int Main_ChoiceBorderSize = 2;
+static const TCHAR Main_WinName[] = TEXT("Castle: A Text Based Adventure");
+static const char Main_WinNameMB[] = "Castle: A Text Based Adventure";
 
 class CGameShell
 {
@@ -54,7 +55,7 @@ public:
 			, FALSE, FALSE, FALSE, ANSI_CHARSET
 			, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS
 			, ANTIALIASED_QUALITY, DEFAULT_PITCH
-			, "Georgia");
+			, TEXT("Georgia"));
 
 		m_ButtonBgBrush = CreateSolidBrush(Main_ChoiceBgColor);
 		m_ButtonBgHlBrush = CreateSolidBrush(Main_ChoiceBgHlColor);
@@ -273,9 +274,8 @@ public:
 
 	void UpdateWindowName()
 	{
-		char Temp[1024];
-		sprintf_s(Temp, "%s [%s]", Main_WinName, m_CastleGame.GetMapName().c_str());
-		SetWindowText(m_hwnd, Temp);
+		const std::string NewWindowName = std::format("{} [{}]", Main_WinNameMB, m_CastleGame.GetMapName());
+		SetWindowTextA(m_hwnd, NewWindowName.c_str());
 	}
 
 	void OnPaint(HWND hwnd)
@@ -296,9 +296,9 @@ public:
 		HGDIOBJ OldFont = SelectObject(hDc, m_Font);
 
 		RECT rcDraw = rcClient;
-		DrawText(hDc, Text.c_str(), TextLength, &rcDraw, DT_WORDBREAK | DT_CALCRECT);
+		DrawTextA(hDc, Text.c_str(), TextLength, &rcDraw, DT_WORDBREAK | DT_CALCRECT);
 		m_TextBottom = rcDraw.bottom;
-		DrawText(hDc, Text.c_str(), TextLength, &rcDraw, DT_WORDBREAK);
+		DrawTextA(hDc, Text.c_str(), TextLength, &rcDraw, DT_WORDBREAK);
 
 		static const int BUTTON_PADDING = 2;
 		static const int TEXT_PADDING = Main_ChoiceBorderSize * 2;
@@ -316,7 +316,7 @@ public:
 				rcDraw.right = rcClient.right - TEXT_PADDING;
 
 				// Calculate the size of the text.
-				DrawText(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK | DT_CALCRECT);
+				DrawTextA(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK | DT_CALCRECT);
 
 				bool bIsHighlighted = false;
 
@@ -355,7 +355,7 @@ public:
 				rcDraw.right -= Main_ChoiceBorderSize;
 				rcDraw.top += Main_ChoiceBorderSize / 2;
 				SetBkColor(hDc, bIsHighlighted ? Main_ChoiceBgHlColor : Main_ChoiceBgColor);
-				DrawText(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK);
+				DrawTextA(hDc, Line.c_str(), static_cast<int>(Line.size()), &rcDraw, DT_WORDBREAK);
 			}
 		}
 
@@ -363,7 +363,7 @@ public:
 		{
 			SetTextColor(hDc, RGB(255, 0, 0));
 			SetBkColor(hDc, RGB(0, 0, 255));
-			DrawText(hDc, m_CastleGame.GetCompilerError().c_str(), -1, &rcClient, DT_BOTTOM | DT_CENTER | DT_SINGLELINE);
+			DrawTextA(hDc, m_CastleGame.GetCompilerError().c_str(), -1, &rcClient, DT_BOTTOM | DT_CENTER | DT_SINGLELINE);
 		}
 
 		SelectObject(hDc, OldFont);

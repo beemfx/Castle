@@ -1,7 +1,7 @@
 // (c) 2025 Beem Media. All rights reserved.
 
-#include "DataStream2.h"
 #include "CastleTypes.h"
+#include "DataStream2.h"
 
 class CCastleGame
 {

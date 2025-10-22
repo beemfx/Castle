@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CastleTypes.h"
+
 class CDataStream
 {
 public:

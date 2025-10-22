@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "CastleTypes.h"
+
 enum class eg_parse_result
 {
 	OKAY,
