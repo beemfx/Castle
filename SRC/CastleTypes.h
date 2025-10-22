@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include <filesystem>
+#include <format>
+#include <fstream>
 #include <string>
 #include <vector>
-#include <format>
 
 //////////////////////////////////////////////////
 // EG Types (Since we are using some eg libraries)
@@ -30,6 +32,8 @@ typedef unsigned __int32 eg_uintptr_t;
 #endif
 
 static_assert(sizeof(eg_uintptr_t) == sizeof(void*), "Wrong size!");
+
+typedef std::filesystem::path eg_path;
 
 #define EG_INLINE inline
 #define null nullptr

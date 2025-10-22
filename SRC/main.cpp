@@ -306,7 +306,7 @@ public:
 		// Draw the buttons...
 		{
 			SetTextColor(hDc, Main_ChoiceColor);
-			for (int i = 0; i < m_CastleGame.GetNumChoices(); i++)
+			for (std::size_t i = 0; i < m_CastleGame.GetNumChoices(); i++)
 			{
 				const std::string Line = std::format("{}) {}", i + 1, m_CastleGame.GetChoiceText(i));
 

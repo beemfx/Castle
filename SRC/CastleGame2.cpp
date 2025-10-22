@@ -3,9 +3,9 @@
 #include "CastleGame2.h"
 #include "EGParse.h"
 
-CCastleGame::CCastleGame(const char* szInitialMap)
+CCastleGame::CCastleGame(const eg_path& ScriptFilename)
 {
-	LoadMap(szInitialMap);
+	LoadMap(ScriptFilename);
 }
 
 CCastleGame::~CCastleGame()
@@ -14,11 +14,11 @@ CCastleGame::~CCastleGame()
 }
 
 
-bool CCastleGame::LoadMap(const char* szFilename)
+bool CCastleGame::LoadMap(const eg_path& ScriptFilename)
 {
 	//Open the file, return false if the file can't be opened.
 	CDataStream DataStream;
-	if (!DataStream.Open(szFilename))
+	if (!DataStream.Open(ScriptFilename))
 	{
 		return false;
 	}
@@ -130,7 +130,7 @@ bool CCastleGame::GotoLabel(const std::string& StrLabel)
 	return false;
 }
 
-bool CCastleGame::SendInput(int nChoice)
+bool CCastleGame::SendInput(std::size_t nChoice)
 {
 	switch (m_InputType)
 	{
@@ -207,7 +207,7 @@ void CCastleGame::ProcessGameUntilBreak()
 					m_szGotoChoice.resize(0);
 					m_nInputChoice = ParseInfo.NumParms / 2;
 
-					for (int i = 0; i < m_nInputChoice; i++)
+					for (std::size_t i = 0; i < m_nInputChoice; i++)
 					{
 						m_ChoiceStrings.push_back(ParseInfo.Parms[i * 2 + 0]);
 						m_szGotoChoice.push_back(ParseInfo.Parms[i * 2 + 1]);
@@ -238,7 +238,7 @@ void CCastleGame::ProcessGameUntilBreak()
 				m_nInputChoice = 0;
 				m_ChoiceStrings.resize(ParseInfo.NumParms);
 				//Print all the choices.
-				for (int i = 0; i < m_ChoiceStrings.size(); i++)
+				for (std::size_t i = 0; i < m_ChoiceStrings.size(); i++)
 				{
 					m_ChoiceStrings[i] = ParseInfo.Parms[i];
 				}

@@ -71,7 +71,7 @@ private:
 	CLabelMap m_LabelMap;
 	std::size_t m_InstrPtr = 0;
 	e_input_t m_InputType = INPUT_NONE;
-	int m_nInputChoice;
+	std::size_t m_nInputChoice;
 	std::string m_szMapName; //The name of the map default map is WINCASTLE
 	std::string m_Output;
 	CStringArray m_szGotoChoice;
@@ -85,20 +85,21 @@ private:
 	bool GotoLabel(const std::string& StrLabel);
 	void LoadProgram(CDataStream& Stream);
 	void DoPrint(const char* StrLine);
+
 public:
-	CCastleGame(const char* szInitialMap);
+	CCastleGame(const eg_path& ScriptFilename);
 	~CCastleGame();
-	bool LoadMap(const char* szFilename);
+	bool LoadMap(const eg_path& ScriptFilename);
 
 	const std::string& GetMapName() const { return m_szMapName; }
 	const std::string& GetCompilerError() const { return m_CompileError; }
 
 	void ProcessGameUntilBreak(); //Process game until something stops the game such as a CHOICE function
 
-	bool SendInput(int nChoice);
+	bool SendInput(std::size_t nChoice);
 	void Restart();
 
 	const std::string& GetOutput() const { return m_Output; }
 	std::size_t GetNumChoices() const { return m_ChoiceStrings.size(); }
-	const char* GetChoiceText(int Index)const { if (0 <= Index && Index < m_ChoiceStrings.size()) { return m_ChoiceStrings[Index].c_str(); } return ""; }
+	const char* GetChoiceText(std::size_t Index)const { if (0 <= Index && Index < m_ChoiceStrings.size()) { return m_ChoiceStrings[Index].c_str(); } return ""; }
 };

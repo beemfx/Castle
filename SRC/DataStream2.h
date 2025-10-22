@@ -22,10 +22,10 @@ public:
 
 public:
 	CDataStream() = default;
-	CDataStream(const char* Filename);
+	CDataStream(const eg_path& Filename);
 	~CDataStream();
 
-	bool Open(const char* Filename);
+	bool Open(const eg_path& Filename);
 	void Close();
 	std::size_t Read(ds_byte* pBuffer, std::size_t count);
 	std::size_t GetSize() const;
