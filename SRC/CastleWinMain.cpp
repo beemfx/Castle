@@ -1,10 +1,9 @@
 // (c) 2025 Beem Media. All rights reserved.
 
-#include "CastleTypes.h"
 #include "CastleGame2.h"
+#include "CastleResources.h"
 #include <windows.h>
 #include <windowsx.h>
-#include "resource.h"
 
 static const TCHAR* Main_CurVersion = TEXT("version 6.00");
 static const COLORREF Main_TextColor = RGB(255, 255, 255);

@@ -25,17 +25,17 @@
     <ClCompile Include="..\SRC\CastleGame2.cpp" />
     <ClCompile Include="..\SRC\DataStream2.cpp" />
     <ClCompile Include="..\SRC\EGParse.cpp" />
-    <ClCompile Include="..\SRC\WinMain.cpp" />
+    <ClCompile Include="..\SRC\CastleWinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SRC\CastleGame2.h" />
     <ClInclude Include="..\SRC\CastleTypes.h" />
     <ClInclude Include="..\SRC\DataStream2.h" />
     <ClInclude Include="..\SRC\EGParse.h" />
-    <ClInclude Include="..\SRC\resource.h" />
+    <ClInclude Include="..\SRC\CastleResources.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\SRC\cresource.rc" />
+    <ResourceCompile Include="..\SRC\CastleResources.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

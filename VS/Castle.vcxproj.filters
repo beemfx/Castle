@@ -20,7 +20,7 @@
     <ClCompile Include="..\SRC\EGParse.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRC\WinMain.cpp">
+    <ClCompile Include="..\SRC\CastleWinMain.cpp">
       <Filter>SRC</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,7 +34,7 @@
     <ClInclude Include="..\SRC\DataStream2.h">
       <Filter>SRC</Filter>
     </ClInclude>
-    <ClInclude Include="..\SRC\resource.h">
+    <ClInclude Include="..\SRC\CastleResources.h">
       <Filter>SRC</Filter>
     </ClInclude>
     <ClInclude Include="..\SRC\EGParse.h">
@@ -42,7 +42,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\SRC\cresource.rc">
+    <ResourceCompile Include="..\SRC\CastleResources.rc">
       <Filter>SRC</Filter>
     </ResourceCompile>
   </ItemGroup>
