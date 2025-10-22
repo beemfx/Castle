@@ -24,6 +24,11 @@ Origin: 1997
 === Version History of                                ===
 ===        WinCastle: A Text Based Adventure          ===
 =========================================================
+version 6.01 (October 21, 2025)
+	Cleaned up the code a bit since it was more embarassing looking than I
+	remembered. Removed most of the eglib stuff (but kept a simplified EGParse)
+	in favor of using the C++ library instead.
+
 version 6.XX (October 1, 2015)
 	There have been many major changes to how scripts are
 	processed, but the script themselves have also changed
