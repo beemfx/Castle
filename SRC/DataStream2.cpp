@@ -25,7 +25,6 @@ bool CDataStream::Open(const char* Filename)
 	{
 		std::ifstream File(Filename, std::ios::binary);
 		File.read(reinterpret_cast<char*>(m_Data.data()), m_Data.size());
-		m_bOpen = true;
 		return true;
 	}
 
@@ -36,21 +35,15 @@ void CDataStream::Close()
 {
 	m_Data.resize(0);
 	m_ReadPtr = 0;
-	m_bOpen = false;
 }
 
 std::size_t CDataStream::Read(ds_byte* pBuffer, std::size_t count)
 {
-	if (!m_bOpen)
-	{
-		return 0;
-	}
-
 	std::size_t SizeToRead = count;
 
 	if ((m_ReadPtr + SizeToRead) > m_Data.size())
 	{
-		count = m_Data.size() - m_ReadPtr;
+		SizeToRead = m_Data.size() - m_ReadPtr;
 	}
 
 	std::memcpy(pBuffer, m_Data.data() + m_ReadPtr, SizeToRead);
@@ -60,21 +53,11 @@ std::size_t CDataStream::Read(ds_byte* pBuffer, std::size_t count)
 
 std::size_t CDataStream::GetSize() const
 {
-	if (!m_bOpen)
-	{
-		return 0;
-	}
-
 	return m_Data.size();
 }
 
 std::size_t CDataStream::Seek(signed long nDistance, MOVE_T nMethod)
 {
-	if (!m_bOpen)
-	{
-		return 0;
-	}
-
 	switch (nMethod)
 	{
 	case MOVE_START:
@@ -96,10 +79,5 @@ std::size_t CDataStream::Seek(signed long nDistance, MOVE_T nMethod)
 
 std::size_t CDataStream::Tell() const
 {
-	if (!m_bOpen)
-	{
-		return 0;
-	}
-
 	return m_ReadPtr;
 }

@@ -11,7 +11,6 @@ public:
 private:
 	std::vector<ds_byte> m_Data;
 	std::size_t m_ReadPtr = 0;
-	bool m_bOpen = false;
 
 public:
 	enum MOVE_T
